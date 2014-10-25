@@ -1,0 +1,19 @@
+<f:layout name="Default" />
+
+<f:section name="main">
+
+<f:if condition="{playlist}">
+<f:then>
+	<div id="tx-streamovations-vp-play" class="video-player"></div>
+	
+	<script type="text/javascript">
+		PlayerStarter.initSmvPlayer('{playlist -> f:format.raw()}');
+		// PlayerStarter.initJwPlayer();
+	</script>
+</f:then>
+<f:else>
+	<p>No video-playlist found.</p>
+</f:else>
+</f:if>
+
+</f:section>

@@ -1,0 +1,135 @@
+/* 
+	This is the main stylesheet for the Streamovations Player
+    Created on : Jan 23, 2014, 5:55:40 PM
+    Author     : Thomas Sonck @ Streamovations
+*/
+
+.smp{
+	//margin-bottom: 30px;
+	background-color: black;
+	overflow: none;
+}
+
+.smp_hidden{
+	visibility: hidden;
+}
+
+.smp object{
+	display:inline-block;
+	zoom: 1;
+	margin:0px;
+	outline:none;
+	vertical-align: top;
+	width: 100%;
+}
+
+.smp_infoBar{
+	/*text-align: center;*/
+	height: 30px;
+	width: 100%;
+	margin: 0;
+	display: inline-block;
+	zoom:1;
+	outline:none;
+	vertical-align: top;
+	overflow: hidden;
+}
+
+.smp_infoBarSegment{
+	display: inline-block;
+	height: 100%;
+	vertical-align: top;
+}
+
+.smp_infoBarLeft{
+	float: left;
+	//width: 25%;
+}
+.smp_infoBarCenter{
+	//width: 25%;
+}
+.smp_infoBarRight{
+	float: right;
+	//width: 50%;
+}
+
+.smp_androidwrapper{
+	height: 100%; 
+	width: 100%; 
+	clear: left;
+}
+
+.smp_androidPlayBtnQualContainer{
+	width: 100%;
+	height: 100%;
+	background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA0CAYAAADWr1sfAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAWBJREFUeNrs2b9KA0EQBvDdvUtzsbAwRRpjqsRC7gFikNPaxEJMF+JDCeJLBBvRUsg7eClTpTgSFGLlFZmBKFY2cWcnu/PBd9cN/GAW7o/udDMFqUKPoTVorPxKCS2gb9BPxO1BT6EV5WfQWIceQCcGLm2Psb+DxrbZrHEoqRkPz+yf621UYBGwgAUsYAELWMCegR/u74ZX/V6DIzg6bDRb/z30djTspelJenGeHUVR/J5Ppx9egwc312d4T5JknxvcKvg7nOAkYE5wUjAHuBOwS7hTsAs4CzAlnBWYAs4SbBPOGmwDvlMvD1prpY3easZOfKJdLJazp+eX1/H4cbbtrDgUKGuwDShLsE0oKzAFlAWYEuoU7ALqBOwSSgrmACUBc4JaBXOE/jyedrrZpQoo8udBwAIWsIAFLGABk4LLgLwlgouAwAWCc+hXAFg05gheQSfQuafrXW5saFytBRgAzGna228Se3gAAAAASUVORK5CYII=");
+
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.smp_androidPlayBtnQualContainer:hover{
+	width: 100%;
+	height: 100%;
+	background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA0CAYAAADWr1sfAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAUZJREFUeNrs2UFqwkAUBuCXkGUprutaegVBI0TEA/QmhQqC++BeKJ5AcdMDiJvWjUcQutdtSbrXf0oQV27svHmZeT/8swx8ZCZ5IVEnzQhpoVN0gD6SXynQDTpGvxMsz+gObZCfMTfwBe2j7RhL7jH2OsaYx9U2DiXD2MMzeysPMQUWBStYwQpWsIIV7Bl4/j6jXtoNB9xsPtHo7VUk3OqWlghnOcOS4KwPLQlwJ09pl3CnryUXcBHvYU64qMGDAy5y0rIJFz1a2oDXYpb+T3itPh6iKPrrPUnqAD0cjrRYrujza3v3tZJQoKLBNqAiwTahosAcUBFgTqhTsAuoE7BLKCtYApQFLAlqFSwRehlPO2l2ooCifx4UrGAFK1jBClYwK7gIyPtrwJuAwGsDnqA/AWCNcWLAe7SNfqClh9Cyshnj/izAAPwSkmauZbNJAAAAAElFTkSuQmCC");
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+
+
+.smp_linksWrapper{
+	height: 100%;
+}
+
+.smp_androidPlayBtn{ 
+	display:inline-block; 
+	/*background-image: url('play_btn.gif'); */
+	background-position: center center; 
+	background-repeat: no-repeat; 
+	height: 100%; 
+	width: 100%;
+	color: #FFF; 
+	float: left; 
+	text-decoration: none; 
+	font-weight: bold; 
+	margin: auto; 
+	text-align: center; 
+}
+
+
+.smp_androidPlayBtnQualContainer{ 
+	display:inline-block; 
+	height: 100%;
+	width: 100%; 
+	color: #FFF; 
+	float: left; 
+	text-decoration: none; 
+	font-weight: bold; 
+	margin: auto; 
+	text-align: center; 
+}
+
+.smp_androidPlayBtnQualContainer a{
+	color: #FFF; 
+	font-size: 25pt;
+}
+
+.smp_infoLabel
+{
+	color: #f8f8f8;
+	padding-left: 10px;
+	margin-top: 3px;
+	font-size: 18px;
+}
+
+.smp_mediaUrlKot{
+	display: inline-block;
+	width: 90%;
+	margin-left: 5%;
+	margin-right: 5%;
+}
+
+.rood{
+	color: red;
+}

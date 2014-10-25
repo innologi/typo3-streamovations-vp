@@ -1,0 +1,108 @@
+config.tx_extbase.objects {
+	Innologi\StreamovationsVp\Library\Rest\RequestFactoryInterface {
+		className = Innologi\StreamovationsVp\Library\Rest\RequestFactory
+	}
+	Innologi\StreamovationsVp\Library\Rest\RequestInterface {
+		className = Innologi\StreamovationsVp\Library\Rest\Typo3Request
+	}
+}
+
+plugin.tx_streamovationsvp {
+	view {
+		templateRootPaths.10 = {$plugin.tx_streamovationsvp.view.templateRootPath}
+		partialRootPaths.10 = {$plugin.tx_streamovationsvp.view.partialRootPath}
+		layoutRootPaths.10 = {$plugin.tx_streamovationsvp.view.layoutRootPath}
+	}
+	persistence {
+		storagePid = {$plugin.tx_streamovationsvp.persistence.storagePid}
+	}
+	rest {
+		#protocol = http
+		#baseUrl = digiraad.heemskerk.nl
+		#apiUrl = api.php/playlists/pub/hash/
+		url = http://digiraad.heemskerk.nl/api.php/playlists/pub/
+	}
+	settings {
+		player = {$plugin.tx_streamovationsvp.settings.player}
+		playlist {
+			#hash = {$plugin.tx_streamovationsvp.settings.playlist.hash}
+			hash = 1f0e3dad99908345f7439f8ffabdffc4
+		}
+	}
+	javascript {
+		jQuery.external = 0
+		jQuery = {$plugin.tx_streamovationsvp.javascript.jqueryLib}
+		# jQuery.disableCompression = 1
+		jwPlayer.external = 0
+		jwPlayer = {$plugin.tx_streamovationsvp.javascript.jwPlayerLib}
+		smvPlayer.external = 0
+		smvPlayer = {$plugin.tx_streamovationsvp.javascript.smvPlayerLib}
+		
+		inlineJS = COA
+		inlineJS {
+			10 = TEMPLATE
+			10.template = FILE
+			10.template.file = {$plugin.tx_streamovationsvp.javascript.starterFile}
+			10.marks {
+				JWPLAYER_KEY = TEXT
+				JWPLAYER_KEY.value = {$plugin.tx_streamovationsvp.settings.jwPlayerKey}
+				SMVPLAYER_JSON = TEXT
+				SMVPLAYER_JSON.value = 
+			}
+			#20 = TEMPLATE
+			#20.template = FILE
+			#20.template.file = {$plugin.tx_streamovationsvp.javascript.smvPlayerLib}
+			#20.marks {
+			#	SCRIPT_PATH = TEXT
+			#	SCRIPT_PATH.value = {$plugin.tx_streamovationsvp.javascript.smvPlayerDir}
+			#}
+		}
+	}
+}
+
+[globalVar = LIT:0 < {$plugin.tx_streamovationsvp.javascript.includeJquery}] 
+page.includeJSlibs.streamovationsvp_jQuery < plugin.tx_streamovationsvp.javascript.jQuery
+
+[globalVar = LIT:0 < {$plugin.tx_streamovationsvp.settings.player}]
+page.includeJSlibs.streamovationsvp_jwPlayer < plugin.tx_streamovationsvp.javascript.jwPlayer
+page.jsInline.198111210 < plugin.tx_streamovationsvp.javascript.inlineJS
+
+[globalVar = LIT:1 < {$plugin.tx_streamovationsvp.settings.player}]
+page.includeJSlibs.streamovationsvp_smvPlayer < plugin.tx_streamovationsvp.javascript.smvPlayer
+
+
+[global]
+
+plugin.tx_streamovationsvp._CSS_DEFAULT_STYLE (
+	textarea.f3-form-error {
+		background-color:#FF9F9F;
+		border: 1px #FF0000 solid;
+	}
+
+	input.f3-form-error {
+		background-color:#FF9F9F;
+		border: 1px #FF0000 solid;
+	}
+
+	.tx-streamovations-vp table {
+		border-collapse:separate;
+		border-spacing:10px;
+	}
+
+	.tx-streamovations-vp table th {
+		font-weight:bold;
+	}
+
+	.tx-streamovations-vp table td {
+		vertical-align:top;
+	}
+
+	.typo3-messages .message-error {
+		color:red;
+	}
+
+	.typo3-messages .message-ok {
+		color:green;
+	}
+
+)
