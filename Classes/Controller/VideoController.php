@@ -47,13 +47,7 @@ class VideoController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 	 * @return void
 	 */
 	public function listAction() {
-		$playlist = NULL;
-		if (isset($this->settings['playlist']['hash'][0])) {
-			$playlist = $this->videoRepository->findByHash(
-				$this->settings['playlist']['hash']
-			);
-		}
-		$this->view->assign('playlist', $playlist);
+
 	}
 
 	/**
@@ -62,9 +56,15 @@ class VideoController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 	 * @param string $hash Video Hash ID
 	 * @return void
 	 */
-	public function showAction($hash) {
-		$video = $this->videoRepository->findByHash($hash);
-		$this->view->assign('video', $video);
+	public function showAction($hash = NULL) {
+		#$playlist = $this->videoRepository->findByHash($hash);
+		$playlist = NULL;
+		if (isset($this->settings['playlist']['hash'][0])) {
+			$playlist = $this->videoRepository->findByHash(
+				$this->settings['playlist']['hash']
+			);
+		}
+		$this->view->assign('playlist', $playlist);
 	}
 
 }
