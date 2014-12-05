@@ -15,7 +15,7 @@ var PlayerStarter = {
 		jwplayer('tx-streamovations-vp-play').setup({
 			//file: 'http://188.205.234.147:1935/vod/19_15_test_scheduler_e07efb7cbaa993768b376864e08ad0328a451c32.mp4'
 			//file: '188.205.234.147:1935/vod/19_15_test_scheduler_caef3c4f1d9c4255691b18d1b92bad86cf3dbe66---mbr-2---.mp4'
-			file: '188.205.234.147:1935/vod/19_15_test_scheduler_caef3c4f1d9c4255691b18d1b92bad86cf3dbe66---mbr-2---.mp4/media_6.ts'
+			file: 'rtmp://188.205.234.147:1935/vod/19_15_test_scheduler_caef3c4f1d9c4255691b18d1b92bad86cf3dbe66---mbr-2---.mp4'
 			//image: '/uploads/myPoster.jpg'
 		});
 	},
