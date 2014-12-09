@@ -1,7 +1,6 @@
 <?php
 namespace Innologi\StreamovationsVp\Library\Rest;
 
-use TYPO3\CMS\Extbase\Property\TypeConverter\IntegerConverter;
 /***************************************************************
  *  Copyright notice
  *
@@ -46,35 +45,34 @@ abstract class AbstractRequest {
 	protected $headers = array();
 
 	/**
-	 * @var array
+	 * Request URI
+	 *
+	 * @var RequestUriInterface
 	 */
-	protected $arguments = array();
-
-	/**
-	 * @var string
-	 */
-	protected $url;
+	protected $requestUri;
 
 	/**
 	 * Constructor
 	 *
-	 * @param string $url
-	 * @param array $configuration
+	 * @param RequestUriInterface $requestUri
+	 * @param array $httpConfiguration
 	 * @return void
 	 */
-	public function __construct($url, array $configuration) {
-		$this->url = $url;
+	public function __construct($requestUri, array $httpConfiguration = array()) {
+		$this->requestUri = $requestUri;
 	}
 
 	/**
 	 * Adds URL argument
+	 *
+	 * Proxy method for requestUri
 	 *
 	 * @param string $name
 	 * @param string $value
 	 * @return RequestInterface
 	 */
 	public function addArgument($name, $value) {
-		$this->arguments[$name] = $value;
+		$this->requestUri->addArgument($name, $value);
 		return $this;
 	}
 
@@ -93,7 +91,7 @@ abstract class AbstractRequest {
 	 * Sends Request, returns response
 	 *
 	 * @param boolean $returnRawResponse
-	 * @return mixed
+	 * @return void
 	 */
 	public function send($returnRawResponse = FALSE) {
 		$this->headers[] = 'Accept: ' . ($this->responseType === RequestInterface::RESPONSE_TYPE_JSON

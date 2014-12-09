@@ -36,32 +36,92 @@ class RequestFactory implements RequestFactoryInterface,\TYPO3\CMS\Core\Singleto
 
 	/**
 	 * @var \TYPO3\CMS\Extbase\Object\ObjectManagerInterface
-	 * @inject
 	 */
 	protected $objectManager;
 
 	/**
-	 * @var \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface
-	 * @inject
+	 * General REST request configuration
+	 *
+	 * @var array
 	 */
-	protected $configurationManager;
+	protected $configuration;
+
+	/**
+	 * @var string
+	 */
+	protected $httpConfKey = 'applyHttpConfiguration';
+
+	/**
+	 * Class constructor
+	 *
+	 * @param \TYPO3\CMS\Extbase\Object\ObjectManagerInterface $objectManager
+	 * @return void
+	 */
+	public function __construct(\TYPO3\CMS\Extbase\Object\ObjectManagerInterface $objectManager) {
+		// it's this once, or DI + an if on each create(), or DI + an entire init on each create()
+		$this->objectManager = $objectManager;
+		$this->initializeConfiguration();
+	}
+
+	/**
+	 * Initializes the configuration
+	 *
+	 * @return void
+	 */
+	protected function initializeConfiguration() {
+		/* @var $configurationManager \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface */
+		$configurationManager = $this->objectManager->get('TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManagerInterface');
+		$frameworkConfiguration = $configurationManager->getConfiguration(
+			\TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK
+		);
+		$this->configuration = $frameworkConfiguration['rest'];
+	}
 
 	/**
 	 * Create REST request object
 	 *
-	 * @param boolean $applySystemSettings
-	 * @return RequestInterface
+	 * @param string $type Determines applied configuration
+	 * @return Request
 	 */
-	public function create($applySystemSettings = TRUE) {
-		$frameworkConfiguration = $this->configurationManager->getConfiguration(
-			\TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK
-		);
-
+	public function create($type = 'default') {
 		return $this->objectManager->get(
 			__NAMESPACE__ . '\\RequestInterface',
-			$frameworkConfiguration['rest']['url'],
-			$applySystemSettings ? $GLOBALS['TYPO3_CONF_VARS']['HTTP'] : array()
+			$this->createRequestUriObject($type),
+			isset($this->configuration[$this->httpConfKey]) && $this->configuration[$this->httpConfKey]
+				? $GLOBALS['TYPO3_CONF_VARS']['HTTP']
+				: array()
 		);
+	}
+
+	/**
+	 * Creates RequestUri object for type
+	 *
+	 * @param string $type
+	 * @return RequestUriInterface
+	 */
+	protected function createRequestUriObject($type) {
+		$settings = array();
+		$config = $this->configuration['repository'];
+
+		if (isset($config[$type])) {
+			$settings = $config[$type];
+		}
+		if ($type !== 'default' && isset($config['default'])) {
+			// merging of default settings with type-specific
+			$settings = array_merge($config['default'], $settings);
+		}
+
+		/* @var $requestUri RequestUriInterface */
+		$requestUri = $this->objectManager->get(
+			__NAMESPACE__ . '\\RequestUriInterface'
+		);
+		$requestUri
+			// no isset checks here, if they don't exist errors occur anyway
+			->setProtocol($settings['protocol'])
+			->setBaseUri($settings['baseUri'])
+			->setApiUri($settings['apiUri']);
+
+		return $requestUri;
 	}
 
 }

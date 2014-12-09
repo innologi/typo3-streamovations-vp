@@ -40,14 +40,16 @@ interface RequestInterface {
 	/**
 	 * Constructor
 	 *
-	 * @param string $url
-	 * @param array $configuration
+	 * @param RequestUriInterface $requestUri
+	 * @param array $httpConfiguration
 	 * @return void
 	 */
-	public function __construct($url, array $configuration);
+	public function __construct($requestUri, array $httpConfiguration = array());
 
 	/**
 	 * Adds URL argument
+	 *
+	 * Proxy method for requestUri
 	 *
 	 * @param string $name
 	 * @param string $value

@@ -44,28 +44,15 @@ class Typo3Request extends AbstractRequest implements RequestInterface {
 	 */
 	public function send($returnRawResponse = FALSE) {
 		parent::send($returnRawResponse);
-		$this->processArguments();
+		//$report = array();
 		$rawResponse = \TYPO3\CMS\Core\Utility\GeneralUtility::getUrl(
-			$this->url, 0, $this->headers, $report
+			$this->requestUri->getRequestUri(), 0, $this->headers //, $report
 		);
 		return $rawResponse;
 		// @TODO create Response class
 		/*return $returnRawResponse
 			? $rawResponse
 			: $this->objectManager->get(__NAMESPACE__ . '\\Response', $rawResponse);*/
-	}
-
-	/**
-	 * Process arguments
-	 *
-	 * @return void
-	 */
-	protected function processArguments() {
-		$append = '';
-		foreach ($this->arguments as $arg => $val) {
-			$append .= $arg . '/' . $val;
-		}
-		$this->url .= $append;
 	}
 
 }

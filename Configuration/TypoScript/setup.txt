@@ -5,6 +5,9 @@ config.tx_extbase.objects {
 	Innologi\StreamovationsVp\Library\Rest\RequestInterface {
 		className = Innologi\StreamovationsVp\Library\Rest\Typo3Request
 	}
+	Innologi\StreamovationsVp\Library\Rest\RequestUriInterface {
+		className = Innologi\StreamovationsVp\Library\Rest\RequestUri
+	}
 }
 
 plugin.tx_streamovationsvp {
@@ -17,10 +20,23 @@ plugin.tx_streamovationsvp {
 		storagePid = {$plugin.tx_streamovationsvp.persistence.storagePid}
 	}
 	rest {
-		#protocol = http
-		#baseUrl = digiraad.heemskerk.nl
-		#apiUrl = api.php/playlists/pub/hash/
-		url = http://digiraad.heemskerk.nl/api.php/playlists/pub/
+		applyHttpConfiguration = 1
+		repository {
+			default {
+				protocol = http
+				baseUri = digiraad.heemskerk.nl
+				apiUri = api.php
+			}
+			session {
+				apiUri = api.php/sessions/date
+			}
+			playlist {
+				apiUri = api.php/playlists/pub
+			}
+			meetingdata {
+				apiUri = api.php/meetingdata
+			}
+		}
 	}
 	settings {
 		player = {$plugin.tx_streamovationsvp.settings.player}

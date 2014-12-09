@@ -41,17 +41,46 @@ class Repository implements \TYPO3\CMS\Core\SingletonInterface {
 	protected $objectManager;
 
 	/**
+	 * @var string
+	 */
+	protected $objectType;
+
+	/**
+	 * Constructs a new Repository
+	 *
+	 * @return void
+	 */
+	public function __construct() {
+		$this->initializeObjectType();
+	}
+
+	/**
+	 * Initializes ObjectType from class name
+	 *
+	 * @return void
+	 */
+	protected function initializeObjectType() {
+		$className = strtoLower(get_class($this));
+		// rempve 'repository'
+		$this->objectType = str_replace(
+			'repository',
+			'',
+			// remove namespace
+			substr($className, (strrpos($className, '\\') + 1))
+		);
+	}
+
+	/**
 	 * Creates a REST Request object
 	 *
-	 * @param boolean $applySystemSettings
 	 * @return RequestInterface
 	 */
-	public function createRequest($applySystemSettings = TRUE) {
+	protected function createRequest() {
+		// @LOW if multiple REST requests in a single web request, this is not efficient
 		/* @var $requestFactory RequestFactoryInterface */
 		$requestFactory = $this->objectManager->get(__NAMESPACE__ . '\\RequestFactoryInterface');
 
-		return $requestFactory->create($applySystemSettings);
+		return $requestFactory->create($this->objectType);
 	}
-
 
 }

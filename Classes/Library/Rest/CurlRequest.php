@@ -42,16 +42,16 @@ class CurlRequest extends AbstractRequest implements RequestInterface {
 	/**
 	 * Constructor
 	 *
-	 * @param string $url
-	 * @param array $configuration
+	 * @param RequestUriInterface $requestUri
+	 * @param array $httpConfiguration
 	 * @return void
 	 */
-	public function __construct($url, array $configuration) {
-		$this->url = $url;
+	public function __construct($requestUri, array $httpConfiguration = array()) {
+		$this->requestSettings = $requestSettings;
 		$this->resource = curl_init();
 
-		if (!empty($configuration)) {
-			$this->applySystemSettings($configuration);
+		if (!empty($httpConfiguration)) {
+			$this->applyHttpConfiguration($httpConfiguration);
 		}
 
 		$this->setRequestOptions(
@@ -79,7 +79,6 @@ class CurlRequest extends AbstractRequest implements RequestInterface {
 	 * @return mixed
 	 */
 	public function send($returnRawResponse = FALSE) {
-		$this->processArguments();
 		// @TODO catch errors?
 		$rawResponse = curl_exec($this->resource);
 		return $rawResponse;
@@ -90,56 +89,47 @@ class CurlRequest extends AbstractRequest implements RequestInterface {
 	}
 
 	/**
-	 * Process arguments
-	 *
-	 * @return void
-	 */
-	protected function processArguments() {
-		// @TODO how do we process arguments?
-	}
-
-	/**
-	 * Applies TYPO3 system settings on cURL handle
+	 * Applies HTTP configuration on cURL handle
 	 *
 	 * Typically, these are the settings that can be changed in
 	 * the Install tool, read from  $GLOBALS['TYPO3_CONF_VARS']['HTTP']
 	 *
-	 * @param array $system
+	 * @param array $config
 	 * @return void
 	 */
-	protected function applySystemSettings(array $system) {
+	protected function applyHttpConfiguration(array $config) {
 		$options = array();
 
-		if (isset($system['proxy_host'][0])) {
-			$options[CURLOPT_PROXY] = $system['proxy_host'];
-			if (isset($system['proxy_port'][0])) {
-				$options[CURLOPT_PROXYPORT] = $system['proxy_port'];
+		if (isset($config['proxy_host'][0])) {
+			$options[CURLOPT_PROXY] = $config['proxy_host'];
+			if (isset($config['proxy_port'][0])) {
+				$options[CURLOPT_PROXYPORT] = $config['proxy_port'];
 			}
-			if (isset($system['proxy_user'][0])) {
-				$options[CURLOPT_PROXYUSERPWD] = $system['proxy_user'];
-				if (isset($system['proxy_password'][0])) {
-					$options[CURLOPT_PROXYUSERPWD] .= ':' . $system['proxy_password'];
+			if (isset($config['proxy_user'][0])) {
+				$options[CURLOPT_PROXYUSERPWD] = $config['proxy_user'];
+				if (isset($config['proxy_password'][0])) {
+					$options[CURLOPT_PROXYUSERPWD] .= ':' . $config['proxy_password'];
 				}
 			}
 		}
 
-		if (isset($system['userAgent'][0])) {
-			$options[CURLOPT_USERAGENT] = $system['userAgent'];
+		if (isset($config['userAgent'][0])) {
+			$options[CURLOPT_USERAGENT] = $config['userAgent'];
 		}
 
 		// @TODO finish cURL system settings
-		#$options[CURLOPT_FOLLOWLOCATION] = $system['follow_redirects'];
-		#$options[CURLOPT_SSL_VERIFYPEER] = $system['ssl_verify_peer'];
-		#$options[CURLOPT_SSL_VERIFYHOST] = $system['ssl_verify_host'];
-		#$options[CURLOPT_CONNECTTIMEOUT] = $system['connect_timeout'];
-		#$options[CURLOPT_TIMEOUT] = $system['timeout'];
-		#$options[CURLOPT_PROXYAUTH] = $system['proxy_auth_scheme']; // CURLAUTH_BASIC CURLAUTH_NTLM
-		#$options[CURLOPT_HTTP_VERSION] = $system['protocol_version']; // CURL_HTTP_VERSION_1_0 CURL_HTTP_VERSION_1_1
-		#$options[CURLOPT_MAXREDIRS] = $system['max_redirects'];
-		#$options[CURLOPT_CAINFO] = $system['ssl_cafile'];
-		#$options[CURLOPT_CAPATH] = $system['ssl_capath'];
-		#$options[CURLOPT_SSLKEY] = $system['ssl_local_cert'];
-		#$options[CURLOPT_SSLKEYPASSWD] = $system['ssl_passphrase'];
+		#$options[CURLOPT_FOLLOWLOCATION] = $config['follow_redirects'];
+		#$options[CURLOPT_SSL_VERIFYPEER] = $config['ssl_verify_peer'];
+		#$options[CURLOPT_SSL_VERIFYHOST] = $config['ssl_verify_host'];
+		#$options[CURLOPT_CONNECTTIMEOUT] = $config['connect_timeout'];
+		#$options[CURLOPT_TIMEOUT] = $config['timeout'];
+		#$options[CURLOPT_PROXYAUTH] = $config['proxy_auth_scheme']; // CURLAUTH_BASIC CURLAUTH_NTLM
+		#$options[CURLOPT_HTTP_VERSION] = $config['protocol_version']; // CURL_HTTP_VERSION_1_0 CURL_HTTP_VERSION_1_1
+		#$options[CURLOPT_MAXREDIRS] = $config['max_redirects'];
+		#$options[CURLOPT_CAINFO] = $config['ssl_cafile'];
+		#$options[CURLOPT_CAPATH] = $config['ssl_capath'];
+		#$options[CURLOPT_SSLKEY] = $config['ssl_local_cert'];
+		#$options[CURLOPT_SSLKEYPASSWD] = $config['ssl_passphrase'];
 
 		if (!empty($options)) {
 			$this->setRequestOptions($options);

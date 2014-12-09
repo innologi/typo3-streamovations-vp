@@ -26,7 +26,7 @@ namespace Innologi\StreamovationsVp\Library\Rest;
  ***************************************************************/
 
 /**
- * REST RequestFatctory Interface
+ * REST Request Factory Interface
  *
  * @package streamovations_vp
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
@@ -37,9 +37,9 @@ interface RequestFactoryInterface {
 	/**
 	 * Create REST request object
 	 *
-	 * @param boolean $applySystemSettings
+	 * @param string $type Determines applied configuration
 	 * @return Request
 	 */
-	public function create($applySystemSettings = TRUE);
+	public function create($type = 'default');
 
 }

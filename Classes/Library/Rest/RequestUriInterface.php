@@ -26,35 +26,73 @@ namespace Innologi\StreamovationsVp\Library\Rest;
  ***************************************************************/
 
 /**
- * REST cURL Adapter Request
+ * REST Request URI Interface
  *
  * @package streamovations_vp
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class CurlAdapterRequest extends AbstractRequest implements RequestInterface {
-	// @TODO finish implementation
+interface RequestUriInterface {
 
 	/**
-	 * Constructor
+	 * Sets request protocol
 	 *
-	 * @param RequestUriInterface $requestUri
-	 * @param array $httpConfiguration
-	 * @return void
+	 * @param string $protocol
+	 * @return RequestUriInterface
 	 */
-	public function __construct($requestUri, array $httpConfiguration = array()) {
-		// @see typo3/contrib/pear/HTTP/Request2/Request2.php
-		// @see typo3/contrib/pear/HTTP/Request2/Adapter/Curl.php
-	}
+	public function setProtocol($protocol);
 
 	/**
-	 * Sends Request, returns response
+	 * Returns request protocol
 	 *
-	 * @param boolean $returnRawResponse
-	 * @return mixed
+	 * @return string
 	 */
-	public function send($returnRawResponse = FALSE) {
+	public function getProtocol();
 
-	}
+	/**
+	 * Sets request base URI
+	 *
+	 * @param string $baseUri
+	 * @return RequestUriInterface
+	 */
+	public function setBaseUri($baseUri);
+
+	/**
+	 * Returns request base URI
+	 *
+	 * @return string
+	 */
+	public function getBaseUri();
+
+	/**
+	 * Sets request api URI
+	 *
+	 * @param string $apiUri
+	 * @return RequestUriInterface
+	 */
+	public function setApiUri($apiUri);
+
+	/**
+	 * Returns request api URI
+	 *
+	 * @return string
+	 */
+	public function getApiUri();
+
+	/**
+	 * Adds URI argument
+	 *
+	 * @param string $name
+	 * @param string $value
+	 * @return RequestUriInterface
+	 */
+	public function addArgument($name, $value);
+
+	/**
+	 * Returns full request URI
+	 *
+	 * @return string
+	 */
+	public function getRequestUri();
 
 }
