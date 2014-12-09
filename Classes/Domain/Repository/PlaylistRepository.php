@@ -26,26 +26,36 @@ namespace Innologi\StreamovationsVp\Domain\Repository;
  ***************************************************************/
 
 /**
- * Video Repository
+ * Playlist Repository
+ *
+ * Playlist API:
+ * [hash] : required : alphanum
+ * [lang] : optional : ascending (default), descending, lang-eu, or 2 letter ISO-639-1 codes separated by colon
+ * [qual] : optional : descending (default), ascending, or colon separated [broadcast, high, medium, low, minimal]
  *
  * @package streamovations_vp
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class VideoRepository extends \Innologi\StreamovationsVp\Library\Rest\Repository {
+class PlaylistRepository extends \Innologi\StreamovationsVp\Library\Rest\Repository {
 
 	/**
-	 * Returns all objects of this repository identified by hash.
+	 * Returns playlist identified by hash.
 	 *
 	 * @param string $hash
+	 * @param string $language
+	 * @param string $quality
 	 * @return array
 	 */
-	public function findByHash($hash) {
-		$playlist = $this->createRequest()
-			->addArgument('hash', $hash)
-			->send(TRUE);
-
-		return $playlist;
+	public function findByHash($hash, $language = NULL, $quality = NULL) {
+		$request = $this->createRequest()->addArgument('hash', $hash);
+		if ($language !== NULL) {
+			$request->addArgument('lang', $language);
+		}
+		if ($quality !== NULL) {
+			$request->addArgument('qual', $quality);
+		}
+		return $request->send(TRUE);
 	}
 
 }
