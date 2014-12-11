@@ -171,9 +171,9 @@ class RequestUri implements RequestUriInterface {
 		$this->requestUri = $this->protocol . '://' .
 			$this->baseUri . '/' .
 			$this->apiUri . '/';
-		foreach ($this->arguments as $name => $val) {
+		foreach ($this->arguments as $parameter => $value) {
 			// @LOW can't we speed this up with some kind of join? note the need for array keys
-			$this->requestUri .= $name . '/' . $val;
+			$this->requestUri .= $parameter . '/' . $value . '/';
 		}
 		// @TODO evaluation of URL and throwing of exception?
 	}
