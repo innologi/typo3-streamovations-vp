@@ -49,7 +49,7 @@ class RequestFactory implements RequestFactoryInterface,\TYPO3\CMS\Core\Singleto
 	/**
 	 * @var string
 	 */
-	protected $httpConfKey = 'applyHttpConfiguration';
+	protected $httpConfKey = 'ignoreHttpConfiguration';
 
 	/**
 	 * Class constructor
@@ -80,16 +80,19 @@ class RequestFactory implements RequestFactoryInterface,\TYPO3\CMS\Core\Singleto
 	/**
 	 * Create REST request object
 	 *
-	 * @param string $type Determines applied configuration
-	 * @return Request
+	 * @param string $objectType
+	 * @return RequestInterface
 	 */
-	public function create($type = 'default') {
+	public function create($objectType) {
 		return $this->objectManager->get(
 			__NAMESPACE__ . '\\RequestInterface',
-			$this->createRequestUriObject($type),
-			isset($this->configuration[$this->httpConfKey]) && $this->configuration[$this->httpConfKey]
-				? $GLOBALS['TYPO3_CONF_VARS']['HTTP']
-				: array()
+			$this->createRequestUriObject($objectType),
+			$objectType,
+			(isset($this->configuration['features'][$this->httpConfKey])
+				&& $this->configuration['features'][$this->httpConfKey]
+					? array()
+					: $GLOBALS['TYPO3_CONF_VARS']['HTTP']
+			)
 		);
 	}
 
@@ -99,16 +102,16 @@ class RequestFactory implements RequestFactoryInterface,\TYPO3\CMS\Core\Singleto
 	 * @param string $type
 	 * @return RequestUriInterface
 	 */
-	protected function createRequestUriObject($type) {
+	protected function createRequestUriObject($type = 'default') {
 		$settings = array();
 		$config = $this->configuration['repository'];
 
 		if (isset($config[$type])) {
-			$settings = $config[$type];
+			$settings = $config[$type]['request'];
 		}
-		if ($type !== 'default' && isset($config['default'])) {
+		if ($type !== 'default' && isset($config['default']['request'])) {
 			// merging of default settings with type-specific
-			$settings = array_merge($config['default'], $settings);
+			$settings = array_merge($config['default']['request'], $settings);
 		}
 
 		/* @var $requestUri RequestUriInterface */

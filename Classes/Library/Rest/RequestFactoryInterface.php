@@ -37,9 +37,9 @@ interface RequestFactoryInterface {
 	/**
 	 * Create REST request object
 	 *
-	 * @param string $type Determines applied configuration
-	 * @return Request
+	 * @param string $objectType
+	 * @return RequestInterface
 	 */
-	public function create($type = 'default');
+	public function create($objectType);
 
 }

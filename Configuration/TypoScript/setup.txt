@@ -20,20 +20,30 @@ plugin.tx_streamovationsvp {
 		storagePid = {$plugin.tx_streamovationsvp.persistence.storagePid}
 	}
 	rest {
-		applyHttpConfiguration = 1
+		features {
+			# only works for request types that support it
+			ignoreHttpConfiguration = 0
+			# get away without model objects
+			useResponseMapper = 0
+		}
 		repository {
-			default {
+			default.request {
 				protocol = http
 				baseUri = digiraad.heemskerk.nl
 				apiUri = api.php
 			}
 			event {
-				apiUri = api.php/sessions/date
+				request {
+					apiUri = api.php/sessions/date
+				}
+				#response.mappings {
+				#	eventId = eventId
+				#}
 			}
-			playlist {
+			playlist.request {
 				apiUri = api.php/playlists/pub
 			}
-			meetingdata {
+			meetingdata.request {
 				apiUri = api.php/meetingdata
 			}
 		}

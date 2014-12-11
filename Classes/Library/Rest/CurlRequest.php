@@ -43,10 +43,11 @@ class CurlRequest extends AbstractRequest implements RequestInterface {
 	 * Constructor
 	 *
 	 * @param RequestUriInterface $requestUri
+	 * @param string $responseObjectType
 	 * @param array $httpConfiguration
 	 * @return void
 	 */
-	public function __construct($requestUri, array $httpConfiguration = array()) {
+	public function __construct($requestUri, $responseObjectType, array $httpConfiguration = array()) {
 		$this->requestSettings = $requestSettings;
 		$this->resource = curl_init();
 

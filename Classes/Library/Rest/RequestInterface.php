@@ -41,10 +41,11 @@ interface RequestInterface {
 	 * Constructor
 	 *
 	 * @param RequestUriInterface $requestUri
+	 * @param string $objectType
 	 * @param array $httpConfiguration
 	 * @return void
 	 */
-	public function __construct($requestUri, array $httpConfiguration = array());
+	public function __construct($requestUri, $objectType, array $httpConfiguration = array());
 
 	/**
 	 * Adds URL argument

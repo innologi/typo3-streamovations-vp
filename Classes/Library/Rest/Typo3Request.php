@@ -44,15 +44,15 @@ class Typo3Request extends AbstractRequest implements RequestInterface {
 	 */
 	public function send($returnRawResponse = FALSE) {
 		parent::send($returnRawResponse);
+		// @TODO can I use $report for some meaningful error message?
 		//$report = array();
 		$rawResponse = \TYPO3\CMS\Core\Utility\GeneralUtility::getUrl(
 			$this->requestUri->getRequestUri(), 0, $this->headers //, $report
 		);
-		return $rawResponse;
-		// @TODO create Response class
-		/*return $returnRawResponse
+
+		return $returnRawResponse
 			? $rawResponse
-			: $this->objectManager->get(__NAMESPACE__ . '\\Response', $rawResponse);*/
+			: $this->createResponseObject($rawResponse);
 	}
 
 }
