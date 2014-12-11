@@ -27,7 +27,7 @@ plugin.tx_streamovationsvp {
 				baseUri = digiraad.heemskerk.nl
 				apiUri = api.php
 			}
-			session {
+			event {
 				apiUri = api.php/sessions/date
 			}
 			playlist {
@@ -40,6 +40,16 @@ plugin.tx_streamovationsvp {
 	}
 	settings {
 		player = {$plugin.tx_streamovationsvp.settings.player}
+		event {
+			# supported formats: http://php.net/manual/en/datetime.formats.php
+			dateFrom = 2014-09-29
+			dateTo = 2014-12-11
+			dateAt = 2014-12-10
+			
+			category =
+			subCategory =
+			tags =
+		}
 		playlist {
 			#hash = {$plugin.tx_streamovationsvp.settings.playlist.hash}
 			hash = 1f0e3dad99908345f7439f8ffabdffc4

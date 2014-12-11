@@ -26,9 +26,9 @@ namespace Innologi\StreamovationsVp\Domain\Repository;
  ***************************************************************/
 
 /**
- * Session Repository
+ * Event/Session Repository
  *
- * Session API:
+ * Event/Session API:
  * - [at] : optional : date
  * - [from] : optional : start date (inclusive)
  * - [through] : optional : end date (inclusive)
@@ -45,7 +45,7 @@ namespace Innologi\StreamovationsVp\Domain\Repository;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class SessionRepository extends \Innologi\StreamovationsVp\Library\Rest\Repository {
+class EventRepository extends \Innologi\StreamovationsVp\Library\Rest\Repository {
 
 	// DateTime formats
 	const FORMAT_DATE = 'Y-m-d';
@@ -71,7 +71,7 @@ class SessionRepository extends \Innologi\StreamovationsVp\Library\Rest\Reposito
 	 * Sets category
 	 *
 	 * @param string $category
-	 * @return SessionRepository
+	 * @return EventRepository
 	 */
 	public function setCategory($category) {
 		$this->category = $category;
@@ -82,7 +82,7 @@ class SessionRepository extends \Innologi\StreamovationsVp\Library\Rest\Reposito
 	 * Sets subcategory
 	 *
 	 * @param string $subCategory
-	 * @return SessionRepository
+	 * @return EventRepository
 	 */
 	public function setSubCategory($subCategory) {
 		$this->subCategory = $subCategory;
@@ -92,7 +92,7 @@ class SessionRepository extends \Innologi\StreamovationsVp\Library\Rest\Reposito
 	/**
 	 * Sets tags
 	 * @param string $tags
-	 * @return SessionRepository
+	 * @return EventRepository
 	 */
 	public function setTags($tags) {
 		$this->tags = $tags;
@@ -100,7 +100,7 @@ class SessionRepository extends \Innologi\StreamovationsVp\Library\Rest\Reposito
 	}
 
 	/**
-	 * Returns sessions at a specific date/time as per $format
+	 * Returns events of a specific date/time as per $format
 	 *
 	 * @param \DateTime $dateTime
 	 * @param string $format
@@ -109,11 +109,11 @@ class SessionRepository extends \Innologi\StreamovationsVp\Library\Rest\Reposito
 	public function findAt(\DateTime $dateTime, $format) {
 		$request = $this->createRequest()
 			->addArgument('at', $dateTime->format($format));
-		return $this->addSharedArguments($request)->send(TRUE);
+		return $this->addSharedArguments($request)->send();
 	}
 
 	/**
-	 * Returns sessions at a specific date
+	 * Returns events of a specific date
 	 *
 	 * @param \DateTime $dateTime
 	 * @return array
@@ -123,7 +123,7 @@ class SessionRepository extends \Innologi\StreamovationsVp\Library\Rest\Reposito
 	}
 
 	/**
-	 * Returns sessions at a specific date/time
+	 * Returns events of a specific date/time
 	 *
 	 * @param \DateTime $dateTime
 	 * @return array
@@ -133,7 +133,7 @@ class SessionRepository extends \Innologi\StreamovationsVp\Library\Rest\Reposito
 	}
 
 	/**
-	 * Returns sessions between and including(!) $from and $to datetimes
+	 * Returns events between and including(!) $from and $to dates/times
 	 *
 	 * @param \DateTime $from
 	 * @param \DateTime $to (optional)
