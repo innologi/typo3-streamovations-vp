@@ -35,36 +35,95 @@ namespace Innologi\StreamovationsVp\Controller;
 class VideoController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
 
 	/**
-	 * @var \Innologi\StreamovationsVp\Domain\Repository\VideoRepository
+	 * @var \Innologi\StreamovationsVp\Domain\Repository\EventRepository
 	 * @inject
 	 */
-	protected $videoRepository;
-
+	protected $eventRepository;
 
 	/**
-	 * Lists video's
+	 * @var \Innologi\StreamovationsVp\Domain\Repository\PlaylistRepository
+	 * @inject
+	 */
+	protected $playlistRepository;
+
+	/**
+	 * Lists sessions
 	 *
 	 * @return void
 	 */
 	public function listAction() {
+		$this->eventRepository
+			->setCategory($this->settings['event']['category'])
+			->setSubCategory($this->settings['event']['subCategory'])
+			->setTags($this->settings['event']['tags']);
 
+		// @LOW this is really ugly. isn't there a cleaner way that doesn't involve multiple actions? or should we have multiple actions anyway?
+		$events = NULL;
+		$dateTime = new \DateTime();
+		if (isset($this->settings['event']['dateAt'][0])) {
+			// @FIX temp?
+			$this->settings['event']['dateAt'] = strtotime($this->settings['event']['dateAt']);
+			$dateTime->setTimestamp((int)$this->settings['event']['dateAt']);
+			$events = $this->eventRepository->findAtDate($dateTime);
+		} else {
+			// @FIX temp?
+			$this->settings['event']['dateFrom'] = strtotime($this->settings['event']['dateFrom']);
+			$dateTime->setTimestamp((int)$this->settings['event']['dateFrom']);
+			if (isset($this->settings['event']['dateTo'][0])) {
+				$dateEnd = new \DateTime();
+				// @FIX temp?
+				$this->settings['event']['dateTo'] = strtotime($this->settings['event']['dateTo']);
+				$dateEnd->setTimestamp((int)$this->settings['event']['dateTo']);
+			} else {
+				$dateEnd = NULL;
+			}
+			$events = $this->eventRepository->findBetweenDateTimeRange($dateTime, $dateEnd);
+		}
+		// @TODO error handling of lack of proper dates?
+
+		// @FIX this includes private VODs
+		$this->view->assign('events', $events);
 	}
 
 	/**
-	 * Show video
+	 * Show playlist
 	 *
-	 * @param string $hash Video Hash ID
+	 * @param string $hash Playlist Hash
 	 * @return void
 	 */
-	public function showAction($hash = NULL) {
-		#$playlist = $this->videoRepository->findByHash($hash);
-		$playlist = NULL;
-		if (isset($this->settings['playlist']['hash'][0])) {
-			$playlist = $this->videoRepository->findByHash(
-				$this->settings['playlist']['hash']
-			);
-		}
+	public function showAction($hash) {
+		$playlist = $this->playlistRepository->findByHash($hash);
 		$this->view->assign('playlist', $playlist);
+	}
+
+	/**
+	 * Show playlist by configured hash
+	 *
+	 * @return void
+	 */
+	public function presetShowAction() {
+		$arguments = array(
+			'hash' => $this->settings['playlist']['hash']
+		);
+		$this->forward('show', NULL, NULL, $arguments);
+	}
+
+	/**
+	 * Show LIVE stream
+	 *
+	 * @return void
+	 */
+	public function liveStreamAction() {
+		$sessions = $this->eventRepository
+			->setCategory($this->settings['session']['category'])
+			->setSubCategory($this->settings['session']['subCategory'])
+			->setTags($this->settings['session']['tags'])
+			->findAtDateTime(new \DateTime());
+
+		$arguments = array(
+			'hash' => $sessions[0]
+		);
+		$this->forward('show', NULL, NULL, $arguments);
 	}
 
 }

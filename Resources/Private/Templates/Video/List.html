@@ -1,18 +1,20 @@
 <f:layout name="Default" />
 
 <f:section name="main">
-
-<f:if condition="{playlist}">
+<f:if condition="{events}">
 <f:then>
-	<div id="tx-streamovations-vp-play" class="video-player"></div>
-	
-	<script type="text/javascript">
-		// PlayerStarter.initSmvPlayer('{playlist -> f:format.raw()}');
-		PlayerStarter.initJwPlayer();
-	</script>
+	<ul>
+	<f:for each="{events}" as="event">
+		<f:debug>{event}</f:debug>
+		<li><f:link.action action="show" arguments="{hash:event.eventId}">
+			<f:format.date format="d-m-Y, H:i">@{event.startUnix}</f:format.date>:
+			{event.title}
+		</f:link.action></li>
+	</f:for>
+	</ul>
 </f:then>
 <f:else>
-	<p>No video-playlist found.</p>
+	<p>No recorded events found.</p>
 </f:else>
 </f:if>
 
