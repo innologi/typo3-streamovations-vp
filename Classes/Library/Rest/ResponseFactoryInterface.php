@@ -26,34 +26,31 @@ namespace Innologi\StreamovationsVp\Library\Rest;
  ***************************************************************/
 
 /**
- * TYPO3 REST Request
- *
- * Utilizes api provided by TYPO3 CMS directly
+ * REST Response Factory Interface
  *
  * @package streamovations_vp
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class Typo3Request extends AbstractRequest implements RequestInterface {
+interface ResponseFactoryInterface {
 
 	/**
-	 * Sends Request, returns response
+	 * Create Response objects out of a raw response, and return them in an array
 	 *
-	 * @param boolean $returnRawResponse
-	 * @return mixed
+	 * @param string $rawResponse
+	 * @param string $responseType
+	 * @param string $objectType
+	 * @return array
 	 */
-	public function send($returnRawResponse = FALSE) {
-		parent::send($returnRawResponse);
-		// @TODO can I use $report for some meaningful error message?
-		//$report = array();
-		$rawResponse = \TYPO3\CMS\Core\Utility\GeneralUtility::getUrl(
-			$this->requestUri->getRequestUri(), 0, $this->headers //, $report
-		);
+	public function createByRawResponse($rawResponse, $responseType, $objectType);
 
-		// @TODO what to return on errors?
-		return $returnRawResponse
-			? $rawResponse
-			: $this->mapResponseToObjects($rawResponse);
-	}
+	/**
+	 * Create Response
+	 *
+	 * @param array $properties
+	 * @param string $objectType
+	 * @return ResponseInterface
+	 */
+	public function create(array $properties = array(), $objectType);
 
 }

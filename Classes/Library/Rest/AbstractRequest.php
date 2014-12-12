@@ -33,11 +33,23 @@ namespace Innologi\StreamovationsVp\Library\Rest;
  *
  */
 abstract class AbstractRequest {
+	// @FIX rename this shit
+
+	/**
+	 * @var \TYPO3\CMS\Extbase\Object\ObjectManagerInterface
+	 * @inject
+	 */
+	protected $objectManager;
 
 	/**
 	 * @var integer
 	 */
 	protected $responseType = RequestInterface::RESPONSE_TYPE_JSON;
+
+	/**
+	 * @var string
+	 */
+	protected $responseObjectType;
 
 	/**
 	 * @var array
@@ -55,11 +67,13 @@ abstract class AbstractRequest {
 	 * Constructor
 	 *
 	 * @param RequestUriInterface $requestUri
+	 * @param string $responseObjectType
 	 * @param array $httpConfiguration
 	 * @return void
 	 */
-	public function __construct($requestUri, array $httpConfiguration = array()) {
+	public function __construct($requestUri, $responseObjectType, array $httpConfiguration = array()) {
 		$this->requestUri = $requestUri;
+		$this->responseObjectType = $responseObjectType;
 	}
 
 	/**
@@ -99,6 +113,19 @@ abstract class AbstractRequest {
 			: 'text/xml'
 		);
 		// implementation logic
+	}
+
+	/**
+	 * Maps a raw response to objects and returns them in an array
+	 *
+	 * @param string $rawResponse
+	 * @return array
+	 */
+	protected function mapResponseToObjects($rawResponse) {
+		/* @var $responseFactory ResponseFactoryInterface */
+		$responseFactory = $this->objectManager->get(__NAMESPACE__ . '\\ResponseFactoryInterface');
+
+		return $responseFactory->createByRawResponse($rawResponse, $this->responseType, $this->responseObjectType);
 	}
 
 }

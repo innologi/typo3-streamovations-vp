@@ -1,4 +1,10 @@
 config.tx_extbase.objects {
+	Innologi\StreamovationsVp\Library\Rest\ResponseFactoryInterface {
+		className = Innologi\StreamovationsVp\Library\Rest\ResponseFactory
+	}
+	Innologi\StreamovationsVp\Library\Rest\ResponseInterface {
+		className = Innologi\StreamovationsVp\Library\Rest\DynamicResponse
+	}
 	Innologi\StreamovationsVp\Library\Rest\RequestFactoryInterface {
 		className = Innologi\StreamovationsVp\Library\Rest\RequestFactory
 	}
@@ -23,8 +29,8 @@ plugin.tx_streamovationsvp {
 		features {
 			# only works for request types that support it
 			ignoreHttpConfiguration = 0
-			# get away without model objects
-			useResponseMapper = 0
+			# model-less fallback, for development purposes only
+			disableResponseMapper = 1
 		}
 		repository {
 			default.request {
@@ -36,9 +42,9 @@ plugin.tx_streamovationsvp {
 				request {
 					apiUri = api.php/sessions/date
 				}
-				#response.mappings {
-				#	eventId = eventId
-				#}
+				response.mapping {
+					objects = ROOT.events
+				}
 			}
 			playlist.request {
 				apiUri = api.php/playlists/pub

@@ -32,50 +32,12 @@ namespace Innologi\StreamovationsVp\Library\Rest;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class RequestFactory implements RequestFactoryInterface,\TYPO3\CMS\Core\SingletonInterface {
-
-	/**
-	 * @var \TYPO3\CMS\Extbase\Object\ObjectManagerInterface
-	 */
-	protected $objectManager;
-
-	/**
-	 * General REST request configuration
-	 *
-	 * @var array
-	 */
-	protected $configuration;
+class RequestFactory extends FactoryAbstract implements RequestFactoryInterface,\TYPO3\CMS\Core\SingletonInterface {
 
 	/**
 	 * @var string
 	 */
 	protected $httpConfKey = 'ignoreHttpConfiguration';
-
-	/**
-	 * Class constructor
-	 *
-	 * @param \TYPO3\CMS\Extbase\Object\ObjectManagerInterface $objectManager
-	 * @return void
-	 */
-	public function __construct(\TYPO3\CMS\Extbase\Object\ObjectManagerInterface $objectManager) {
-		// it's this once, or DI + an if on each create(), or DI + an entire init on each create()
-		$this->objectManager = $objectManager;
-		$this->initializeConfiguration();
-	}
-
-	/**
-	 * Initializes the configuration
-	 *
-	 * @return void
-	 */
-	protected function initializeConfiguration() {
-		/* @var $configurationManager \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface */
-		$configurationManager = $this->objectManager->get('TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManagerInterface');
-		$frameworkConfiguration = $configurationManager->getConfiguration(
-			\TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK
-		);
-		$this->configuration = $frameworkConfiguration['rest'];
-	}
 
 	/**
 	 * Create REST request object
