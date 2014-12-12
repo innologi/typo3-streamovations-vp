@@ -32,8 +32,7 @@ namespace Innologi\StreamovationsVp\Library\Rest;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-abstract class AbstractRequest {
-	// @FIX rename this shit
+abstract class RequestAbstract {
 
 	/**
 	 * @var \TYPO3\CMS\Extbase\Object\ObjectManagerInterface

@@ -34,7 +34,7 @@ namespace Innologi\StreamovationsVp\Library\Rest;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class Typo3Request extends AbstractRequest implements RequestInterface {
+class Typo3Request extends RequestAbstract implements RequestInterface {
 
 	/**
 	 * Sends Request, returns response

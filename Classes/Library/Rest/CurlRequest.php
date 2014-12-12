@@ -32,7 +32,7 @@ namespace Innologi\StreamovationsVp\Library\Rest;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class CurlRequest extends AbstractRequest implements RequestInterface {
+class CurlRequest extends RequestAbstract implements RequestInterface {
 	// @TODO finish implementation
 	/**
 	 * @var resource
