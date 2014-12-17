@@ -26,11 +26,11 @@ namespace Innologi\StreamovationsVp\Library\Rest;
  ***************************************************************/
 
 /**
- * REST Response Interface
+ * REST Magic Response
  *
  * This class is meant to be used only for proof-of-concepts.
  * It is a fallback once you disable the response-mapper via TS:
- * rest.features.disableResponseMapper = 0
+ * rest.features.disableResponseMapper = 1
  *
  * It allows you to use response objects in extbase and fluid
  * as if all their properties are defined and have getters and
@@ -40,20 +40,19 @@ namespace Innologi\StreamovationsVp\Library\Rest;
  * purpose, and possibly having to throw them away later on.
  *
  * The reason this is not meant for production-ready extensions,
- * is that you then lack the actual model classes which are
- * a specification / documentation themselves. Also: performance.
+ * is performance and lack of specified domain models.
  *
  * @package streamovations_vp
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class DynamicResponse implements ResponseInterface {
+class MagicResponse implements ResponseInterface {
 	// @TODO doc
 
-	protected $propertyMap;
+	protected $properties;
 
 	public function __construct(array $properties) {
-		$this->propertyMap = $properties;
+		$this->properties = $properties;
 	}
 
 	/**
@@ -66,18 +65,22 @@ class DynamicResponse implements ResponseInterface {
 	public function __call($methodName, $arguments) {
 		if (substr($methodName, 0, 3) === 'get' && strlen($methodName) > 4) {
 			$propertyName = lcfirst(substr($methodName, 3));
-			return isset($this->propertyMap[$propertyName])
-				? $this->propertyMap[$propertyName]
+			return isset($this->properties[$propertyName])
+				? $this->properties[$propertyName]
 				: NULL;
 		} elseif (substr($methodName, 0, 3) === 'set' && strlen($methodName) > 4) {
 			if (!isset($arguments[0])) {
 				// @TODO throw exception
 			}
 			$propertyName = lcfirst(substr($methodName, 3));
-			$this->propertyMap[$propertyName] = $arguments[0];
+			$this->properties[$propertyName] = $arguments[0];
 			return $this;
 		}
 		// @TODO throw exception
 		//throw new \TYPO3\CMS\Extbase\Persistence\Generic\Exception\UnsupportedMethodException('The method "' . $methodName . '" is not supported by the repository.', 1233180480);
+	}
+
+	public function __toString() {
+		return serialize($this);
 	}
 }

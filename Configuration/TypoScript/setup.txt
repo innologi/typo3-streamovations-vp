@@ -3,7 +3,7 @@ config.tx_extbase.objects {
 		className = Innologi\StreamovationsVp\Library\Rest\ResponseFactory
 	}
 	Innologi\StreamovationsVp\Library\Rest\ResponseInterface {
-		className = Innologi\StreamovationsVp\Library\Rest\DynamicResponse
+		className = Innologi\StreamovationsVp\Library\Rest\MagicResponse
 	}
 	Innologi\StreamovationsVp\Library\Rest\RequestFactoryInterface {
 		className = Innologi\StreamovationsVp\Library\Rest\RequestFactory
