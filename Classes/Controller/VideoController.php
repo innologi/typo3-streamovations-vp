@@ -47,6 +47,12 @@ class VideoController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 	protected $playlistRepository;
 
 	/**
+	 * @var \Innologi\StreamovationsVp\Domain\Repository\MeetingdataRepository
+	 * @inject
+	 */
+	protected $meetingdataRepository;
+
+	/**
 	 * Lists sessions
 	 *
 	 * @return void
@@ -81,7 +87,6 @@ class VideoController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 		}
 		// @TODO error handling of lack of proper dates?
 
-		// @FIX this includes private VODs
 		$this->view->assign('events', $events);
 	}
 
@@ -93,6 +98,11 @@ class VideoController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 	 */
 	public function showAction($hash) {
 		$playlist = $this->playlistRepository->findByHash($hash);
+		if ($playlist) {
+			// @TODO make meetingdata optional
+			$meetingdata = $this->meetingdataRepository->findByHash($hash);
+			$this->view->assign('meetingdata', $meetingdata);
+		}
 		$this->view->assign('playlist', $playlist);
 	}
 

@@ -13,11 +13,10 @@ plugin.tx_streamovationsvp {
 		storagePid =
 	}
 	settings {
-		# cat=plugin.tx_streamovationsvp//b; type=options[HTML5=0, JW Player=1, Streamovations Player=2]; label=Preferred Video Player: Choose which videoplayer to use. Note that the HTML5-setting falls back to JW Player on HTML5-incompatible browsers.
-		player = 1
-		# cat=plugin.tx_streamovationsvp//c; type=string; label=JW Player License Key: You need a valid license key for use of the Streamovations Player. Please note that your license key will be exposed to knowledgable viewers of the plugin, as is always the case with JW Player.
-		jwPlayerKey = 
-		#jwPlayerKey = s6GQRyTvZYpk7/2gJvWFeYg76NMr5KsifL0iEg==
+		# cat=plugin.tx_streamovationsvp//b; type=options[JW Player=1, Streamovations Player=2]; label=Preferred Video Player: Choose which videoplayer to use. If you wish to use the Streamovations player, please ask your contact at the Streamovations company about this, as it will require a JW player license key and additional player files.
+		player = 2
+		# cat=plugin.tx_streamovationsvp//c; type=string; label=JW Player License Key: You need a valid license key for use of the Streamovations Player. Please note that your license key will be exposed to knowledgable viewers of the plugin, as is always the case with JW Player. 
+		jwPlayerKey = s6GQRyTvZYpk7/2gJvWFeYg76NMr5KsifL0iEg==
 	}
 	javascript {
 		# cat=plugin.tx_streamovationsvp//d; type=boolean; label=Include jQuery Library: You can disable this if a compatible jQuery-version is already included on your site
@@ -30,6 +29,6 @@ plugin.tx_streamovationsvp {
 		# cat=plugin.tx_streamovationsvp//g; type=string; label=Streamovations Player Library Location: This library file is not included. If you wish to use the Streamovations Player, inquire at your contact at Streamovations BVBA.
 		smvPlayerLib = EXT:streamovations_vp/Resources/Public/JavaScript/smvPlayer/smp.js
 		
-		starterFile = EXT:streamovations_vp/Resources/Private/JavaScript/PlayerStarter.js
+		starterFile = EXT:streamovations_vp/Resources/Private/JavaScript/SVPS.js
 	}
 }

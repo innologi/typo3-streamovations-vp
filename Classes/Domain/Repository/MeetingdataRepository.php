@@ -44,9 +44,10 @@ class MeetingdataRepository extends \Innologi\StreamovationsVp\Library\Rest\Repo
 	 * @return array
 	 */
 	public function findByHash($hash) {
-		return $this->createRequest()
+		$response = $this->createRequest()
 			->addArgument('session', $hash)
-			->send(TRUE);
+			->send();
+		return $response[0]; // @FIX this should actually be solved @ mapping config
 	}
 
 }

@@ -39,18 +39,40 @@ plugin.tx_streamovationsvp {
 				apiUri = api.php
 			}
 			event {
-				request {
-					apiUri = api.php/sessions/date
-				}
-				response.mapping {
-					objects = ROOT.events
+				request.apiUri = api.php/sessions/date
+				response {
+					container = ROOT.events
 				}
 			}
 			playlist.request {
 				apiUri = api.php/playlists/pub
 			}
-			meetingdata.request {
-				apiUri = api.php/meetingdata
+			meetingdata {
+				request.apiUri = api.php/meetingdata
+				response {
+					property {
+						timestamps {
+							mappings {
+								10 {
+									name = topicTimeline
+									if {
+										field = metadataType
+										value = topic
+									}
+									else {
+										sendToMapping = 20
+									}
+								}
+								20 {
+									name = speakerTimeline
+								}
+							}
+							remove = 1
+						}
+						topicTimeline.json = 1
+						speakerTimeline.json = 1
+					}
+				}
 			}
 		}
 	}
@@ -88,16 +110,9 @@ plugin.tx_streamovationsvp {
 			10.marks {
 				JWPLAYER_KEY = TEXT
 				JWPLAYER_KEY.value = {$plugin.tx_streamovationsvp.settings.jwPlayerKey}
-				SMVPLAYER_JSON = TEXT
-				SMVPLAYER_JSON.value = 
+				PLAYER_TYPE = TEXT
+				PLAYER_TYPE.value = {$plugin.tx_streamovationsvp.settings.player} 
 			}
-			#20 = TEMPLATE
-			#20.template = FILE
-			#20.template.file = {$plugin.tx_streamovationsvp.javascript.smvPlayerLib}
-			#20.marks {
-			#	SCRIPT_PATH = TEXT
-			#	SCRIPT_PATH.value = {$plugin.tx_streamovationsvp.javascript.smvPlayerDir}
-			#}
 		}
 	}
 }
@@ -116,35 +131,23 @@ page.includeJSlibs.streamovationsvp_smvPlayer < plugin.tx_streamovationsvp.javas
 [global]
 
 plugin.tx_streamovationsvp._CSS_DEFAULT_STYLE (
-	textarea.f3-form-error {
-		background-color:#FF9F9F;
-		border: 1px #FF0000 solid;
+	
+	.tx-streamovations-vp .topics .topic {
+		background-color: #eee;
+		display:inline-block;
 	}
-
-	input.f3-form-error {
-		background-color:#FF9F9F;
-		border: 1px #FF0000 solid;
+	.tx-streamovations-vp .topics .topic.active {
+		color:#f00;
+		background-color:#fff;
 	}
-
-	.tx-streamovations-vp table {
-		border-collapse:separate;
-		border-spacing:10px;
+	
+	.tx-streamovations-vp .speakers .speaker {
+		opacity:0.5;
+		background-color:#eee;
 	}
-
-	.tx-streamovations-vp table th {
-		font-weight:bold;
+	.tx-streamovations-vp .speakers .speaker.active {
+		opacity:1;
+		color:#f00;
+		background-color:#fff;
 	}
-
-	.tx-streamovations-vp table td {
-		vertical-align:top;
-	}
-
-	.typo3-messages .message-error {
-		color:red;
-	}
-
-	.typo3-messages .message-ok {
-		color:green;
-	}
-
 )

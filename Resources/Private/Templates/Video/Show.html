@@ -1,15 +1,52 @@
 <f:layout name="Default" />
 
+<!--
+	@TODO add a back button
+	@TODO make types of meetingdata optional
+	@TODO replace the error message with proper error handling
+	@TODO put stuff in partials
+-->
+
 <f:section name="main">
 
 <f:if condition="{playlist}">
 <f:then>
 	<div id="tx-streamovations-vp-play" class="video-player"></div>
 	
-	<script type="text/javascript">
-		// PlayerStarter.initSmvPlayer('{playlist -> f:format.raw()}');
-		PlayerStarter.initJwPlayer();
+	<script type="application/json" id="tx-streamovations-vp-playerdata">
+		{playlist -> f:format.raw()}
 	</script>
+	
+	<f:if condition="{meetingdata.topics}">
+		<ul class="topics">
+			<f:for each="{meetingdata.topics}" as="topic">
+				<li><a href="#" class="topic"  data-topic="{topic.id}">
+					<p>{topic.title}</p>
+					<p>{topic.description}</p>
+				</a></li>
+			</f:for>
+		</ul>
+	</f:if>
+	
+	<f:if condition="{meetingdata.speakers}">
+		<ul class="speakers">
+			<f:for each="{meetingdata.speakers}" as="speaker">
+				<li class="speaker" data-speaker="{speaker.id}">{speaker.title}</li>
+			</f:for>
+		</ul>
+	</f:if>
+	
+	<f:if condition="{meetingdata.topicTimeline}">
+		<script type="application/json" id="tx-streamovations-vp-topictimeline">
+			{meetingdata.topicTimeline -> f:format.raw()}
+		</script>
+	</f:if>
+	<f:if condition="{meetingdata.speakerTimeline}">
+		<script type="application/json" id="tx-streamovations-vp-speakertimeline">
+			{meetingdata.speakerTimeline -> f:format.raw()}
+		</script>
+	</f:if>
+	
 </f:then>
 <f:else>
 	<p>No video-playlist found.</p>
