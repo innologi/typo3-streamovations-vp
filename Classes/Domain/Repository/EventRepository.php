@@ -145,7 +145,7 @@ class EventRepository extends \Innologi\StreamovationsVp\Library\Rest\Repository
 		if ($to !== NULL) {
 			$request->addArgument('through', $to->format(self::FORMAT_DATETIME));
 		}
-		return $this->addSharedArguments($request)->send(TRUE);
+		return $this->addSharedArguments($request)->send();
 	}
 
 	/**
