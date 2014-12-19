@@ -23,7 +23,7 @@ var SVPS = (function($) {
 
 		// wrapper to substitute the actual player object
 		player: null,
-		// wrapper to substitute jwplayer object for
+		// wrapper to substitute jwplayer object for jwplayer-only calls
 		jw: null,
 
 		// #@LOW make these ids/class configurable?
@@ -163,8 +163,10 @@ var SVPS = (function($) {
 				this.player = smvplayer(this.select.player);
 				this.player.init(jsonData);
 				this.jw = jwplayer(this.select.player);
-				// smvplayer calls jwplayer.remove() on moving in the playlist, which clears all event handlers
-				// so we need to provide a construct which enables us to re-attach them, see below
+
+				// Smvplayer calls jwplayer.remove() on moving in the playlist, which clears the entire jwplayer
+				// instance, including event handlers, so we need a construct that reassigns this.jw and
+				// all of the event handler callbacks. This is what reset() is for.
 				this.player.onTime = function(callback) {
 					_this.callbacks.onTime.push(callback);
 					_this.jw.onTime(callback);
@@ -177,23 +179,13 @@ var SVPS = (function($) {
 				this.orig.player.next = this.player.next;
 				this.player.next = function() {
 					_this.orig.player.next();
-					// if next() was succesful, onReady will be called
-					_this.jw = jwplayer(_this.select.player);
-					_this.jw.onReady(function(e) {
-						_this.active.playlist++;
-						_this.reattachEventCallbacks();
-					});
+					_this.reset();
 				}
 				// overrule player.previous()
 				this.orig.player.previous = this.player.previous;
 				this.player.previous = function() {
 					_this.orig.player.previous();
-					// if previous() was succesful, onReady will be called
-					_this.jw = jwplayer(_this.select.player);
-					_this.jw.onReady(function(e) {
-						_this.active.playlist--;
-						_this.reattachEventCallbacks();
-					});
+					_this.reset();
 				}
 			}
 		},
@@ -230,7 +222,7 @@ var SVPS = (function($) {
 
 		// prepare all eventhandlers
 		initEventHandlers: function() {
-			// set time on topic clicks
+			// set jump event on topic clicks
 			$('.' + this.select.container + ' .topics').on('click', '.topic', function() {
 				_this.jumpToTopic(
 					$(this).attr('data-topic')
@@ -265,6 +257,7 @@ var SVPS = (function($) {
 
 		// processes timeline data to create the proper event handler callbacks
 		createTimelineEventHandlers: function(elemType, timeline, pushToIdMap) {
+			// @FIX if a topic is active, and the player goes to next(), the topic is not deactivated. Is this right?
 			for (var i=0; i<timeline.length; i++) {
 				var time = timeline[i],
 					j = i+1;
@@ -276,7 +269,7 @@ var SVPS = (function($) {
 				if (pushToIdMap) {
 					this.idMap[elemType][time.id] = {
 						playlist: this.idMap.playlist[time.streamfileId],
-						time: Math.floor(time.relativeTime / 1000)
+						time: time.start
 					}
 				}
 
@@ -317,6 +310,20 @@ var SVPS = (function($) {
 			})(elemType));
 		},
 
+		// needs to be called when the jwplayer instance was removed and a new instance created
+		reset: function() {
+			this.jw = jwplayer(this.select.player);
+			// if really new, an onReady will be fired
+			this.jw.onReady(function(e) {
+				// @FIX only smvplayer has getTimeline()
+				_this.active.playlist = _this.player.getTimeline().currentItem;
+				_this.deactivateElement('speaker');
+				_this.deactivateElement('topic');
+				// all event handler callbacks need to be re-attached
+				_this.reattachEventCallbacks();
+			});
+		},
+
 		// reattach callbacks on event handlers, if stored in respective arrays
 		reattachEventCallbacks: function() {
 			for (var c in this.callbacks.onTime) {
@@ -344,12 +351,10 @@ var SVPS = (function($) {
 
 		// jump to the correct topic after finding its playlist item
 		jumpToTopic: function(id) {
-			// @TODO this is entirely smvplayer dependent, so what to do with jwplayer?
-			var timeline = this.player.getTimeline(),
-				topic = this.idMap.topic[id];
+			var topic = this.idMap.topic[id];
 			if (topic !== undefined) {
-				var moveAction = topic.playlist - timeline.currentItem;
-				// @TODO now using the smv api as provided, but can't we directly load a playlistitem from smv into the jw?
+				// @TODO this is entirely smvplayer dependent, so what to do with jwplayer?
+				var moveAction = topic.playlist - this.player.getTimeline().currentItem;
 				if (moveAction > 0) {
 					this.recursiveSeekInNext(0, moveAction, topic.time);
 				} else if(moveAction < 0) {
@@ -380,27 +385,27 @@ var SVPS = (function($) {
 		},
 
 		// recursively call previous() and then seek()
-		recursiveSeekInPrevious: function(current, limit, time) {
+		recursiveSeekInPrevious: function(current, limit, seekTime) {
 			this.player.previous();
 			current--;
 			if (current > limit) {
 				// timeout prevents flash from crashing
 				this.jw.onReady(function (e) {
 					setTimeout(function() {
-						_this.recursiveSeekInPrevious(current, limit, time);
+						_this.recursiveSeekInPrevious(current, limit, seekTime);
 					}, 50);
 				});
 			} else {
-				this.applySeekOnPlay(time);
+				this.applySeekOnPlay(seekTime);
 			}
 		},
 
 		// applies a seek() on the onPlay event handler, useful when player isn't playing
-		applySeekOnPlay: function(time) {
+		applySeekOnPlay: function(seekTime) {
 			this.seekOnPlay = true;
 			this.jw.onPlay(function (e) {
 				if (_this.seekOnPlay) {
-					_this.player.seek(time);
+					_this.player.seek(seekTime);
 					_this.seekOnPlay = false;
 				}
 			});
