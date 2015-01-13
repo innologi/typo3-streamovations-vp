@@ -3,15 +3,24 @@
 <f:section name="main">
 <f:if condition="{events}">
 <f:then>
-	<ul>
-	<f:for each="{events}" as="event">
-		<f:debug>{event}</f:debug>
-		<li><f:link.action action="show" arguments="{hash:event.eventId}">
-			<f:format.date format="d-m-Y, H:i">@{event.startUnix}</f:format.date>:
-			{event.title}
-		</f:link.action></li>
-	</f:for>
-	</ul>
+	<table class="videos">
+		<caption>Streaming video's van vergaderingen</caption>
+		<tr>
+			<th scope="col">Vergadering</th>
+			<th scope="col">Tijdstip</th>
+		</tr>
+		
+		<f:for each="{events}" as="event">
+			<tr>	
+				<td>
+					<f:link.action action="show" arguments="{hash:event.eventId}">{event.title}</f:link.action>
+				</td>
+				<td>
+					<f:format.date format="d-m-Y, H:i">@{event.startUnix}</f:format.date>
+				</td>
+			</tr>
+		</f:for>
+	</table>
 </f:then>
 <f:else>
 	<p>No recorded events found.</p>
