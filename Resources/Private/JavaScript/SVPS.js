@@ -360,7 +360,13 @@ var SVPS = (function($) {
 				} else if(moveAction < 0) {
 					this.recursiveSeekInPrevious(0, moveAction, topic.time);
 				} else {
-					this.player.seek(topic.time);
+					if (this.jw.getState() === 'IDLE') {
+						// not all relevant onSeek events will trigger if player hasn't started
+						this.applySeekOnPlay(topic.time);
+						this.jw.play(true);
+					} else {
+						this.player.seek(topic.time);
+					}
 				}
 			} else {
 				// @LOW throw error?
