@@ -223,9 +223,9 @@ var SVPS = (function($) {
 		// prepare all eventhandlers
 		initEventHandlers: function() {
 			// set jump event on topic clicks
-			$('.' + this.select.container + ' .topics').on('click', '.topic', function() {
+			$('.' + this.select.container + ' .topics').on('click', '.topic .topic-link', function() {
 				_this.jumpToTopic(
-					$(this).attr('data-topic')
+					$(this).parent('.topic').attr('data-topic')
 				);
 				return false;
 			});

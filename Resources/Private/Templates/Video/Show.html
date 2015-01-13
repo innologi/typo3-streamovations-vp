@@ -1,3 +1,4 @@
+{namespace s=Innologi\StreamovationsVp\ViewHelpers}
 <f:layout name="Default" />
 
 <!--
@@ -5,37 +6,55 @@
 	@TODO make types of meetingdata optional
 	@TODO replace the error message with proper error handling
 	@TODO put stuff in partials
+	@TODO language in llang
 -->
 
 <f:section name="main">
 
 <f:if condition="{playlist}">
 <f:then>
+	
+	<f:if condition="{meetingdata.topics}">
+		<div class="topics">
+			<p class="header">Agendapunten</p>
+			<ol>
+				<f:for each="{meetingdata.topics}" as="topic">
+					<li class="topic"  data-topic="{topic.id}">
+						<a href="#" class="topic-link" title="Spring naar dit agendapunt in de video">{topic.title}</a>
+						<span class="topic-description">{topic.description -> f:format.raw()}</span>
+					</li>
+				</f:for>
+			</ol>
+		</div>
+	</f:if>
+	
 	<div id="tx-streamovations-vp-play" class="video-player"></div>
+	
+	<f:if condition="{meetingdata.speakers}">
+		<div class="speakers">
+			<ul>
+				<f:for each="{meetingdata.speakers}" as="speaker">
+					<li class="speaker" data-speaker="{speaker.id}">
+						<p class="header">Spreker</p>
+						<f:alias map="{speakerAvatar: '{settings.speakers.imgDir}{speaker.photo}'}">
+							<f:image
+								class="speaker-avatar"
+								src="{s:file.exists(file: speakerAvatar, then: speakerAvatar, else: settings.speakers.imgDefault)}"
+								height="{settings.speakers.imgHeight}"
+								width="{settings.speakers.imgWidth}"
+								alt="Speaker Profile Image"
+							/>
+						</f:alias>
+						<div class="speaker-data">{speaker.firstname} {speaker.lastname}</div>
+					</li>
+				</f:for>
+			</ul>
+		</div>
+	</f:if>
 	
 	<script type="application/json" id="tx-streamovations-vp-playerdata">
 		{playlist -> f:format.raw()}
 	</script>
-	
-	<f:if condition="{meetingdata.topics}">
-		<ul class="topics">
-			<f:for each="{meetingdata.topics}" as="topic">
-				<li><a href="#" class="topic"  data-topic="{topic.id}">
-					<p>{topic.title}</p>
-					<p>{topic.description}</p>
-				</a></li>
-			</f:for>
-		</ul>
-	</f:if>
-	
-	<f:if condition="{meetingdata.speakers}">
-		<ul class="speakers">
-			<f:for each="{meetingdata.speakers}" as="speaker">
-				<li class="speaker" data-speaker="{speaker.id}">{speaker.title}</li>
-			</f:for>
-		</ul>
-	</f:if>
-	
 	<f:if condition="{meetingdata.topicTimeline}">
 		<script type="application/json" id="tx-streamovations-vp-topictimeline">
 			{meetingdata.topicTimeline -> f:format.raw()}

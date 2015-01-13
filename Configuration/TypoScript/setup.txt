@@ -78,12 +78,22 @@ plugin.tx_streamovationsvp {
 	}
 	settings {
 		player = {$plugin.tx_streamovationsvp.settings.player}
+		topics {
+			enable = 1
+		}
+		speakers {
+			enable = 1
+			#imgDir = EXT:streamovations_vp/Resources/Public/Image/
+			imgDir = fileadmin/streamovations/
+			imgHeight = 150
+			ImgWidth = 150
+			imgDefault = EXT:streamovations_vp/Resources/Public/Image/speaker-avatar.jpg
+		}
 		event {
 			# supported formats: http://php.net/manual/en/datetime.formats.php
 			dateFrom = 2014-09-29
 			dateTo = 2014-12-11
 			dateAt = 2014-12-10
-			
 			category =
 			subCategory =
 			tags =
@@ -131,23 +141,72 @@ page.includeJSlibs.streamovationsvp_smvPlayer < plugin.tx_streamovationsvp.javas
 [global]
 
 plugin.tx_streamovationsvp._CSS_DEFAULT_STYLE (
+
+	.tx-streamovations-vp {
+		position:relative;
+		width:940px;
+	}
+	.tx-streamovations-vp table th {
+		text-align:left;
+		font-weight:bold;
+	}
+	.tx-streamovations-vp table caption {
+		display:none;
+	}
+	.tx-streamovations-vp ul {
+		margin:0 !important;
+		padding:0 !important;
+	}
+	.tx-streamovations-vp ul li {
+		list-style:none;
+	}
 	
-	.tx-streamovations-vp .topics .topic {
-		background-color: #eee;
+	.tx-streamovations-vp .video-player {
+		width:600px;
+		clear:none;
+	}
+	
+	.tx-streamovations-vp .header {
+		font-size:1.1rem;
+		font-weight:bold;
+	}
+	
+	.tx-streamovations-vp .topics {
+		float:right;
+		width:340px;
+		font-size:.9rem;
+	}
+	.tx-streamovations-vp .topics .header {
+		margin:0 0 0 15px;
+	}
+	.tx-streamovations-vp .topic,
+	.tx-streamovations-vp .topic-link {
+		padding:2px;
+		color:#000;
+		text-decoration:none;
+	}
+	.tx-streamovations-vp .topic.active,
+	.tx-streamovations-vp .topic.active .topic-link {
+		background-color:#e2eeff;
+		font-weight:bold;
+	}
+	
+	.tx-streamovations-vp .topic-link:hover,
+	.tx-streamovations-vp .topic-link:focus {
+		text-decoration:underline;
+	}
+	
+	.tx-streamovations-vp .speakers {
+		width:570px;
+		padding:0 15px;
+	}
+	.tx-streamovations-vp .speaker {
+		display:none;
+	}
+	.tx-streamovations-vp .speaker.active {
 		display:inline-block;
 	}
-	.tx-streamovations-vp .topics .topic.active {
-		color:#f00;
-		background-color:#fff;
+	.tx-streamovations-vp .speaker-data {
+		margin-top:5px;
 	}
-	
-	.tx-streamovations-vp .speakers .speaker {
-		opacity:0.5;
-		background-color:#eee;
-	}
-	.tx-streamovations-vp .speakers .speaker.active {
-		opacity:1;
-		color:#f00;
-		background-color:#fff;
-	}
-)
+)	
