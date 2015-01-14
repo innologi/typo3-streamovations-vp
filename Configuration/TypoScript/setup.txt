@@ -106,11 +106,14 @@ plugin.tx_streamovationsvp {
 	javascript {
 		jQuery.external = 0
 		jQuery = {$plugin.tx_streamovationsvp.javascript.jqueryLib}
-		# jQuery.disableCompression = 1
 		jwPlayer.external = 0
 		jwPlayer = {$plugin.tx_streamovationsvp.javascript.jwPlayerLib}
+		# this sucks, but if not loaded from original location, it can't find its dependencies out of the box
+		jwPlayer.disableCompression = 1
 		smvPlayer.external = 0
 		smvPlayer = {$plugin.tx_streamovationsvp.javascript.smvPlayerLib}
+		# same as jwplayer
+		smvPlayer.disableCompression = 1
 		
 		inlineJS = COA
 		inlineJS {
