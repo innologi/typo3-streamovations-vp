@@ -172,15 +172,13 @@ plugin.tx_streamovationsvp._CSS_DEFAULT_STYLE (
 	.tx-streamovations-vp .header {
 		font-size:1.1rem;
 		font-weight:bold;
+		margin:0 0 1em;
 	}
 	
 	.tx-streamovations-vp .topics {
 		float:right;
-		width:340px;
+		width:325px;
 		font-size:.9rem;
-	}
-	.tx-streamovations-vp .topics .header {
-		margin:0 0 0 15px;
 	}
 	.tx-streamovations-vp .topic,
 	.tx-streamovations-vp .topic-link {
@@ -201,15 +199,23 @@ plugin.tx_streamovationsvp._CSS_DEFAULT_STYLE (
 	
 	.tx-streamovations-vp .speakers {
 		width:570px;
-		padding:0 15px;
+		height:220px;
+		padding:15px 0;
 	}
 	.tx-streamovations-vp .speaker {
 		display:none;
+		padding:5px;
 	}
 	.tx-streamovations-vp .speaker.active {
 		display:inline-block;
 	}
 	.tx-streamovations-vp .speaker-data {
 		margin-top:5px;
+		font-size:.8rem;
+		font-family:Verdana,Arial,sans-serif;
+		text-align:center;
+	}
+	.tx-streamovations-vp .speaker-avatar {
+		border:1px solid #888;
 	}
 )	
