@@ -35,11 +35,11 @@ namespace Innologi\StreamovationsVp\Library\Rest;
 class RequestUri implements RequestUriInterface {
 
 	/**
-	 * Protocol-portion of the request URI, e.g. http or https
+	 * Scheme-portion of the request URI, e.g. http or https
 	 *
 	 * @var string
 	 */
-	protected $protocol;
+	protected $scheme;
 
 	/**
 	 * Base-portion of the request URI
@@ -77,23 +77,23 @@ class RequestUri implements RequestUriInterface {
 	protected $isModified = TRUE;
 
 	/**
-	 * Sets request protocol
+	 * Sets request scheme
 	 *
-	 * @param string $protocol
+	 * @param string $scheme
 	 * @return RequestUriInterface
 	 */
-	public function setProtocol($protocol) {
-		$this->protocol = $this->processPropertyChange($protocol);
+	public function setScheme($scheme) {
+		$this->scheme = $this->processPropertyChange($scheme);
 		return $this;
 	}
 
 	/**
-	 * Returns request protocol
+	 * Returns request scheme
 	 *
 	 * @return string
 	 */
-	public function getProtocol() {
-		return $this->protocol;
+	public function getScheme() {
+		return $this->scheme;
 	}
 
 	/**
@@ -168,7 +168,7 @@ class RequestUri implements RequestUriInterface {
 	 * @return void
 	 */
 	protected function buildRequestUri() {
-		$this->requestUri = $this->protocol . '://' .
+		$this->requestUri = $this->scheme . '://' .
 			$this->baseUri . '/' .
 			$this->apiUri . '/';
 		foreach ($this->arguments as $parameter => $value) {

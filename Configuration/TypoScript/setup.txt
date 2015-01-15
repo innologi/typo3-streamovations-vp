@@ -34,7 +34,7 @@ plugin.tx_streamovationsvp {
 		}
 		repository {
 			default.request {
-				protocol = http
+				scheme = http
 				baseUri = digiraad.heemskerk.nl
 				apiUri = api.php
 			}

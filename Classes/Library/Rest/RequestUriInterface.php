@@ -35,19 +35,19 @@ namespace Innologi\StreamovationsVp\Library\Rest;
 interface RequestUriInterface {
 
 	/**
-	 * Sets request protocol
+	 * Sets request scheme
 	 *
-	 * @param string $protocol
+	 * @param string $scheme
 	 * @return RequestUriInterface
 	 */
-	public function setProtocol($protocol);
+	public function setScheme($scheme);
 
 	/**
-	 * Returns request protocol
+	 * Returns request scheme
 	 *
 	 * @return string
 	 */
-	public function getProtocol();
+	public function getScheme();
 
 	/**
 	 * Sets request base URI

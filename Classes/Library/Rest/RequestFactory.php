@@ -82,7 +82,7 @@ class RequestFactory extends FactoryAbstract implements RequestFactoryInterface,
 		);
 		$requestUri
 			// no isset checks here, if they don't exist errors occur anyway
-			->setProtocol($settings['protocol'])
+			->setScheme($settings['scheme'])
 			->setBaseUri($settings['baseUri'])
 			->setApiUri($settings['apiUri']);
 
