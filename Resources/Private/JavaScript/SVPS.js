@@ -257,7 +257,6 @@ var SVPS = (function($) {
 
 		// processes timeline data to create the proper event handler callbacks
 		createTimelineEventHandlers: function(elemType, timeline, pushToIdMap) {
-			// @FIX if a topic is active, and the player goes to next(), the topic is not deactivated. Is this right?
 			for (var i=0; i<timeline.length; i++) {
 				var time = timeline[i],
 					j = i+1;
