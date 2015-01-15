@@ -81,6 +81,7 @@ class VideoController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 				$this->settings['event']['dateTo'] = strtotime($this->settings['event']['dateTo']);
 				$dateEnd->setTimestamp((int)$this->settings['event']['dateTo']);
 			} else {
+				// @LOW should we set "now" as default value if dateFrom exists?
 				$dateEnd = NULL;
 			}
 			$events = $this->eventRepository->findBetweenDateTimeRange($dateTime, $dateEnd);
@@ -112,10 +113,14 @@ class VideoController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 	 * @return void
 	 */
 	public function presetShowAction() {
-		$arguments = array(
-			'hash' => $this->settings['playlist']['hash']
-		);
-		$this->forward('show', NULL, NULL, $arguments);
+		if (isset($this->settings['playlist']['hash'][0])) {
+			$arguments = array(
+				'hash' => $this->settings['playlist']['hash']
+			);
+			$this->forward('show', NULL, NULL, $arguments);
+		} else {
+			// @TODO report no stream found on hash
+		}
 	}
 
 	/**
@@ -124,16 +129,21 @@ class VideoController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 	 * @return void
 	 */
 	public function liveStreamAction() {
-		$sessions = $this->eventRepository
+		$events = $this->eventRepository
 			->setCategory($this->settings['session']['category'])
 			->setSubCategory($this->settings['session']['subCategory'])
 			->setTags($this->settings['session']['tags'])
 			->findAtDateTime(new \DateTime());
 
-		$arguments = array(
-			'hash' => $sessions[0]
-		);
-		$this->forward('show', NULL, NULL, $arguments);
+		if (isset($events[0])) {
+			$arguments = array(
+				// @TODO try/catch would be better
+				'hash' => $events[0]->getEventId()
+			);
+			$this->forward('show', NULL, NULL, $arguments);
+		} else {
+			// @TODO report no livestream event
+		}
 	}
 
 }

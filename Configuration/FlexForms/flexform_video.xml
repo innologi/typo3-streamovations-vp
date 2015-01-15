@@ -1,0 +1,41 @@
+<T3DataStructure>
+ <meta>
+ 	<langDisable>1</langDisable>
+ </meta>
+ <sheets>
+  <sDEF>
+   <ROOT>
+    <TCEforms>
+    	<sheetTitle>LLL:EXT:appointments/Resources/Private/Language/locallang_be.xml:tx_appointments_flexform_sheet_sDEF</sheetTitle>
+    </TCEforms>
+    <type>array</type>
+    <el>
+		<switchableControllerActions>
+			<TCEforms>
+				<label>Type</label>
+				<config>
+					<type>select</type>
+					<items type="array">
+						<numIndex index="0" type="array">
+							<numIndex index="0">List</numIndex>
+							<numIndex index="1">Video->list;Video->show</numIndex>
+						</numIndex>
+						<numIndex index="1" type="array">
+							<numIndex index="0">Single</numIndex>
+							<numIndex index="1">Video->presetShow</numIndex>
+						</numIndex>
+						<numIndex index="2" type="array">
+							<numIndex index="0">LIVE-stream</numIndex>
+							<numIndex index="1">Video->liveStream</numIndex>
+						</numIndex>
+					</items>
+					<maxitems>1</maxitems>
+					<size>1</size>
+				</config>
+			</TCEforms>
+		</switchableControllerActions>
+    </el>
+   </ROOT>
+  </sDEF>
+ </sheets>
+</T3DataStructure>

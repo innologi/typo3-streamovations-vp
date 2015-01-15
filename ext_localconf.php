@@ -7,11 +7,11 @@ if (!defined('TYPO3_MODE')) {
 	'Innologi.' . $_EXTKEY,
 	'Video',
 	array(
-		'Video' => 'list, show',
-		
+		'Video' => 'list, presetShow, show, liveStream',
 	),
 	// non-cacheable actions
 	array(
-		
+		// @TODO need to decide which ones get cached and which ones not
+		'Video' => 'list, presetShow, show, liveStream',
 	)
 );

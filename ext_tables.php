@@ -6,7 +6,7 @@ if (!defined('TYPO3_MODE')) {
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
 	$_EXTKEY,
 	'Video',
-	'Video'
+	'Streamovations Video Player'
 );
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile(
@@ -14,3 +14,16 @@ if (!defined('TYPO3_MODE')) {
 	'Configuration/TypoScript',
 	'Streamovations Video Player'
 );
+
+$pluginSignature = str_replace('_','',$_EXTKEY) . '_video';
+$TCA['tt_content']['types']['list']['subtypes_addlist'][$pluginSignature] = 'pi_flexform';
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue(
+	$pluginSignature,
+	'FILE:EXT:' . $_EXTKEY . '/Configuration/FlexForms/flexform_video.xml'
+);
+// @TODO add CSH for flexform
+#\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr(
+#	'tt_content.pi_flexform.'.$pluginSignature.'.list',
+#	'EXT:'.$_EXTKEY.'/Resources/Private/Language/locallang_csh_flexform_video.xml'
+#);
+// AND/OR? in flexform add <cshFile>LLL:EXT:<extkey>/Resources/Private/Language/locallang_csh_flexform_video.xml</cshFile>
