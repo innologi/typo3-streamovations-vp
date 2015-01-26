@@ -3,7 +3,7 @@
  * Streamovations Video Player Starter (SVPS)
  * ------------------------------------------
  *
- * Please note that ALL properties are for internal use only,
+ * Please note that MOST properties are for internal use only,
  * any property that is configurable will have an respective
  * TypoScript setting.
  *
@@ -25,6 +25,8 @@ var SVPS = (function($) {
 		player: null,
 		// wrapper to substitute jwplayer object for jwplayer-only calls
 		jw: null,
+		// consistent property determining if current item is live or not (vod)
+		isLiveStream: false,
 
 		// #@LOW make these ids/class configurable?
 		// selector strings
@@ -110,6 +112,10 @@ var SVPS = (function($) {
 			}
 
 			this.initEventHandlers();
+			// @TODO re-enable condition
+			//if (this.isLiveStream) {
+				this.initPolling();
+			//}
 			return true;
 		},
 
@@ -159,6 +165,10 @@ var SVPS = (function($) {
 				if (jsonData.hasOwnProperty('playlist')) {
 					this.pushPlaylistToIdMap(jsonData.playlist);
 				}
+				if (jsonData.hasOwnProperty('application')) {
+					this.isLiveStream = jsonData.application === 'rtplive';
+				}
+
 
 				this.player = smvplayer(this.select.player);
 				this.player.init(jsonData);
@@ -228,6 +238,7 @@ var SVPS = (function($) {
 					$(this).parent('.topic').attr('data-topic')
 				);
 				return false;
+				// @TODO e.preventDefault(); ?
 			});
 
 			// automatic timeline events need JSON parsing
@@ -419,8 +430,22 @@ var SVPS = (function($) {
 		// find out if time is valid for current playlist item
 		timeIsOnPlaylist: function(t) {
 			return this.idMap.playlist[t.streamfileId] === this.active.playlist;
-		}
+		},
 
+		// initialize polling function
+		initPolling: function() {
+			// #@TODO allow disabling?
+			// #@TODO test these kind of errors btw
+			if (!SvpPolling) {
+				alert('###ERROR_NO_POLLING###');
+				return false;
+			}
+			var interval = parseInt('###POLLING_INTERVAL###') * 1000,
+				pid = parseInt('###CURRENT_PAGE_ID###'),
+				hash = '###HASH###';
+
+			SvpPolling.init(hash, pid, interval);
+		}
 	}
 
 	// initialize when document is loaded

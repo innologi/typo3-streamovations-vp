@@ -117,6 +117,7 @@ plugin.tx_streamovationsvp {
 		
 		inlineJS = COA
 		inlineJS {
+			# SvpStarter
 			10 = TEMPLATE
 			10.template = FILE
 			10.template.file = {$plugin.tx_streamovationsvp.javascript.starterFile}
@@ -125,7 +126,16 @@ plugin.tx_streamovationsvp {
 				JWPLAYER_KEY.value = {$plugin.tx_streamovationsvp.settings.jwPlayerKey}
 				PLAYER_TYPE = TEXT
 				PLAYER_TYPE.value = {$plugin.tx_streamovationsvp.settings.player}
+				POLLING_INTERVAL = TEXT
+				POLLING_INTERVAL.value = {$plugin.tx_streamovationsvp.settings.pollingInterval}
+				CURRENT_PAGE_ID = TEXT
+				CURRENT_PAGE_ID.data = TSFE:id
+				HASH = TEXT
+				HASH.data = GP:tx_streamovationsvp_video|hash
 			}
+			# SvpPolling
+			20 = FILE
+			20.file = {$plugin.tx_streamovationsvp.javascript.pollingFile}
 		}
 	}
 }
