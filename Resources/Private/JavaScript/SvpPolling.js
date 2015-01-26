@@ -28,8 +28,6 @@ var SvpPolling = (function($) {
 				failCount = 0;
 			}
 		});
-		// @TODO remove this
-		console.log('SVPP | Ping');
 	}
 
 	// @TODO when everything works, divide internal and external methods in SVPS as well
