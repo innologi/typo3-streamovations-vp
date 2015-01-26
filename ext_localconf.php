@@ -15,3 +15,7 @@ if (!defined('TYPO3_MODE')) {
 		'Video' => 'list, presetShow, show, liveStream',
 	)
 );
+
+// register eID script for metadata processing
+$GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'][$_EXTKEY . '_meetingdata'] =
+	'EXT:' . $_EXTKEY . '/Classes/Eid/Meetingdata.php';
