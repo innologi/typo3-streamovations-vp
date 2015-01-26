@@ -41,7 +41,8 @@ plugin.tx_streamovationsvp {
 			event {
 				request.apiUri = api.php/sessions/date
 				response {
-					container = ROOT.events
+					container = events
+					list = 1
 				}
 			}
 			playlist.request {
@@ -50,6 +51,7 @@ plugin.tx_streamovationsvp {
 			meetingdata {
 				request.apiUri = api.php/meetingdata
 				response {
+					exclude = result
 					property {
 						timestamps {
 							mappings {

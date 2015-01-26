@@ -43,7 +43,7 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 	 * @return array
 	 */
 	public function createByRawResponse($rawResponse, $responseType, $objectType) {
-		$responseArray = array();
+		$response = array();
 
 		// @TODO pull this method apart?
 
@@ -56,38 +56,53 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 				// @TODO add XML support
 		}
 
-		// @FIX remove this
-		if (isset($output['result'])) {
-			unset($output['result']);
-		}
+		// @TODO pull apart
+		if (isset($this->configuration['repository'][$objectType]['response'])) {
+			$mappingConfiguration = $this->configuration['repository'][$objectType]['response'];
 
-		// find objects
-		if (isset($this->configuration['repository'][$objectType]['response']['container'])) {
-			$mappingConfiguration = explode('.', $this->configuration['repository'][$objectType]['response']['container']);
-			if ($mappingConfiguration[0] !== 'ROOT') {
-				// @TODO throw exception
-			}
-			array_shift($mappingConfiguration);
-			foreach ($mappingConfiguration as $key) {
-				if (isset($output[$key])) {
-					$output = $output[$key];
-				} else {
-					// @TODO throw RELEVANT exception
-					throw new \Exception('blargh!');
+			// if set, will replace root with container element
+			if (isset($mappingConfiguration['container'])) {
+				// note that container may be set as path
+				$containerKeys = explode('.', $mappingConfiguration['container']);
+				foreach ($containerKeys as $key) {
+					if (isset($output[$key])) {
+						$output = $output[$key];
+					} else {
+						// unexpected structure, does not compute
+						// @FIX if there is no connection to the request-uri, processing ends here, that's WAY too late and WAY too conditional
+						// @TODO throw RELEVANT exception
+						throw new \Exception('blargh!');
+					}
 				}
 			}
 
-			// create objects
-			foreach ($output as $properties) {
-				$responseArray[] = $this->create($properties, $objectType);
+			// exclude elements from result
+			if (isset($mappingConfiguration['exclude'])) {
+				// exclude is CSV
+				$excludeKeys = explode(',', $mappingConfiguration['exclude']);
+				// @LOW support paths?
+				foreach ($excludeKeys as $key) {
+					if (isset($output[$key])) {
+						unset($output[$key]);
+					}
+					// note that nothing happens if key isn't found, no exception thrown
+				}
 			}
+
+			// is output a list of response-objects?
+			if (isset($mappingConfiguration['list']) && (bool)$mappingConfiguration['list']) {
+				foreach ($output as $o) {
+					$response[] = $this->create($o, $objectType);
+				}
+			} else {
+				$response = $this->create($output, $objectType);
+			}
+
 		} else {
-			$responseArray[] = $this->create($output, $objectType);
+			$response = $this->create($output, $objectType);
 		}
 
-
-
-		return $responseArray;
+		return $response;
 	}
 
 	/**

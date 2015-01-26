@@ -47,7 +47,7 @@ class MeetingdataRepository extends \Innologi\StreamovationsVp\Library\Rest\Repo
 		$response = $this->createRequest()
 			->addArgument('session', $hash)
 			->send();
-		return $response[0]; // @FIX this should actually be solved @ mapping config
+		return $response;
 	}
 
 }
