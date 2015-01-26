@@ -43,13 +43,15 @@ class RequestFactory extends FactoryAbstract implements RequestFactoryInterface,
 	 * Create REST request object
 	 *
 	 * @param string $objectType
+	 * @param boolean $forceRawResponse
 	 * @return RequestInterface
 	 */
-	public function create($objectType) {
+	public function create($objectType, $forceRawResponse = FALSE) {
 		return $this->objectManager->get(
 			__NAMESPACE__ . '\\RequestInterface',
 			$this->createRequestUriObject($objectType),
 			$objectType,
+			$forceRawResponse,
 			(isset($this->configuration['features'][$this->httpConfKey])
 				&& $this->configuration['features'][$this->httpConfKey]
 					? array()

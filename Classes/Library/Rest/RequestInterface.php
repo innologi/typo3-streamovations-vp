@@ -42,10 +42,11 @@ interface RequestInterface {
 	 *
 	 * @param RequestUriInterface $requestUri
 	 * @param string $objectType
+	 * @param boolean $forceRawResponse
 	 * @param array $httpConfiguration
 	 * @return void
 	 */
-	public function __construct($requestUri, $objectType, array $httpConfiguration = array());
+	public function __construct($requestUri, $objectType, $forceRawResponse = FALSE, array $httpConfiguration = array());
 
 	/**
 	 * Adds URL argument

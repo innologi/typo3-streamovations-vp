@@ -43,7 +43,6 @@ class Typo3Request extends RequestAbstract implements RequestInterface {
 	 * @return mixed
 	 */
 	public function send($returnRawResponse = FALSE) {
-		parent::send($returnRawResponse);
 		// @TODO can I use $report for some meaningful error message?
 		//$report = array();
 		$rawResponse = \TYPO3\CMS\Core\Utility\GeneralUtility::getUrl(
@@ -51,7 +50,7 @@ class Typo3Request extends RequestAbstract implements RequestInterface {
 		);
 
 		// @TODO what to return on errors?
-		return $returnRawResponse
+		return $this->forceRawResponse || $returnRawResponse
 			? $rawResponse
 			: $this->mapResponseToObjects($rawResponse);
 	}

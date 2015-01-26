@@ -46,12 +46,28 @@ class Repository implements \TYPO3\CMS\Core\SingletonInterface {
 	protected $objectType;
 
 	/**
+	 * @var boolean
+	 */
+	protected $forceRawResponse = FALSE;
+
+	/**
 	 * Constructs a new Repository
 	 *
 	 * @return void
 	 */
 	public function __construct() {
 		$this->initializeObjectType();
+	}
+
+	/**
+	 * If TRUE, forces RAW response from any request,
+	 * regardless of the applied methods.
+	 *
+	 * @param boolean $forceRawResponse
+	 * @return void
+	 */
+	public function setForceRawResponse($forceRawResponse) {
+		$this->forceRawResponse = $forceRawResponse;
 	}
 
 	/**
@@ -80,7 +96,7 @@ class Repository implements \TYPO3\CMS\Core\SingletonInterface {
 		/* @var $requestFactory RequestFactoryInterface */
 		$requestFactory = $this->objectManager->get(__NAMESPACE__ . '\\RequestFactoryInterface');
 
-		return $requestFactory->create($this->objectType);
+		return $requestFactory->create($this->objectType, $this->forceRawResponse);
 	}
 
 }

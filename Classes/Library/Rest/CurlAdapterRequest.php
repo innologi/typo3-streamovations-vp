@@ -40,10 +40,11 @@ class CurlAdapterRequest extends RequestAbstract implements RequestInterface {
 	 *
 	 * @param RequestUriInterface $requestUri
 	 * @param string $responseObjectType
+	 * @param boolean $forceRawResponse
 	 * @param array $httpConfiguration
 	 * @return void
 	 */
-	public function __construct($requestUri, $responseObjectType, array $httpConfiguration = array()) {
+	public function __construct($requestUri, $responseObjectType, $forceRawResponse = FALSE, array $httpConfiguration = array()) {
 		// @see typo3/contrib/pear/HTTP/Request2/Request2.php
 		// @see typo3/contrib/pear/HTTP/Request2/Adapter/Curl.php
 	}

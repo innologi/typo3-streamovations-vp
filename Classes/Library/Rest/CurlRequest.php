@@ -44,11 +44,11 @@ class CurlRequest extends RequestAbstract implements RequestInterface {
 	 *
 	 * @param RequestUriInterface $requestUri
 	 * @param string $responseObjectType
+	 * @param boolean $forceRawResponse
 	 * @param array $httpConfiguration
 	 * @return void
 	 */
-	public function __construct($requestUri, $responseObjectType, array $httpConfiguration = array()) {
-		$this->requestSettings = $requestSettings;
+	public function __construct($requestUri, $responseObjectType, $forceRawResponse = FALSE, array $httpConfiguration = array()) {
 		$this->resource = curl_init();
 
 		if (!empty($httpConfiguration)) {
@@ -83,10 +83,6 @@ class CurlRequest extends RequestAbstract implements RequestInterface {
 		// @TODO catch errors?
 		$rawResponse = curl_exec($this->resource);
 		return $rawResponse;
-		// @TODO create Response class
-		/*return $returnRawResponse
-			? $rawResponse
-			: $this->objectManager->get(__NAMESPACE__ . '\\Response', $rawResponse);*/
 	}
 
 	/**

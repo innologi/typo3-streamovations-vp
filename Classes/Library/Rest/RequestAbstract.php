@@ -51,6 +51,11 @@ abstract class RequestAbstract {
 	protected $responseObjectType;
 
 	/**
+	 * @var boolean
+	 */
+	protected $forceRawResponse;
+
+	/**
 	 * @var array
 	 */
 	protected $headers = array();
@@ -67,12 +72,16 @@ abstract class RequestAbstract {
 	 *
 	 * @param RequestUriInterface $requestUri
 	 * @param string $responseObjectType
+	 * @param boolean $forceRawResponse
 	 * @param array $httpConfiguration
 	 * @return void
 	 */
-	public function __construct($requestUri, $responseObjectType, array $httpConfiguration = array()) {
+	public function __construct($requestUri, $responseObjectType, $forceRawResponse = FALSE, array $httpConfiguration = array()) {
 		$this->requestUri = $requestUri;
 		$this->responseObjectType = $responseObjectType;
+		$this->forceRawResponse = $forceRawResponse;
+
+		$this->initRequestHeaders();
 	}
 
 	/**
@@ -107,11 +116,26 @@ abstract class RequestAbstract {
 	 * @return void
 	 */
 	public function send($returnRawResponse = FALSE) {
+		$rawResponse = 'Dummy Response';
+
+		// implementation logic
+
+		// @TODO what to return on errors?
+		return $this->forceRawResponse || $returnRawResponse
+			? $rawResponse
+			: $this->mapResponseToObjects($rawResponse);
+	}
+
+	/**
+	 * Prepares request headers
+	 *
+	 * @return void
+	 */
+	protected function initRequestHeaders() {
 		$this->headers[] = 'Accept: ' . ($this->responseType === RequestInterface::RESPONSE_TYPE_JSON
 			? 'application/json'
 			: 'text/xml'
 		);
-		// implementation logic
 	}
 
 	/**

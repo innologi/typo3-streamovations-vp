@@ -38,8 +38,9 @@ interface RequestFactoryInterface {
 	 * Create REST request object
 	 *
 	 * @param string $objectType
+	 * @param boolean $forceRawResponse
 	 * @return RequestInterface
 	 */
-	public function create($objectType);
+	public function create($objectType, $forceRawResponse = FALSE);
 
 }
