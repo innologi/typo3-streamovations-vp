@@ -34,8 +34,8 @@ plugin.tx_streamovationsvp {
 		}
 		repository {
 			default.request {
-				scheme = http
-				baseUri = digiraad.heemskerk.nl
+				scheme = {$plugin.tx_streamovationsvp.rest.scheme}
+				baseUri = {$plugin.tx_streamovationsvp.rest.baseUri}
 				apiUri = api.php
 			}
 			event {
@@ -79,28 +79,26 @@ plugin.tx_streamovationsvp {
 	settings {
 		player = {$plugin.tx_streamovationsvp.settings.player}
 		topics {
-			enable = 1
+			enable = {$plugin.tx_streamovationsvp.settings.topics.enable}
 		}
 		speakers {
-			enable = 1
-			#imgDir = EXT:streamovations_vp/Resources/Public/Image/
-			imgDir = fileadmin/streamovations/
-			imgHeight = 150
-			ImgWidth = 150
-			imgDefault = EXT:streamovations_vp/Resources/Public/Image/speaker-avatar.jpg
+			enable = {$plugin.tx_streamovationsvp.settings.speakers.enable}
+			imgDir = {$plugin.tx_streamovationsvp.settings.speakers.imgDir}
+			imgHeight = {$plugin.tx_streamovationsvp.settings.speakers.imgHeight}
+			imgWidth = {$plugin.tx_streamovationsvp.settings.speakers.imgWidth}
+			imgDefault = {$plugin.tx_streamovationsvp.settings.speakers.imgDefault}
 		}
 		event {
 			# supported formats: http://php.net/manual/en/datetime.formats.php
-			dateFrom = 2014-09-29
-			dateTo = 2014-12-11
-			dateAt = 2014-12-10
+			dateFrom =
+			dateTo =
+			dateAt =
 			category =
 			subCategory =
 			tags =
 		}
 		playlist {
-			#hash = {$plugin.tx_streamovationsvp.settings.playlist.hash}
-			hash = 1f0e3dad99908345f7439f8ffabdffc4
+			hash =
 		}
 	}
 	javascript {
@@ -124,7 +122,7 @@ plugin.tx_streamovationsvp {
 				JWPLAYER_KEY = TEXT
 				JWPLAYER_KEY.value = {$plugin.tx_streamovationsvp.settings.jwPlayerKey}
 				PLAYER_TYPE = TEXT
-				PLAYER_TYPE.value = {$plugin.tx_streamovationsvp.settings.player} 
+				PLAYER_TYPE.value = {$plugin.tx_streamovationsvp.settings.player}
 			}
 		}
 	}
