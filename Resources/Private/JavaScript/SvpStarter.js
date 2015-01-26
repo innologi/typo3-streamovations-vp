@@ -11,7 +11,7 @@
  * (thus modifiable) to make debugging via browser tools
  * as easy as possible.
  */
-var SVPS = (function($) {
+var SvpStarter = (function($) {
 
 	// extend jQuery
 	$.fn.exists = function () {
