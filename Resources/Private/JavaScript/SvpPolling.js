@@ -19,7 +19,7 @@ var SvpPolling = (function($) {
 			failCount = 0;
 			// @TODO remove once debugging is completed
 			console.log(data);
-			SVPS.processMeetingdata(data);
+			SvpStarter.processMeetingdata(data);
 		}, 'json').fail(function() {
 			failCount++;
 			if (failCount >= limitFailCount) {
