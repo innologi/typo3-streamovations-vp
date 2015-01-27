@@ -132,6 +132,8 @@ plugin.tx_streamovationsvp {
 				CURRENT_PAGE_ID.data = TSFE:id
 				HASH = TEXT
 				HASH.data = GP:tx_streamovationsvp_video|hash
+				SPEAKER_IMAGE_DIR = TEXT
+				SPEAKER_IMAGE_DIR.value < plugin.tx_streamovationsvp.settings.speakers.imgDir
 			}
 			# SvpPolling
 			20 = FILE

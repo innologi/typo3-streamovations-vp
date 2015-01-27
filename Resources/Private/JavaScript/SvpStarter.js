@@ -4,18 +4,94 @@
  * ------------------------------------------
  *
  * Please note that MOST properties are for internal use only,
- * any property that is configurable will have an respective
+ * any property that is configurable will have a respective
  * TypoScript setting.
- *
- * Regardless, all element properties are publicly visible
- * (thus modifiable) to make debugging via browser tools
- * as easy as possible.
  */
 var SvpStarter = (function($) {
 
+	/**
+	 * Speaker-avatar image directory, configured via TS
+	 *
+	 * @var string
+	 */
+	var speakerImageDir = '###SPEAKER_IMAGE_DIR###';
+
+	/**
+	 * Counter of processed meetingdata elements (live streams)
+	 *
+	 * @var object
+	 */
+	var count = {
+		topic: 0,
+		speaker: 0
+		//topicTime: 0,
+		//speakerTime: 0
+	};
+
 	// extend jQuery
-	$.fn.exists = function () {
+	$.fn.exists = function() {
 		return this.length !== 0;
+	}
+
+	/**
+	 * Initialize live counters, keeping track of the number
+	 * of speakers, topics, etc.
+	 *
+	 * @return void
+	 */
+	function initLiveCounters() {
+		var $container = $('.' + _this.select.container);
+		count.topic = $('.topics .topic', $container).length;
+		count.speaker = $('.speakers .speaker', $container).length;
+		// timeline's are produced via polling, so no need to initialize them here
+	}
+
+	/**
+	 * Activates latest element in an array
+	 *
+	 * @param array array Contains elements
+	 * @param type string The element-type [speaker,topic]
+	 * @return void
+	 */
+	function activateLatestElement(array, type) {
+		var id = array[array.length-1].id;
+		if (_this.active[type] !== id) {
+			_this.activateElement(id, type);
+		}
+	}
+
+	/**
+	 * Adds a new type-element to the appropriate DOM location
+	 *
+	 * @param array array Contains new element-properties
+	 * @param type string The element-type [speaker,topic]
+	 * @return void
+	 */
+	function addNewElements(array, type) {
+		// @TODO for performance improvement, use filter(':first') everywhere where you use :first in the selector
+		// @TODO what if there is no template?
+		var $template = $('.' + _this.select.container + ' .' + type + 's .' + type).filter(':last');
+		// @TODO if we replace insertAfter() with something like add(), can we put the for-order back to normal?
+		for (var i=array.length-1; i >= 0; i--) {
+			var $temp = $template.clone(),
+				elem = array[i];
+			// some changes are too specific to be handled generally
+			switch (type) {
+				case 'speaker':
+					$('.speaker-avatar', $temp).attr('src', speakerImageDir + elem.photo);
+					$('.speaker-data', $temp).html(elem.firstname + ' ' + elem.lastname);
+					break;
+				case 'topic':
+					$('.topic-title', $temp).html(elem.title);
+					$('.topic-description', $temp).html(elem.description);
+			}
+			$temp.attr('data-' + type, elem.id)
+				// $template might have been active, so disable just in case
+				.removeClass('active')
+				.insertAfter($template);
+
+			count[type].length++;
+		}
 	}
 
 	// actual SVPS object
@@ -111,11 +187,13 @@ var SvpStarter = (function($) {
 					return false;
 			}
 
-			this.initEventHandlers();
-			// @TODO re-enable condition
-			//if (this.isLiveStream) {
-				this.initPolling();
-			//}
+			if (this.isLiveStream) {
+				initLiveCounters();
+				// @TODO only start polling on play? Can you pause a livestream?
+				//this.initPolling();
+			} else {
+				this.initEventHandlers();
+			}
 			return true;
 		},
 
@@ -318,6 +396,57 @@ var SvpStarter = (function($) {
 					_this.onSeekHit[type] = false;
 				}
 			})(elemType));
+		},
+
+		/**
+		 * Process a meetingdata-change as retrieved by polling.
+		 *
+		 * Note that this method assumes meetingdata is only added,
+		 * never removed!
+		 *
+		 * @param data object Parsed JSON object
+		 * @return void
+		 */
+		processMeetingdataChange: function(data) {
+			// note that empty elements are translated by json-encoding to
+			// value "false", hence these extra checks
+
+			// add missing speakers?
+			if (data.hasOwnProperty('speakers')
+				&& data.speakers !== false
+				&& data.speakers.length > count.speaker
+			) {
+				addNewElements(
+					data.speakers.slice(count.speaker),
+					'speaker'
+				);
+			}
+			// add missing topics?
+			if (data.hasOwnProperty('topics')
+				&& data.topics !== false
+				&& data.topics.length > count.topic
+			) {
+				addNewElements(
+					data.topics.slice(count.topic),
+					'topic'
+				);
+			}
+			// activate latest speaker timestamp?
+			if (data.hasOwnProperty('speakerTimeline')
+				&& data.speakerTimeline !== false
+				//&& data.speakerTimeline.length !== count.speakerTime
+			) {
+				//count.speakerTime = data.speakerTimeline.length;
+				activateLatestElement(data.speakerTimeline, 'speaker');
+			}
+			// activate latest topic timestamp?
+			if (data.hasOwnProperty('topicTimeline')
+				&& data.topicTimeline !== false
+				//&& data.topicTimeline.length !== count.topicTime
+			) {
+				//count.topicTime = data.topicTimeline.length;
+				activateLatestElement(data.topicTimeline, 'topic');
+			}
 		},
 
 		// needs to be called when the jwplayer instance was removed and a new instance created
