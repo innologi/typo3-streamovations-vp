@@ -40,7 +40,7 @@ namespace Innologi\StreamovationsVp\Library\Rest;
  * purpose, and possibly having to throw them away later on.
  *
  * The reason this is not meant for production-ready extensions,
- * is performance and lack of specified domain models.
+ * is performance and lack of documented domain models.
  *
  * @package streamovations_vp
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
@@ -49,10 +49,10 @@ namespace Innologi\StreamovationsVp\Library\Rest;
 class MagicResponse implements ResponseInterface {
 	// @TODO doc
 
-	protected $properties;
-
 	public function __construct(array $properties) {
-		$this->properties = $properties;
+		foreach ($properties as $property => $value) {
+			$this->$property = $value;
+		}
 	}
 
 	/**
@@ -65,15 +65,15 @@ class MagicResponse implements ResponseInterface {
 	public function __call($methodName, $arguments) {
 		if (substr($methodName, 0, 3) === 'get' && strlen($methodName) > 4) {
 			$propertyName = lcfirst(substr($methodName, 3));
-			return isset($this->properties[$propertyName])
-				? $this->properties[$propertyName]
+			return isset($this->$propertyName)
+				? $this->$propertyName
 				: NULL;
 		} elseif (substr($methodName, 0, 3) === 'set' && strlen($methodName) > 4) {
 			if (!isset($arguments[0])) {
 				// @TODO throw exception
 			}
 			$propertyName = lcfirst(substr($methodName, 3));
-			$this->properties[$propertyName] = $arguments[0];
+			$this->$propertyName = $arguments[0];
 			return $this;
 		}
 		// @TODO throw exception
