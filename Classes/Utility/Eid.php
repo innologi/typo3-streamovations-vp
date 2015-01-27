@@ -100,15 +100,17 @@ class Eid {
 	 * @param string $pluginName
 	 * @param string $extensionName
 	 * @param string $vendorName
+	 * @param array $configuration
 	 * @return void
 	 */
-	static public function initExtbaseBootstrap($pluginName = '', $extensionName = '', $vendorName = '') {
-		$bootstrap = new Bootstrap();
-		$bootstrap->initialize(array(
+	static public function initExtbaseBootstrap($pluginName = '', $extensionName = '', $vendorName = '', array $configuration = array()) {
+		$configuration = array_merge(array(
 			'pluginName' => $pluginName,
 			'extensionName' => $extensionName,
 			'vendorName' => $vendorName
-		));
+		), $configuration);
+		$bootstrap = new Bootstrap();
+		$bootstrap->initialize($configuration);
 	}
 
 }

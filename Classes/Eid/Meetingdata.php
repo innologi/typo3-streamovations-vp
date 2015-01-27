@@ -25,7 +25,6 @@ namespace Innologi\StreamovationsVp\Eid;
  ***************************************************************/
 use Innologi\StreamovationsVp\Utility\Eid;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Innologi\StreamovationsVp\Library\Rest\MagicResponse;
 /**
  * Meetingdata eID script
  *
@@ -62,7 +61,30 @@ class Meetingdata {
 		// initialize TSFE to make TS accessible to extbase configuration manager
 		Eid::initTSFE();
 		// initialize extbase bootstrap, so we can use repositories
-		Eid::initExtbaseBootstrap('Video', 'StreamovationsVp', 'Innologi');
+		Eid::initExtbaseBootstrap(
+			'Video',
+			'StreamovationsVp',
+			'Innologi',
+			// overrule property json encoding
+			array(
+				'rest' => array(
+					'repository' => array(
+						'meetingdata' => array(
+							'response' => array(
+								'property' => array(
+									'topicTimeline' => array(
+										'json' => 0
+									),
+									'speakerTimeline' => array(
+										'json' => 0
+									)
+								)
+							)
+						)
+					)
+				)
+			)
+		);
 	}
 
 	/**
@@ -78,10 +100,10 @@ class Meetingdata {
 
 		/* @var $meetingdataRepository \Innologi\StreamovationsVp\Domain\Repository\MeetingdataRepository */
 		$meetingdataRepository = $this->objectManager->get('Innologi\\StreamovationsVp\\Domain\\Repository\\MeetingdataRepository');
-		$meetingdataRepository->setForceRawResponse(TRUE);
+		//$meetingdataRepository->setForceRawResponse(TRUE);
 		$meetingdata = $meetingdataRepository->findByHash($hash);
 
-		return $meetingdata;
+		return json_encode($meetingdata);
 	}
 }
 
