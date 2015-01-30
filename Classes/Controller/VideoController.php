@@ -133,9 +133,9 @@ class VideoController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 	public function liveStreamAction() {
 		// there is no need to 'filter out' VODs, because only LIVEstreams are active @ requested time (=now)
 		$this->eventRepository
-			->setCategory($this->settings['session']['category'])
-			->setSubCategory($this->settings['session']['subCategory'])
-			->setTags($this->settings['session']['tags'])
+			->setCategory($this->settings['event']['category'])
+			->setSubCategory($this->settings['event']['subCategory'])
+			->setTags($this->settings['event']['tags'])
 			->findAtDateTime(new \DateTime());
 
 		if (isset($events[0])) {
