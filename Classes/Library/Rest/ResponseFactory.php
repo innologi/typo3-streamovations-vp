@@ -40,7 +40,7 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 	 * @param string $rawResponse
 	 * @param string $responseType
 	 * @param string $objectType
-	 * @return array
+	 * @return mixed Array or object
 	 */
 	public function createByRawResponse($rawResponse, $responseType, $objectType) {
 		$response = array();
@@ -94,14 +94,12 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 				foreach ($output as $o) {
 					$response[] = $this->create($o, $objectType);
 				}
-			} else {
-				$response = $this->create($output, $objectType);
+				return $response;
 			}
 
-		} else {
-			$response = $this->create($output, $objectType);
 		}
 
+		$response = $this->create($output, $objectType);
 		return $response;
 	}
 
@@ -167,6 +165,17 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 						unset($properties[$property]);
 						// anything else set in this config no longer matters
 						continue;
+					}
+
+					// filter list property
+					if (isset($config['filterList']) && is_array($properties[$property])) {
+						switch ($config['filterList']) {
+							// only get the last element
+							case 'last':
+								$properties[$property] = array(
+									end($properties[$property])
+								);
+						}
 					}
 
 					// re-encode property to json
