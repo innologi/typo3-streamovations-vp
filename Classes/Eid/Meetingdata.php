@@ -103,6 +103,16 @@ class Meetingdata {
 		//$meetingdataRepository->setForceRawResponse(TRUE);
 		$meetingdata = $meetingdataRepository->findByHash($hash);
 
+		// why even bother with TYPO3 session in eID context..
+		session_start();
+		$objectHash = md5(serialize($meetingdata));
+		if (!isset($_SESSION['meetingdataHash'][$hash]) || $objectHash !== $_SESSION['meetingdataHash'][$hash]) {
+			$_SESSION['meetingdataHash'][$hash] = $objectHash;
+		} else {
+			// on no changes, providing an empty class speeds things up
+			$meetingdata = new \stdClass();
+		}
+
 		return json_encode($meetingdata);
 	}
 }

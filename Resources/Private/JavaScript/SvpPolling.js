@@ -16,7 +16,9 @@ var SvpPolling = (function($) {
 	function poll() {
 		// setInterval operates in a global scope, so never refer to this!
 		$.get(scriptPath, function(data) {
-			SvpStarter.processMeetingdataChange(data);
+			if (!$.isEmptyObject(data)) {
+				SvpStarter.processMeetingdataChange(data);
+			}
 			failCount = 0;
 		}, 'json').fail(function() {
 			failCount++;
