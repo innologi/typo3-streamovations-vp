@@ -69,9 +69,8 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 						$output = $output[$key];
 					} else {
 						// unexpected structure, does not compute
-						// @FIX if there is no connection to the request-uri, processing ends here, that's WAY too late and WAY too conditional
 						// @TODO throw RELEVANT exception
-						throw new \Exception('blargh!');
+						throw new \Exception('Unexpected response-structure');
 					}
 				}
 			}

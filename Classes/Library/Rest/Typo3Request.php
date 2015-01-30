@@ -43,11 +43,16 @@ class Typo3Request extends RequestAbstract implements RequestInterface {
 	 * @return mixed
 	 */
 	public function send($returnRawResponse = FALSE) {
-		// @TODO can I use $report for some meaningful error message?
-		//$report = array();
+		$report = array();
 		$rawResponse = \TYPO3\CMS\Core\Utility\GeneralUtility::getUrl(
-			$this->requestUri->getRequestUri(), 0, $this->headers //, $report
+			$this->requestUri->getRequestUri(), 0, $this->headers, $report
 		);
+
+		if ($rawResponse === FALSE || $report['error'] > 0) {
+			$message = isset($report['message'][0]) ? $report['message'] : 'No response returned';
+			// @TODO throw relevant exception
+			throw new \Exception($message);
+		}
 
 		// @TODO what to return on errors?
 		return $this->forceRawResponse || $returnRawResponse
