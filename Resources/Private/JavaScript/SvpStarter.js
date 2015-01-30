@@ -380,7 +380,10 @@ var SvpStarter = (function($) {
 						if (e.offset >= t.start && e.offset < t.end
 							&& _this.timeIsOnPlaylist(t)
 						) {
-							_this.activateElement(t.id, type);
+							if (t.id !== _this.active[type]) {
+								_this.activateElement(t.id, type);
+							}
+							// even if t.id === this.active.type, onSeekHit needs to be marked to prevent deactivation
 							_this.onSeekHit[type] = true;
 						}
 					}
