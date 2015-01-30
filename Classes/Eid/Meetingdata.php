@@ -23,7 +23,7 @@ namespace Innologi\StreamovationsVp\Eid;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use Innologi\StreamovationsVp\Utility\Eid;
+use Innologi\StreamovationsVp\Utility\EidUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Meetingdata eID script
@@ -59,9 +59,9 @@ class Meetingdata {
 	 */
 	protected function initializeContext() {
 		// initialize TSFE to make TS accessible to extbase configuration manager
-		Eid::initTSFE();
+		EidUtility::initTSFE();
 		// initialize extbase bootstrap, so we can use repositories
-		Eid::initExtbaseBootstrap(
+		EidUtility::initExtbaseBootstrap(
 			'Video',
 			'StreamovationsVp',
 			'Innologi',

@@ -28,14 +28,14 @@ use TYPO3\CMS\Extbase\Core\Bootstrap;
 /**
  * eID utility class
  *
- * Much used initialization methods missing from
- * \TYPO3\CMS\Frontend\Utility\EidUtility
+ * Expands original eID utility class with much used
+ * initialization methods that were missing.
  *
  * @package streamovations_vp
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class Eid {
+class EidUtility extends \TYPO3\CMS\Frontend\Utility\EidUtility {
 
 	/**
 	 * Load and initialize TypoScriptFrontendController aka TSFE.
