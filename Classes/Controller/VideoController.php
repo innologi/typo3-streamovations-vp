@@ -24,7 +24,7 @@ namespace Innologi\StreamovationsVp\Controller;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
+use Innologi\StreamovationsVp\Domain\Utility\EventUtility;
 /**
  * Video Controller
  *
@@ -89,6 +89,7 @@ class VideoController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 		}
 		// @TODO error handling of lack of proper dates?
 
+		$events = EventUtility::filterOutStreamingType($events, 'live');
 		$this->view->assign('events', $events);
 	}
 
@@ -130,7 +131,8 @@ class VideoController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 	 * @return void
 	 */
 	public function liveStreamAction() {
-		$events = $this->eventRepository
+		// there is no need to 'filter out' VODs, because only LIVEstreams are active @ requested time (=now)
+		$this->eventRepository
 			->setCategory($this->settings['session']['category'])
 			->setSubCategory($this->settings['session']['subCategory'])
 			->setTags($this->settings['session']['tags'])
@@ -138,7 +140,6 @@ class VideoController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 
 		if (isset($events[0])) {
 			// @LOW this should move to showAction with a condition, once we allow livestreams on list
-			// @TODO test this!
 			$this->view->assign('isLiveStream', TRUE);
 			$arguments = array(
 				// @TODO try/catch would be better
