@@ -20,7 +20,12 @@
 			<ol>
 				<f:for each="{meetingdata.topics}" as="topic">
 					<li class="topic"  data-topic="{topic.id}">
-						<a href="#" class="topic-link" title="Spring naar dit agendapunt in de video">{topic.title}</a>
+						<f:if condition="{isLiveStream}">
+							<f:then><span class="topic-title">{topic.title}</span></f:then>
+							<f:else>
+								<a href="#" class="topic-link topic-title" title="Spring naar dit agendapunt in de video">{topic.title}</a>
+							</f:else>
+						</f:if>
 						<span class="topic-description">{topic.description -> f:format.raw()}</span>
 					</li>
 				</f:for>
@@ -55,15 +60,19 @@
 	<script type="application/json" id="tx-streamovations-vp-playerdata">
 		{playlist -> f:format.raw()}
 	</script>
-	<f:if condition="{meetingdata.topicTimeline}">
-		<script type="application/json" id="tx-streamovations-vp-topictimeline">
-			{meetingdata.topicTimeline -> f:format.raw()}
-		</script>
-	</f:if>
-	<f:if condition="{meetingdata.speakerTimeline}">
-		<script type="application/json" id="tx-streamovations-vp-speakertimeline">
-			{meetingdata.speakerTimeline -> f:format.raw()}
-		</script>
+	<f:if condition="{isLiveStream}">
+		<f:else>
+			<f:if condition="{meetingdata.topicTimeline}">
+				<script type="application/json" id="tx-streamovations-vp-topictimeline">
+					{meetingdata.topicTimeline -> f:format.raw()}
+				</script>
+			</f:if>
+			<f:if condition="{meetingdata.speakerTimeline}">
+				<script type="application/json" id="tx-streamovations-vp-speakertimeline">
+					{meetingdata.speakerTimeline -> f:format.raw()}
+				</script>
+			</f:if>
+		</f:else>
 	</f:if>
 	
 </f:then>

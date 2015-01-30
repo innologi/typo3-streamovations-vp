@@ -58,6 +58,7 @@ class VideoController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 	 * @return void
 	 */
 	public function listAction() {
+		// @LOW exclude livestream events? perhaps at response mapping?
 		$this->eventRepository
 			->setCategory($this->settings['event']['category'])
 			->setSubCategory($this->settings['event']['subCategory'])
@@ -136,6 +137,9 @@ class VideoController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 			->findAtDateTime(new \DateTime());
 
 		if (isset($events[0])) {
+			// @LOW this should move to showAction with a condition, once we allow livestreams on list
+			// @TODO test this!
+			$this->view->assign('isLiveStream', TRUE);
 			$arguments = array(
 				// @TODO try/catch would be better
 				'hash' => $events[0]->getEventId()
