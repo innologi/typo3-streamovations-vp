@@ -167,7 +167,7 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 					}
 
 					// filter list property
-					if (isset($config['filterList']) && is_array($properties[$property])) {
+					if (isset($config['filterList']) && isset($properties[$property][0]) && is_array($properties[$property])) {
 						switch ($config['filterList']) {
 							// only get the last element
 							case 'last':
