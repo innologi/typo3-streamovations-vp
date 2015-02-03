@@ -98,6 +98,8 @@ class Meetingdata {
 		if (!$hash) {
 			// @TODO throw error
 		}
+		// if set, will force to return meetingdata, regardless of session content
+		$force = (int)GeneralUtility::_GP('force');
 
 		/* @var $meetingdataRepository \Innologi\StreamovationsVp\Domain\Repository\MeetingdataRepository */
 		$meetingdataRepository = $this->objectManager->get('Innologi\\StreamovationsVp\\Domain\\Repository\\MeetingdataRepository');
@@ -108,7 +110,7 @@ class Meetingdata {
 		session_start();
 		$objectHash = md5(serialize($meetingdata));
 		$sessionKey = 'meetingdataHash' . $hash;
-		if (!isset($_SESSION[$sessionKey]) || $objectHash !== $_SESSION[$sessionKey]) {
+		if ($force || !isset($_SESSION[$sessionKey]) || $objectHash !== $_SESSION[$sessionKey]) {
 			$_SESSION[$sessionKey] = $objectHash;
 		} else {
 			// on no changes, providing an empty class speeds things up

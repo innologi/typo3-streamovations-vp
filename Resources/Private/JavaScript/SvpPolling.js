@@ -12,9 +12,11 @@ var SvpPolling = (function($) {
 		failCount = 0,
 		limitFailCount = 5;
 
-	function poll() {
+	function poll(force) {
+		var url = scriptPath + (force === true ? '&force=1' : '');
+
 		// setInterval operates in a global scope, so never refer to this!
-		$.get(scriptPath, function(data) {
+		$.get(url, function(data) {
 			if (!$.isEmptyObject(data)) {
 				SvpStarter.processMeetingdataChange(data);
 			}
@@ -37,9 +39,11 @@ var SvpPolling = (function($) {
 			if (intervalId === null) {
 				console.log('SVPP | Polling started');
 				// @LOW what about a setTimeout instead, iterating it in poll.$.get.done method?
-				intervalId = setInterval(poll, interval);
+				intervalId = setInterval(function() {
+					poll(false);
+				}, interval);
 				// for immediate (first) polling
-				poll();
+				poll(true);
 			}
 		},
 
