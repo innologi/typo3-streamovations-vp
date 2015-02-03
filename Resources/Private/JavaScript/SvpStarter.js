@@ -310,6 +310,8 @@ var SvpStarter = (function($) {
 
 		// prepare all eventhandlers
 		initEventHandlers: function() {
+			console.log('SVPS | initializing event handlers');
+
 			// set jump event on topic clicks
 			$('.' + this.select.container + ' .topics').on('click', '.topic .topic-link', function() {
 				_this.jumpToTopic(
