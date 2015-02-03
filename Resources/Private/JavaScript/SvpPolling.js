@@ -10,8 +10,7 @@ var SvpPolling = (function($) {
 		scriptPath = null,
 		// successive fail counts
 		failCount = 0,
-		// @TODO set to at least 5
-		limitFailCount = 1;
+		limitFailCount = 5;
 
 	function poll() {
 		// setInterval operates in a global scope, so never refer to this!
