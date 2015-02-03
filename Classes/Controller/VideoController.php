@@ -97,9 +97,10 @@ class VideoController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 	 * Show playlist
 	 *
 	 * @param string $hash Playlist Hash
+	 * @param boolean $isLiveStream
 	 * @return void
 	 */
-	public function showAction($hash) {
+	public function showAction($hash, $isLiveStream = FALSE) {
 		$playerType = (int)$this->settings['player'];
 
 		// smvPlayer requires raw response
@@ -114,6 +115,9 @@ class VideoController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 			$this->view->assign('meetingdata', $meetingdata);
 		}
 		$this->view->assign('playlist', $playlist);
+
+		// @LOW we should autodetect this once we allow livestreams via list
+		$this->view->assign('isLiveStream', $isLiveStream);
 	}
 
 	/**
@@ -146,11 +150,10 @@ class VideoController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 			->findAtDateTime(new \DateTime());
 
 		if (isset($events[0])) {
-			// @LOW this should move to showAction with a condition, once we allow livestreams on list
-			$this->view->assign('isLiveStream', TRUE);
 			$arguments = array(
 				// @TODO try/catch would be better
-				'hash' => $events[0]->getEventId()
+				'hash' => $events[0]->getEventId(),
+				'isLiveStream' => TRUE
 			);
 			$this->forward('show', NULL, NULL, $arguments);
 		} else {
