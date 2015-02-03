@@ -64,10 +64,11 @@ class Repository implements \TYPO3\CMS\Core\SingletonInterface {
 	 * regardless of the applied methods.
 	 *
 	 * @param boolean $forceRawResponse
-	 * @return void
+	 * @return Repository
 	 */
 	public function setForceRawResponse($forceRawResponse) {
 		$this->forceRawResponse = $forceRawResponse;
+		return $this;
 	}
 
 	/**
