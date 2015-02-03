@@ -145,7 +145,9 @@ var SvpStarter = (function($) {
 		// callback arrays for each event handler
 		callbacks: {
 			onTime: [],
-			onSeek: []
+			onSeek: [],
+			onPlay: [],
+			onPause: []
 		},
 
 		// used to limit seekOnPlays to 1
@@ -262,6 +264,14 @@ var SvpStarter = (function($) {
 					_this.callbacks.onSeek.push(callback);
 					_this.jw.onSeek(callback);
 				}
+				this.player.onPlay = function(callback) {
+					_this.callbacks.onPlay.push(callback);
+					_this.jw.onPlay(callback);
+				}
+				this.player.onPause = function(callback) {
+					_this.callbacks.onPause.push(callback);
+					_this.jw.onPause(callback);
+				}
 				// overrule player.next()
 				this.orig.player.next = this.player.next;
 				this.player.next = function() {
@@ -272,6 +282,18 @@ var SvpStarter = (function($) {
 				this.orig.player.previous = this.player.previous;
 				this.player.previous = function() {
 					_this.orig.player.previous();
+					_this.reset();
+				}
+				// overrule player.setQualityLevel()
+				this.orig.player.setQualityLevel = this.player.setQualityLevel;
+				this.player.setQualityLevel = function(q) {
+					_this.orig.player.setQualityLevel(q);
+					_this.reset();
+				}
+				// overrule player.setAudioLanguage()
+				this.orig.player.setAudioLanguage = this.player.setAudioLanguage;
+				this.player.setAudioLanguage = function(l) {
+					_this.orig.player.setAudioLanguage(l);
 					_this.reset();
 				}
 			}
@@ -473,6 +495,12 @@ var SvpStarter = (function($) {
 			for (var c in this.callbacks.onSeek) {
 				this.jw.onSeek(this.callbacks.onSeek[c]);
 			}
+			for (var c in this.callbacks.onPlay) {
+				this.jw.onPlay(this.callbacks.onPlay[c]);
+			}
+			for (var c in this.callbacks.onPause) {
+				this.jw.onPause(this.callbacks.onPause[c]);
+			}
 			console.log('SVPS | Reattached event callbacks');
 		},
 
@@ -550,6 +578,7 @@ var SvpStarter = (function($) {
 		// applies a seek() on the onPlay event handler, useful when player isn't playing
 		applySeekOnPlay: function(seekTime) {
 			this.seekOnPlay = true;
+			// note that this onPlay isn't added to callbacks with smvPlayer, that would be useless
 			this.jw.onPlay(function (e) {
 				if (_this.seekOnPlay) {
 					_this.player.seek(seekTime);
@@ -576,11 +605,10 @@ var SvpStarter = (function($) {
 				//hash = '###HASH###';
 				hash = $('#' + this.select.data).attr('data-hash');
 
-			// @FIX when changing quality or language, jwplayer is also destroyed.. check for any other onPlay or onPause!
-			this.jw.onPlay(function() {
+			this.player.onPlay(function() {
 				SvpPolling.init(hash, pid, interval);
 			});
-			this.jw.onPause(function() {
+			this.player.onPause(function() {
 				SvpPolling.stop();
 				_this.deactivateElement('speaker');
 				_this.deactivateElement('topic');
