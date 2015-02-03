@@ -574,7 +574,8 @@ var SvpStarter = (function($) {
 			}
 			var interval = parseInt('###POLLING_INTERVAL###') * 1000,
 				pid = parseInt('###CURRENT_PAGE_ID###'),
-				hash = '###HASH###';
+				//hash = '###HASH###';
+				hash = $('#' + this.select.data).attr('data-hash');
 
 			SvpPolling.init(hash, pid, interval);
 		}

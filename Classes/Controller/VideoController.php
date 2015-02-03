@@ -118,6 +118,7 @@ class VideoController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 
 		// @LOW we should autodetect this once we allow livestreams via list
 		$this->view->assign('isLiveStream', $isLiveStream);
+		$this->view->assign('hash', $hash);
 	}
 
 	/**

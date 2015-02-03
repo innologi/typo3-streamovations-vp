@@ -130,8 +130,9 @@ plugin.tx_streamovationsvp {
 				POLLING_INTERVAL.value = {$plugin.tx_streamovationsvp.settings.pollingInterval}
 				CURRENT_PAGE_ID = TEXT
 				CURRENT_PAGE_ID.data = TSFE:id
-				HASH = TEXT
-				HASH.data = GP:tx_streamovationsvp_video|hash
+				# doesn't work if livestream doesn't put hash in GETvar, idiot!
+				#HASH = TEXT
+				#HASH.data = GP:tx_streamovationsvp_video|hash
 				SPEAKER_IMAGE_DIR = TEXT
 				SPEAKER_IMAGE_DIR.value < plugin.tx_streamovationsvp.settings.speakers.imgDir
 			}

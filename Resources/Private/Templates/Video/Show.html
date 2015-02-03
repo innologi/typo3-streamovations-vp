@@ -13,7 +13,6 @@
 
 <f:if condition="{playlist}">
 <f:then>
-	
 	<f:if condition="{meetingdata.topics}">
 		<div class="topics">
 			<p class="header">Agendapunten</p>
@@ -57,7 +56,7 @@
 		</div>
 	</f:if>
 	
-	<script type="application/json" id="tx-streamovations-vp-playerdata">
+	<script type="application/json" id="tx-streamovations-vp-playerdata" data-hash="{hash}">
 		{playlist -> f:format.raw()}
 	</script>
 	<f:if condition="{isLiveStream}">
