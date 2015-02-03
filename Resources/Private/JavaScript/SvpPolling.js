@@ -36,9 +36,11 @@ var SvpPolling = (function($) {
 		init: function(hash, pid, interval) {
 			scriptPath = document.baseURI + 'index.php?id=' + pid + '&eID=streamovations_vp_meetingdata' + '&hash=' + hash;
 			if (intervalId === null) {
+				console.log('SVPP | Polling started');
 				// @LOW what about a setTimeout instead, iterating it in poll.$.get.done method?
 				intervalId = setInterval(poll, interval);
-				console.log('SVPP | Polling started');
+				// for immediate (first) polling
+				poll();
 			}
 		},
 
