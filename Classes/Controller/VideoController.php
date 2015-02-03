@@ -100,6 +100,13 @@ class VideoController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 	 * @return void
 	 */
 	public function showAction($hash) {
+		$playerType = (int)$this->settings['player'];
+
+		// smvPlayer requires raw response
+		if ($playerType === 2) {
+			$this->playlistRepository->setForceRawResponse(TRUE);
+		}
+
 		$playlist = $this->playlistRepository->findByHash($hash);
 		if ($playlist) {
 			// @TODO make meetingdata optional

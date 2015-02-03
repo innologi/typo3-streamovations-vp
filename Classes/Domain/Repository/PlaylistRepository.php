@@ -55,7 +55,7 @@ class PlaylistRepository extends \Innologi\StreamovationsVp\Library\Rest\Reposit
 		if ($quality !== NULL) {
 			$request->addArgument('qual', $quality);
 		}
-		return $request->send(TRUE);
+		return $request->send();
 	}
 
 }
