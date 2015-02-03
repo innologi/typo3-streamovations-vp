@@ -58,6 +58,11 @@ class Meetingdata {
 	 * @return void
 	 */
 	protected function initializeContext() {
+		$timelineConfig = array(
+			'filterList' => 'last',
+			'json' => 0
+		);
+
 		// initialize TSFE to make TS accessible to extbase configuration manager
 		EidUtility::initTSFE();
 		// initialize extbase bootstrap, so we can use repositories
@@ -72,12 +77,8 @@ class Meetingdata {
 						'meetingdata' => array(
 							'response' => array(
 								'property' => array(
-									'topicTimeline' => array(
-										'json' => 0
-									),
-									'speakerTimeline' => array(
-										'json' => 0
-									)
+									'topicTimeline' => $timelineConfig,
+									'speakerTimeline' => $timelineConfig
 								)
 							)
 						)
