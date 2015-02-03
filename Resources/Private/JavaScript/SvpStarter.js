@@ -411,8 +411,8 @@ var SvpStarter = (function($) {
 		 * @return void
 		 */
 		processMeetingdataChange: function(data) {
-			// note that empty elements are translated by json-encoding to
-			// value "false", hence these extra checks
+			// note that empty/null elements are translated by json-encoding to
+			// value "false" in some cases, hence these extra checks
 
 			// add missing speakers?
 			if (data.hasOwnProperty('speakers')
@@ -437,17 +437,15 @@ var SvpStarter = (function($) {
 			// activate latest speaker timestamp?
 			if (data.hasOwnProperty('speakerTimeline')
 				&& data.speakerTimeline !== false
-				//&& data.speakerTimeline.length !== count.speakerTime
+				&& data.speakerTimeline.length > 0
 			) {
-				//count.speakerTime = data.speakerTimeline.length;
 				activateLatestElement(data.speakerTimeline, 'speaker');
 			}
 			// activate latest topic timestamp?
 			if (data.hasOwnProperty('topicTimeline')
 				&& data.topicTimeline !== false
-				//&& data.topicTimeline.length !== count.topicTime
+				&& data.topicTimeline.length > 0
 			) {
-				//count.topicTime = data.topicTimeline.length;
 				activateLatestElement(data.topicTimeline, 'topic');
 			}
 		},
