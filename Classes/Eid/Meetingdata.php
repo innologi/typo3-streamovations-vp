@@ -107,8 +107,9 @@ class Meetingdata {
 		// why even bother with TYPO3 session in eID context..
 		session_start();
 		$objectHash = md5(serialize($meetingdata));
-		if (!isset($_SESSION['meetingdataHash'][$hash]) || $objectHash !== $_SESSION['meetingdataHash'][$hash]) {
-			$_SESSION['meetingdataHash'][$hash] = $objectHash;
+		$sessionKey = 'meetingdataHash' . $hash;
+		if (!isset($_SESSION[$sessionKey]) || $objectHash !== $_SESSION[$sessionKey]) {
+			$_SESSION[$sessionKey] = $objectHash;
 		} else {
 			// on no changes, providing an empty class speeds things up
 			$meetingdata = new \stdClass();
