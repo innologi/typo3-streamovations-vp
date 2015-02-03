@@ -189,8 +189,7 @@ var SvpStarter = (function($) {
 
 			if (this.isLiveStream) {
 				initLiveCounters();
-				// @TODO only start polling on play? Can you pause a livestream?
-				//this.initPolling();
+				this.initPolling();
 			} else {
 				this.initEventHandlers();
 			}
@@ -577,7 +576,15 @@ var SvpStarter = (function($) {
 				//hash = '###HASH###';
 				hash = $('#' + this.select.data).attr('data-hash');
 
-			SvpPolling.init(hash, pid, interval);
+			// @FIX when changing quality or language, jwplayer is also destroyed.. check for any other onPlay or onPause!
+			this.jw.onPlay(function() {
+				SvpPolling.init(hash, pid, interval);
+			});
+			this.jw.onPause(function() {
+				SvpPolling.stop();
+				_this.deactivateElement('speaker');
+				_this.deactivateElement('topic');
+			});
 		}
 	}
 
