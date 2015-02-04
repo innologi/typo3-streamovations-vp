@@ -347,12 +347,11 @@ var SvpStarter = (function($) {
 			console.log('SVPS | initializing event handlers');
 
 			// set jump event on topic clicks
-			$('.' + this.select.container + ' .topics').on('click', '.topic .topic-link', function() {
+			$('.' + this.select.container + ' .topics').on('click', '.topic .topic-link', function(e) {
+				e.preventDefault();
 				_this.jumpToTopic(
 					$(this).parent('.topic').attr('data-topic')
 				);
-				return false;
-				// @TODO e.preventDefault(); ?
 			});
 
 			// parse meeting data
