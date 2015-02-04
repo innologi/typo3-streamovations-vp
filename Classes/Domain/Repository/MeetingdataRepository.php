@@ -1,6 +1,5 @@
 <?php
 namespace Innologi\StreamovationsVp\Domain\Repository;
-
 /***************************************************************
  *  Copyright notice
  *
@@ -24,7 +23,7 @@ namespace Innologi\StreamovationsVp\Domain\Repository;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
+use Innologi\StreamovationsVp\Library\Rest\Repository;
 /**
  * Meetingdata Repository
  *
@@ -35,7 +34,7 @@ namespace Innologi\StreamovationsVp\Domain\Repository;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class MeetingdataRepository extends \Innologi\StreamovationsVp\Library\Rest\Repository {
+class MeetingdataRepository extends Repository {
 
 	/**
 	 * Returns meetingdata associated with session hash.
@@ -44,10 +43,9 @@ class MeetingdataRepository extends \Innologi\StreamovationsVp\Library\Rest\Repo
 	 * @return array
 	 */
 	public function findByHash($hash) {
-		$response = $this->createRequest()
+		return $this->createRequest()
 			->addArgument('session', $hash)
 			->send();
-		return $response;
 	}
 
 }

@@ -1,6 +1,5 @@
 <?php
 namespace Innologi\StreamovationsVp\Library\Rest;
-
 /***************************************************************
  *  Copyright notice
  *

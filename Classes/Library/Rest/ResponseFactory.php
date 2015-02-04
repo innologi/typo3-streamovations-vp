@@ -1,6 +1,5 @@
 <?php
 namespace Innologi\StreamovationsVp\Library\Rest;
-
 /***************************************************************
  *  Copyright notice
  *
@@ -49,7 +48,7 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 
 		// convert response to array
 		switch ($responseType) {
-			case RequestInterface::RESPONSE_TYPE_JSON:
+			case RequestInterface::RESPONSETYPE_JSON:
 				$output = json_decode($rawResponse, TRUE);
 				break;
 			default:

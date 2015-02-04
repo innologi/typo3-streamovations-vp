@@ -1,6 +1,5 @@
 <?php
 namespace Innologi\StreamovationsVp\Library\Rest;
-
 /***************************************************************
  *  Copyright notice
  *
@@ -24,7 +23,7 @@ namespace Innologi\StreamovationsVp\Library\Rest;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * TYPO3 REST Request
  *
@@ -44,7 +43,7 @@ class Typo3Request extends RequestAbstract implements RequestInterface {
 	 */
 	public function send($returnRawResponse = FALSE) {
 		$report = array();
-		$rawResponse = \TYPO3\CMS\Core\Utility\GeneralUtility::getUrl(
+		$rawResponse = GeneralUtility::getUrl(
 			$this->requestUri->getRequestUri(), 0, $this->headers, $report
 		);
 

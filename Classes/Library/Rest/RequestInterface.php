@@ -1,6 +1,5 @@
 <?php
 namespace Innologi\StreamovationsVp\Library\Rest;
-
 /***************************************************************
  *  Copyright notice
  *
@@ -34,8 +33,8 @@ namespace Innologi\StreamovationsVp\Library\Rest;
  */
 interface RequestInterface {
 
-	const RESPONSE_TYPE_JSON = 0;
-	const RESPONSE_TYPE_XML = 1;
+	const RESPONSETYPE_JSON = 0;
+	const RESPONSETYPE_XML = 1;
 
 	/**
 	 * Constructor

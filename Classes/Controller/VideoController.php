@@ -27,6 +27,7 @@ namespace Innologi\StreamovationsVp\Controller;
 use Innologi\StreamovationsVp\Domain\Utility\EventUtility;
 use Innologi\StreamovationsVp\Library\Rest\ResponseInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 /**
  * Video Controller
  *
@@ -34,7 +35,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class VideoController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
+class VideoController extends ActionController {
 
 	/**
 	 * @var \Innologi\StreamovationsVp\Domain\Repository\EventRepository

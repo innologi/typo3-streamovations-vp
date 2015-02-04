@@ -1,6 +1,5 @@
 <?php
 namespace Innologi\StreamovationsVp\Domain\Repository;
-
 /***************************************************************
  *  Copyright notice
  *
@@ -24,7 +23,7 @@ namespace Innologi\StreamovationsVp\Domain\Repository;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
+use Innologi\StreamovationsVp\Library\Rest\Repository;
 /**
  * Playlist Repository
  *
@@ -37,7 +36,7 @@ namespace Innologi\StreamovationsVp\Domain\Repository;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class PlaylistRepository extends \Innologi\StreamovationsVp\Library\Rest\Repository {
+class PlaylistRepository extends Repository {
 
 	/**
 	 * Returns playlist identified by hash.

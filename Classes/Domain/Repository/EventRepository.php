@@ -1,6 +1,5 @@
 <?php
 namespace Innologi\StreamovationsVp\Domain\Repository;
-
 /***************************************************************
  *  Copyright notice
  *
@@ -24,7 +23,7 @@ namespace Innologi\StreamovationsVp\Domain\Repository;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
+use Innologi\StreamovationsVp\Library\Rest\Repository;
 /**
  * Event/Session Repository
  *
@@ -45,7 +44,7 @@ namespace Innologi\StreamovationsVp\Domain\Repository;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class EventRepository extends \Innologi\StreamovationsVp\Library\Rest\Repository {
+class EventRepository extends Repository {
 
 	// DateTime formats
 	const FORMAT_DATE = 'Y-m-d';
@@ -106,7 +105,7 @@ class EventRepository extends \Innologi\StreamovationsVp\Library\Rest\Repository
 	 * @param string $format
 	 * @return array
 	 */
-	public function findAt(\DateTime $dateTime, $format) {
+	public function findAt(\Datetime $dateTime, $format) {
 		$request = $this->createRequest()
 			->addArgument('at', $dateTime->format($format));
 		return $this->addSharedArguments($request)->send();

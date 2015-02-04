@@ -1,6 +1,5 @@
 <?php
 namespace Innologi\StreamovationsVp\Library\Rest;
-
 /***************************************************************
  *  Copyright notice
  *
@@ -24,7 +23,7 @@ namespace Innologi\StreamovationsVp\Library\Rest;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 /**
  * Factory Abstract
  *
@@ -67,7 +66,7 @@ abstract class FactoryAbstract {
 		/* @var $configurationManager \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface */
 		$configurationManager = $this->objectManager->get('TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManagerInterface');
 		$frameworkConfiguration = $configurationManager->getConfiguration(
-			\TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK
+			ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK
 		);
 		$this->configuration = $frameworkConfiguration['rest'];
 	}

@@ -25,7 +25,6 @@ namespace Innologi\StreamovationsVp\ViewHelpers\File;
  ***************************************************************/
 use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 /**
  * file.exists viewhelper
  *
@@ -61,4 +60,3 @@ class ExistsViewHelper extends AbstractConditionViewHelper {
 	}
 
 }
-?>

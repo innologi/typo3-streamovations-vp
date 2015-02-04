@@ -1,6 +1,5 @@
 <?php
 namespace Innologi\StreamovationsVp\Library\Rest;
-
 /***************************************************************
  *  Copyright notice
  *
@@ -43,7 +42,7 @@ abstract class RequestAbstract {
 	/**
 	 * @var integer
 	 */
-	protected $responseType = RequestInterface::RESPONSE_TYPE_JSON;
+	protected $responseType = RequestInterface::RESPONSETYPE_JSON;
 
 	/**
 	 * @var string
@@ -132,7 +131,7 @@ abstract class RequestAbstract {
 	 * @return void
 	 */
 	protected function initRequestHeaders() {
-		$this->headers[] = 'Accept: ' . ($this->responseType === RequestInterface::RESPONSE_TYPE_JSON
+		$this->headers[] = 'Accept: ' . ($this->responseType === RequestInterface::RESPONSETYPE_JSON
 			? 'application/json'
 			: 'text/xml'
 		);
