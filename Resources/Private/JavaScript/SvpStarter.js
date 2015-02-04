@@ -137,7 +137,9 @@ var SvpStarter = (function($) {
 		orig: {
 			player: {
 				next: null,
-				previous: null
+				previous: null,
+				setQualityLevel: null,
+				setAudioLanguage: null
 				// @TODO aren't you forgetting some properties here?
 			}
 		},
