@@ -25,6 +25,8 @@ namespace Innologi\StreamovationsVp\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use Innologi\StreamovationsVp\Domain\Utility\EventUtility;
+use Innologi\StreamovationsVp\Library\Rest\ResponseInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Video Controller
  *
@@ -110,6 +112,84 @@ class VideoController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 
 		$playlist = $this->playlistRepository->findByHash($hash);
 		if ($playlist) {
+			if ($playlist instanceof ResponseInterface) {
+				// for jwPlayer we need to construct a valid configuration from the response
+				// @see http://support.jwplayer.com/customer/portal/articles/1413113-configuration-options-reference
+				if ($playerType === 1) {
+					$useSmil = (int)$this->settings['jwPlayer']['smilSupport'] > 0;
+					$ports = $playlist->getPorts();
+					$application = $playlist->getApplication();
+					$urlParts = array(
+						0 => 'rtmp',
+						1 => '://' . $playlist->getServer() . ':',
+						2 => $ports['rtmp'],
+						3 => '/' . $application . '/'
+					);
+
+					$playlistData = array(
+						'playlist' => array(),
+						'width' => $this->settings['jwPlayer']['width'],
+						'height' => $this->settings['jwPlayer']['height'],
+						// used by SVPS, not by jwplayer
+						'application' => $application
+					);
+
+					$playlistItems = $playlist->getPlaylist();
+					foreach ($playlistItems as $playlistItem) {
+						if (!isset($playlistItem['source']['qualities'])) {
+							// @TODO throw exception
+						}
+
+						$uP = $urlParts;
+						// best case scenario: smil is available, provides quality selection
+						if ($useSmil && isset($playlistItem['source']['smil'])) {
+							$uP[0] = 'http';
+							$uP[2] = $ports['http'];
+							$source = isset($this->settings['jwPlayer']['smilTemplate'][0])
+								? str_replace(
+									'###SOURCE###',
+									$playlistItem['source']['smil'],
+									$this->settings['jwPlayer']['smilTemplate']
+								)
+								: $playlistItem['source']['smil'];
+
+						// worst case scenario: no smil and I'm not bothering with creating quality selection
+						} else {
+							$source = isset($playlistItem['source']['defaultQuality']) && isset($playlistItem['source']['qualities'][$playlistItem['source']['defaultQuality']])
+								? $playlistItem['source']['qualities'][$playlistItem['source']['defaultQuality']]
+								// @TODO test this
+								: array_shift($playlistItem['source']['qualities']);
+							// when livestreaming, $source is an array containing a stream for each available language
+							if ($application === 'rtplive' && is_array($source)) {
+								// livestream does not produce available languages, hence we use a configured csv list
+								$languages = GeneralUtility::trimExplode(',', $this->settings['live']['languages']);
+								foreach ($languages as $lang) {
+									if (isset($source[$lang])) {
+										$source = $source[$lang];
+										break;
+									}
+								}
+								// @TODO throw exception if lang not found
+							}
+						}
+
+						$url = join('', $uP);
+						$playlistData['playlist'][] = array(
+							// @LOW 'image' => ''
+							'sources' => array(
+								0 => array(
+									'file' => $url . $source
+								)
+							),
+							// used by SVPS, not by jwplayer
+							'streamfileId' => $playlistItem['streamfileId']
+						);
+					}
+				}
+
+				// @FIX the option provided is not supported for PHP < 5.4
+				$playlist = json_encode($playlistData, JSON_UNESCAPED_SLASHES);
+			}
 			// @TODO make meetingdata optional
 			$meetingdata = $this->meetingdataRepository->findByHash($hash);
 			$this->view->assign('meetingdata', $meetingdata);

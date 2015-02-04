@@ -129,7 +129,6 @@ var SvpStarter = (function($) {
 
 		// currently active data types
 		active: {
-			playlist: 0,
 			topic: 0,
 			speaker: 0
 		},
@@ -139,6 +138,7 @@ var SvpStarter = (function($) {
 			player: {
 				next: null,
 				previous: null
+				// @TODO aren't you forgetting some properties here?
 			}
 		},
 
@@ -151,7 +151,7 @@ var SvpStarter = (function($) {
 		},
 
 		// used to limit seekOnPlays to 1
-		seekOnPlay: false,
+		seekOnPlay: {},
 
 		// registers a hit of onSeek events, to determine if topics/speakers need to be disabled
 		onSeekHit: {
@@ -169,24 +169,34 @@ var SvpStarter = (function($) {
 				return false;
 			}
 
+			// @TODO try/catch for every JSON.parse call?
+			// read & parse data
+			var data = JSON.parse($data.html().trim());
+			$data.html('');
+			if (typeof data !== 'object') {
+				alert('###ERROR_INVALID_JSON###');
+				return false;
+			}
+
 			switch ('###PLAYER_TYPE###') {
 				case '2':
-					// read data
-					var data = $data.html();
-					$data.html('');
-
-					if (window.JSON.parse) {
-						this.createSmvPlayer(data);
-						break;
-					}
-					// incompatible user-agent, fallback to jw
+					this.createSmvPlayer(data);
+					break;
 				case '1':
-					this.createJwPlayer();
+					this.createJwPlayer(data);
 					break;
 				default:
 					// no valid player configuration
 					alert('###ERROR_NO_VALIDPLAYER###');
 					return false;
+			}
+
+			// meetingdata refers to streamfile id's, but we can only request playlist id from jwplayer object
+			if (data.hasOwnProperty('playlist')) {
+				this.pushPlaylistToIdMap(data.playlist);
+			}
+			if (data.hasOwnProperty('application')) {
+				this.isLiveStream = data.application === 'rtplive';
 			}
 
 			if (this.isLiveStream) {
@@ -217,14 +227,9 @@ var SvpStarter = (function($) {
 		},
 
 		// initialize Streamovations Player
-		createSmvPlayer: function(jsonString) {
+		createSmvPlayer: function(data) {
 			// #@FIX do a more proper error handling
 			if (this.initJwPlayer(true)) {
-				// smvplayer requires an existing jsonString
-				if (!jsonString) {
-					alert('###ERROR_NO_JSON###');
-					return;
-				}
 				// smvplayer object needs to exist
 				// #@FIX this produced an exception when smvplayer wasn't loaded, so this doesn't work
 				if (!smvplayer) {
@@ -232,25 +237,8 @@ var SvpStarter = (function($) {
 					return;
 				}
 
-				// @TODO try/catch for every JSON.parse call?
-				// parse json
-				var jsonData = JSON.parse(jsonString);
-				if (typeof jsonData !== 'object') {
-					alert('###ERROR_INVALID_JSON###');
-					return;
-				}
-
-				// meetingdata refers to streamfile id's, but we can only request playlist id from jwplayer object
-				if (jsonData.hasOwnProperty('playlist')) {
-					this.pushPlaylistToIdMap(jsonData.playlist);
-				}
-				if (jsonData.hasOwnProperty('application')) {
-					this.isLiveStream = jsonData.application === 'rtplive';
-				}
-
-
 				this.player = smvplayer(this.select.player);
-				this.player.init(jsonData);
+				this.player.init(data);
 				this.jw = jwplayer(this.select.player);
 
 				// Smvplayer calls jwplayer.remove() on moving in the playlist, which clears the entire jwplayer
@@ -296,19 +284,42 @@ var SvpStarter = (function($) {
 					_this.orig.player.setAudioLanguage(l);
 					_this.reset();
 				}
+				// because smvplayer doesnt use the playlist as jwplayer does, we emulate
+				// some specific playlist methods on this.player to create a shared api
+				// where this is covenient for SVPS
+				this.player.getPlaylistIndex = function() {
+					return _this.player.getTimeline().currentItem;
+				}
+				this.player.playlistNext = function() {
+					_this.player.next();
+				}
+				this.player.playlistPrev = function() {
+					_this.player.previous();
+				}
+				this.player.playlistItem = function(index) {
+					moveAction = index - _this.player.getPlaylistIndex();
+					if (moveAction > 0) {
+						_this.recursiveMoveNext(0, moveAction);
+					} else if(moveAction < 0) {
+						_this.recursiveMovePrevious(0, moveAction);
+					}
+				}
 			}
 		},
 
-		// #@TODO finish implementation!
 		// initialize JW Player
-		createJwPlayer: function() {
+		createJwPlayer: function(data) {
 			if (this.initJwPlayer(false)) {
+				jwplayer(this.select.player).setup(data);
+				// apparently setup() creates a new object, so assign these AFTER setup()
 				this.player = jwplayer(this.select.player);
-				this.player.setup({
-					file: 'rtmp://188.205.234.147:1935/vod/19_15_test_scheduler_caef3c4f1d9c4255691b18d1b92bad86cf3dbe66---mbr-2---.mp4'
-					//image: '/uploads/myPoster.jpg'
-				});
 				this.jw = this.player;
+
+				// on changing playlist item, deactivate elements
+				this.player.onPlaylistItem(function(e) {
+					_this.deactivateElement('speaker');
+					_this.deactivateElement('topic');
+				});
 			}
 		},
 
@@ -342,28 +353,25 @@ var SvpStarter = (function($) {
 				// @TODO e.preventDefault(); ?
 			});
 
-			// automatic timeline events need JSON parsing
-			if (window.JSON.parse) {
-				// parse meeting data
-				var $topicTimeline = $('#' + this.select.topicTimeline + ':first');
-				var $speakerTimeline = $('#' + this.select.speakerTimeline + ':first');
+			// parse meeting data
+			var $topicTimeline = $('#' + this.select.topicTimeline + ':first');
+			var $speakerTimeline = $('#' + this.select.speakerTimeline + ':first');
 
-				if ($topicTimeline.exists()) {
-					// @TODO try/catch for every JSON.parse call?
-					var timeline = JSON.parse($topicTimeline.html());
-					if (timeline.length > 0) {
-						this.createTimelineEventHandlers('topic', timeline, true);
-					}
-					$topicTimeline.html('');
+			if ($topicTimeline.exists()) {
+				// @TODO try/catch for every JSON.parse call?
+				var timeline = JSON.parse($topicTimeline.html());
+				if (timeline.length > 0) {
+					this.createTimelineEventHandlers('topic', timeline, true);
 				}
-				if ($speakerTimeline.exists()) {
-					// @TODO try/catch for every JSON.parse call?
-					var timeline = JSON.parse($speakerTimeline.html());
-					if (timeline.length > 0) {
-						this.createTimelineEventHandlers('speaker', timeline, false);
-					}
-					$speakerTimeline.html('');
+				$topicTimeline.html('');
+			}
+			if ($speakerTimeline.exists()) {
+				// @TODO try/catch for every JSON.parse call?
+				var timeline = JSON.parse($speakerTimeline.html());
+				if (timeline.length > 0) {
+					this.createTimelineEventHandlers('speaker', timeline, false);
 				}
+				$speakerTimeline.html('');
 			}
 		},
 
@@ -478,8 +486,6 @@ var SvpStarter = (function($) {
 			this.jw = jwplayer(this.select.player);
 			// if really new, an onReady will be fired
 			this.jw.onReady(function(e) {
-				// @FIX only smvplayer has getTimeline()
-				_this.active.playlist = _this.player.getTimeline().currentItem;
 				_this.deactivateElement('speaker');
 				_this.deactivateElement('topic');
 				// all event handler callbacks need to be re-attached
@@ -522,20 +528,17 @@ var SvpStarter = (function($) {
 		jumpToTopic: function(id) {
 			var topic = this.idMap.topic[id];
 			if (topic !== undefined) {
-				// @TODO this is entirely smvplayer dependent, so what to do with jwplayer?
-				var moveAction = topic.playlist - this.player.getTimeline().currentItem;
-				if (moveAction > 0) {
-					this.recursiveSeekInNext(0, moveAction, topic.time);
-				} else if(moveAction < 0) {
-					this.recursiveSeekInPrevious(0, moveAction, topic.time);
+				if (topic.playlist !== this.player.getPlaylistIndex()) {
+					this.player.playlistItem(topic.playlist);
+				}
+				// e.g. when IDLE (smv) or BUFFERING (jw)
+				var state = this.jw.getState();
+				if (state !== 'PLAYING') {
+					// not all relevant onSeek events will trigger if player hasn't started
+					this.applySeekOnPlay(topic);
+					this.jw.play(true);
 				} else {
-					if (this.jw.getState() === 'IDLE') {
-						// not all relevant onSeek events will trigger if player hasn't started
-						this.applySeekOnPlay(topic.time);
-						this.jw.play(true);
-					} else {
-						this.player.seek(topic.time);
-					}
+					this.player.seek(topic.time);
 				}
 			} else {
 				// @LOW throw error?
@@ -543,53 +546,55 @@ var SvpStarter = (function($) {
 			}
 		},
 
-		// recursively call next() and then seek()
-		recursiveSeekInNext: function(current, limit, time) {
-			this.player.next();
+		// recursively call playlistNext(), smvplayer only!
+		recursiveMoveNext: function(current, limit) {
+			this.player.playlistNext();
 			current++;
 			if (current < limit) {
 				this.jw.onReady(function (e) {
 					// timeout prevents flash from crashing
 					setTimeout(function() {
-						_this.recursiveSeekInNext(current, limit, time);
+						_this.recursiveMoveNext(current, limit);
 					}, 50);
 				});
-			} else {
-				this.applySeekOnPlay(time);
 			}
 		},
 
-		// recursively call previous() and then seek()
-		recursiveSeekInPrevious: function(current, limit, seekTime) {
-			this.player.previous();
+		// recursively call playlistPrev(), smvplayer only!
+		recursiveMovePrevious: function(current, limit) {
+			this.player.playlistPrev();
 			current--;
 			if (current > limit) {
-				// timeout prevents flash from crashing
 				this.jw.onReady(function (e) {
+					// timeout prevents flash from crashing
 					setTimeout(function() {
-						_this.recursiveSeekInPrevious(current, limit, seekTime);
+						_this.recursiveMovePrevious(current, limit);
 					}, 50);
 				});
-			} else {
-				this.applySeekOnPlay(seekTime);
 			}
 		},
 
 		// applies a seek() on the onPlay event handler, useful when player isn't playing
-		applySeekOnPlay: function(seekTime) {
-			this.seekOnPlay = true;
+		// otherwise, the flash player may crash (argh)
+		applySeekOnPlay: function(o) {
+			if (!this.seekOnPlay.hasOwnProperty(o.playlist)) {
+				this.seekOnPlay[o.playlist] = {};
+			}
+			this.seekOnPlay[o.playlist][o.time] = true;
+
 			// note that this onPlay isn't added to callbacks with smvPlayer, that would be useless
 			this.jw.onPlay(function (e) {
-				if (_this.seekOnPlay) {
-					_this.player.seek(seekTime);
-					_this.seekOnPlay = false;
+				// there's no way to delete onPlay event callbacks.. so we need these conditions :(
+				if (_this.seekOnPlay[o.playlist][o.time]) {
+					_this.player.seek(o.time);
+					_this.seekOnPlay[o.playlist][o.time] = false;
 				}
 			});
 		},
 
 		// find out if time is valid for current playlist item
 		timeIsOnPlaylist: function(t) {
-			return this.idMap.playlist[t.streamfileId] === this.active.playlist;
+			return this.idMap.playlist[t.streamfileId] === this.player.getPlaylistIndex();
 		},
 
 		// initialize polling function

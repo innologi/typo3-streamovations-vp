@@ -80,6 +80,15 @@ plugin.tx_streamovationsvp {
 	}
 	settings {
 		player = {$plugin.tx_streamovationsvp.settings.player}
+		live {
+			languages = {$plugin.tx_streamovationsvp.settings.live.language}
+		}
+		jwPlayer {
+			width = {$plugin.tx_streamovationsvp.settings.jwPlayer.width}
+			height = {$plugin.tx_streamovationsvp.settings.jwPlayer.height}
+			smilSupport = {$plugin.tx_streamovationsvp.settings.jwPlayer.smilSupport}
+			smilTemplate = {$plugin.tx_streamovationsvp.settings.jwPlayer.smilTemplate}
+		}
 		topics {
 			enable = {$plugin.tx_streamovationsvp.settings.topics.enable}
 		}
@@ -123,7 +132,7 @@ plugin.tx_streamovationsvp {
 			10.template.file = {$plugin.tx_streamovationsvp.javascript.starterFile}
 			10.marks {
 				JWPLAYER_KEY = TEXT
-				JWPLAYER_KEY.value = {$plugin.tx_streamovationsvp.settings.jwPlayerKey}
+				JWPLAYER_KEY.value = {$plugin.tx_streamovationsvp.settings.jwPlayer.key}
 				PLAYER_TYPE = TEXT
 				PLAYER_TYPE.value = {$plugin.tx_streamovationsvp.settings.player}
 				POLLING_INTERVAL = TEXT

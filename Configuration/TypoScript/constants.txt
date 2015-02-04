@@ -19,11 +19,22 @@ plugin.tx_streamovationsvp {
 	settings {
 		# cat=plugin.tx_streamovationsvp//b; type=options[JW Player=1, Streamovations Player=2]; label=Preferred Video Player: Choose which videoplayer to use. If you wish to use the Streamovations player, please ask your contact at the Streamovations company about this, as it will require a JW player license key and additional player files.
 		player = 1
-		# cat=plugin.tx_streamovationsvp//c; type=string; label=JW Player License Key: You need a valid license key for use of the Streamovations Player. Please note that your license key will be exposed to knowledgable viewers of the plugin, as is always the case with JW Player. 
-		jwPlayerKey =
+		jwPlayer {
+			# cat=plugin.tx_streamovationsvp//c; type=string; label=JW Player License Key: You need a valid license key for use of the Streamovations Player. Please note that your license key will be exposed to knowledgable viewers of the plugin, as is always the case with JW Player.
+			key =
+			# width
+			width = 600
+			# height
+			height = 355
+			smilSupport = 1
+			# see http://support.jwplayer.com/customer/portal/articles/1430398-dynamic-rtmp-streaming
+			smilTemplate = smil:###SOURCE###/jwplayer.smil
+			
+		}
 		
 		pollingInterval = 5
 		
+		live.languages = or,nl,en
 		topics.enable = 1
 		speakers {
 			enable = 1
