@@ -26,38 +26,13 @@ namespace Innologi\StreamovationsVp\Library\Rest;
  ***************************************************************/
 
 /**
- * REST Repository
+ * REST Repository Interface
  *
  * @package streamovations_vp
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class Repository implements RepositoryInterface,\TYPO3\CMS\Core\SingletonInterface {
-
-	/**
-	 * @var \TYPO3\CMS\Extbase\Object\ObjectManagerInterface
-	 * @inject
-	 */
-	protected $objectManager;
-
-	/**
-	 * @var string
-	 */
-	protected $objectType;
-
-	/**
-	 * @var boolean
-	 */
-	protected $forceRawResponse = FALSE;
-
-	/**
-	 * Constructs a new Repository
-	 *
-	 * @return void
-	 */
-	public function __construct() {
-		$this->initializeObjectType();
-	}
+interface RepositoryInterface {
 
 	/**
 	 * If TRUE, forces RAW response from any request,
@@ -66,38 +41,20 @@ class Repository implements RepositoryInterface,\TYPO3\CMS\Core\SingletonInterfa
 	 * @param boolean $forceRawResponse
 	 * @return Repository
 	 */
-	public function setForceRawResponse($forceRawResponse) {
-		$this->forceRawResponse = $forceRawResponse;
-		return $this;
-	}
+	public function setForceRawResponse($forceRawResponse);
 
 	/**
 	 * Initializes ObjectType from class name
 	 *
 	 * @return void
 	 */
-	protected function initializeObjectType() {
-		$className = strtoLower(get_class($this));
-		// rempve 'repository'
-		$this->objectType = str_replace(
-			'repository',
-			'',
-			// remove namespace
-			substr($className, (strrpos($className, '\\') + 1))
-		);
-	}
+	protected function initializeObjectType();
 
 	/**
 	 * Creates a REST Request object
 	 *
 	 * @return RequestInterface
 	 */
-	protected function createRequest() {
-		// @LOW if multiple REST requests in a single web request, this is not efficient
-		/* @var $requestFactory RequestFactoryInterface */
-		$requestFactory = $this->objectManager->get(__NAMESPACE__ . '\\RequestFactoryInterface');
-
-		return $requestFactory->create($this->objectType, $this->forceRawResponse);
-	}
+	protected function createRequest();
 
 }
