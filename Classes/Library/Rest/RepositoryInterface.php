@@ -42,18 +42,4 @@ interface RepositoryInterface {
 	 */
 	public function setForceRawResponse($forceRawResponse);
 
-	/**
-	 * Initializes ObjectType from class name
-	 *
-	 * @return void
-	 */
-	protected function initializeObjectType();
-
-	/**
-	 * Creates a REST Request object
-	 *
-	 * @return RequestInterface
-	 */
-	protected function createRequest();
-
 }
