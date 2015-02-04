@@ -1,4 +1,7 @@
 config.tx_extbase.objects {
+	Innologi\StreamovationsVp\Domain\Service\EventServiceInterface {
+		className = Innologi\StreamovationsVp\Domain\Service\EventService
+	}
 	Innologi\StreamovationsVp\Library\Rest\ResponseFactoryInterface {
 		className = Innologi\StreamovationsVp\Library\Rest\ResponseFactory
 	}

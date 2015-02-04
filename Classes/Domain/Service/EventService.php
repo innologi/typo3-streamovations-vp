@@ -1,5 +1,5 @@
 <?php
-namespace Innologi\StreamovationsVp\Domain\Utility;
+namespace Innologi\StreamovationsVp\Domain\Service;
 /***************************************************************
  *  Copyright notice
  *
@@ -25,25 +25,23 @@ namespace Innologi\StreamovationsVp\Domain\Utility;
  ***************************************************************/
 
 /**
- * Event Domain utility class
+ * Event Domain Service class
  *
  * @package streamovations_vp
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class EventUtility {
+class EventService implements EventServiceInterface {
 
 	/**
-	 * Filters out specified $streamingType from $events,
-	 * by unsetting any matches.
+	 * Filters out specified streamingType from $events.
 	 *
 	 * @param array $events
-	 * @param string $streamingType
 	 * @return array
 	 */
-	static public function filterOutStreamingType(array $events, $streamingType) {
+	public function filterOutLiveStreams(array $events) {
 		foreach ($events as $index => $event) {
-			if ($event->getStreamingType() === $streamingType) {
+			if ($event->getStreamingType() === EventServiceInterface::STREAMINGTYPE_LIVE) {
 				unset($events[$index]);
 			}
 		}

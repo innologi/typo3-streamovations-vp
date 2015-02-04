@@ -91,7 +91,10 @@ class VideoController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 		}
 		// @TODO error handling of lack of proper dates?
 
-		$events = EventUtility::filterOutStreamingType($events, 'live');
+		/* @var $eventService \Innologi\StreamovationsVp\Domain\Service\EventServiceInterface */
+		$eventService = $this->objectManager->get('Innologi\\StreamovationsVp\\Domain\\Service\\EventServiceInterface');
+		$events = $eventService->filterOutLiveStreams($events);
+
 		$this->view->assign('events', $events);
 	}
 
