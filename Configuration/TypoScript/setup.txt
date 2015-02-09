@@ -270,4 +270,50 @@ plugin.tx_streamovationsvp._CSS_DEFAULT_STYLE (
 	.tx-streamovations-vp .speaker-avatar {
 		border:1px solid #888;
 	}
+	
+	
+	
+	/* Flash messages */
+	
+	.tx-streamovations-vp .typo3-messages {
+		overflow:hidden;
+	}
+	.tx-streamovations-vp .typo3-message {
+		margin:8px 0;
+		padding:10px;
+		min-width:100px;
+		font-size:0.9em;
+	}
+	.tx-streamovations-vp .typo3-message {
+		float:left;
+		clear:both;
+	}
+	.tx-streamovations-vp .typo3-message .message-header {
+		font-weight:bold;
+	}
+	.tx-streamovations-vp .typo3-message.message-error {
+		background-color:#fcb;
+		border:1px solid #ea9;
+		color:#a33;
+	}
+	.tx-streamovations-vp .typo3-message.message-warning {
+		background-color:#ffb;
+		border:1px solid #f5d588;
+		color:#85510d;
+	}
+	.tx-streamovations-vp .typo3-message.message-notice {
+		background-color:#e4e4e4;
+		border:1px solid #d5d5d5;
+		color:#443;
+	}
+	.tx-streamovations-vp .typo3-message.message-information {
+		background-color:#def;
+		border:1px solid #cdf;
+		color:#469;
+	}
+	.tx-streamovations-vp .typo3-message.message-ok {
+		background-color:#cdefc0;
+		border:1px solid #b9ddaa;
+		color:#3b7826;		
+	}
 )	
