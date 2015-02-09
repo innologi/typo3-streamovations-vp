@@ -1,8 +1,7 @@
 {namespace s=Innologi\StreamovationsVp\ViewHelpers}
-<f:layout name="Default" />
+<f:layout name="FullWidth" />
 
 <!--
-	@TODO add a back button
 	@TODO make types of meetingdata optional
 	@TODO replace the error message with proper error handling
 	@TODO put stuff in partials
@@ -13,6 +12,16 @@
 
 <f:if condition="{playlist}">
 <f:then>
+	<div id="tx-streamovations-vp-play" class="video-player"></div>
+	
+	<f:if condition="{settings.backPid}">
+		<f:link.page
+			title="Terug naar vorige pagina"
+			class="back-link"
+			pageUid="{settings.backPid}"
+		>Terug</f:link.page>
+	</f:if>
+	
 	<f:if condition="{meetingdata.topics}">
 		<div class="topics">
 			<p class="header">Agendapunten</p>
@@ -31,8 +40,6 @@
 			</ol>
 		</div>
 	</f:if>
-	
-	<div id="tx-streamovations-vp-play" class="video-player"></div>
 	
 	<f:if condition="{meetingdata.speakers}">
 		<div class="speakers">

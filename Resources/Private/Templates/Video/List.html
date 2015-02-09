@@ -1,26 +1,32 @@
+{namespace s=Innologi\StreamovationsVp\ViewHelpers}
 <f:layout name="Default" />
 
 <f:section name="main">
 <f:if condition="{events}">
 <f:then>
-	<table class="videos">
-		<caption>Streaming video's van vergaderingen</caption>
-		<tr>
-			<th scope="col">Vergadering</th>
-			<th scope="col">Tijdstip</th>
-		</tr>
-		
-		<f:for each="{events}" as="event">
-			<tr>	
-				<td>
-					<f:link.action action="show" arguments="{hash:event.eventId}">{event.title}</f:link.action>
-				</td>
-				<td>
-					<f:format.date format="d-m-Y, H:i">@{event.startUnix}</f:format.date>
-				</td>
-			</tr>
-		</f:for>
-	</table>
+	<ul>
+		<s:collection.sort subject="{events}" as="sortedEvents" sortBy="startUnix" order="DESC">
+			<s:collection.groupedForDateTime each="{sortedEvents}" as="groupEvents" groupBy="startUnix" dateTimeFormat="Y" groupKey="year">
+				<li class="events">
+					<p class="events-header">{year}</p>
+					<ul>
+						<f:for each="{groupEvents}" as="event">
+							<li class="event">
+								<f:link.action
+									action="show"
+									arguments="{hash:event.eventId}"
+									title="Videostream {f:format.date(format:'d-m-Y, H:i', date:'@{event.startUnix}')} - {f:format.date(format:'H:i', date:'@{event.endUnix}')}"
+									class="event-link"
+									pageUid="{settings.showPid}"
+								>
+								{event.title}
+								</f:link.action>
+							</li>
+						</f:for>
+					</ul>
+			</s:collection.groupedForDateTime>
+		</s:collection.sort>
+	</ul>
 </f:then>
 <f:else>
 	<p>No recorded events found.</p>

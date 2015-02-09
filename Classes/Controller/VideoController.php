@@ -97,6 +97,13 @@ class VideoController extends ActionController {
 		$events = $eventService->filterOutLiveStreams($events);
 
 		$this->view->assign('events', $events);
+
+		// pid fallback, seeing as how there is NONE unless we pass a NULL value
+		// .. which is impossible in TYPO3 Fluid
+		if (!isset($this->settings['showPid'][0])) {
+			$this->settings['showPid'] = $GLOBALS['TSFE']->id;
+			$this->view->assign('settings', $this->settings);
+		}
 	}
 
 	/**

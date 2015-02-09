@@ -85,6 +85,9 @@ plugin.tx_streamovationsvp {
 		}
 	}
 	settings {
+		showPid =
+		backPid =
+		
 		player = {$plugin.tx_streamovationsvp.settings.player}
 		live {
 			languages = {$plugin.tx_streamovationsvp.settings.live.language}
@@ -175,15 +178,11 @@ plugin.tx_streamovationsvp._CSS_DEFAULT_STYLE (
 
 	.tx-streamovations-vp {
 		position:relative;
+	}
+	.tx-streamovations-vp.fullwidth {
 		width:940px;
 	}
-	.tx-streamovations-vp table th {
-		text-align:left;
-		font-weight:bold;
-	}
-	.tx-streamovations-vp table caption {
-		display:none;
-	}
+
 	.tx-streamovations-vp ul {
 		margin:0 !important;
 		padding:0 !important;
@@ -194,6 +193,7 @@ plugin.tx_streamovationsvp._CSS_DEFAULT_STYLE (
 	
 	.tx-streamovations-vp .video-player {
 		width:600px;
+		height:355px;
 		clear:none;
 	}
 	
@@ -203,9 +203,33 @@ plugin.tx_streamovationsvp._CSS_DEFAULT_STYLE (
 		margin:0 0 1em;
 	}
 	
+	.tx-streamovations-vp .events-header {
+		font-size:0.85rem;
+		font-weight:bold;
+		margin:0;
+	}
+	.tx-streamovations-vp .events {
+		padding:5px;
+		line-height:1.4rem;
+	}
+	.tx-streamovations-vp.event-link:before,
+	.tx-streamovations-vp .event-link:before {
+		background-image:url("/typo3conf/ext/streamovations_vp/Resources/Public/Icons/videocam.png");
+		content:"";
+		float:left;
+		height:16px;
+		width:16px;
+		margin:2px 8px 0 0;
+	}
+	
+	.tx-streamovations-vp .back-link:before {
+		content:"\21a9\0000a0";
+	}
+	
 	.tx-streamovations-vp .topics {
 		float:right;
 		width:325px;
+		margin-top:-355px;
 		font-size:.9rem;
 	}
 	.tx-streamovations-vp .topic,
