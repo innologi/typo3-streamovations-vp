@@ -1,6 +1,5 @@
 <?php
 namespace Innologi\StreamovationsVp\Controller;
-
 /***************************************************************
  *  Copyright notice
  *
@@ -24,10 +23,12 @@ namespace Innologi\StreamovationsVp\Controller;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Messaging\FlashMessage;
 use Innologi\StreamovationsVp\Domain\Utility\EventUtility;
 use Innologi\StreamovationsVp\Library\Rest\ResponseInterface;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use Innologi\StreamovationsVp\Library\Rest\Exception\HttpReturnedError;
+use Innologi\StreamovationsVp\Mvc\Controller\Controller;
 /**
  * Video Controller
  *
@@ -35,7 +36,7 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class VideoController extends ActionController {
+class VideoController extends Controller {
 
 	/**
 	 * @var \Innologi\StreamovationsVp\Domain\Repository\EventRepository
@@ -61,48 +62,59 @@ class VideoController extends ActionController {
 	 * @return void
 	 */
 	public function listAction() {
-		// @LOW exclude livestream events? perhaps at response mapping?
-		$this->eventRepository
-			->setCategory($this->settings['event']['category'])
-			->setSubCategory($this->settings['event']['subCategory'])
-			->setTags($this->settings['event']['tags']);
+		try {
+			$this->eventRepository
+				->setCategory($this->settings['event']['category'])
+				->setSubCategory($this->settings['event']['subCategory'])
+				->setTags($this->settings['event']['tags']);
 
-		// @LOW this is really ugly. isn't there a cleaner way that doesn't involve multiple actions? or should we have multiple actions anyway?
-		$events = NULL;
-		$dateTime = new \DateTime();
-		if (isset($this->settings['event']['dateAt'][0])) {
-			// @FIX temp?
-			$this->settings['event']['dateAt'] = strtotime($this->settings['event']['dateAt']);
-			$dateTime->setTimestamp((int)$this->settings['event']['dateAt']);
-			$events = $this->eventRepository->findAtDate($dateTime);
-		} else {
-			// @FIX temp?
-			$this->settings['event']['dateFrom'] = strtotime($this->settings['event']['dateFrom']);
-			$dateTime->setTimestamp((int)$this->settings['event']['dateFrom']);
-			if (isset($this->settings['event']['dateTo'][0])) {
-				$dateEnd = new \DateTime();
+			// @LOW this is really ugly. isn't there a cleaner way that doesn't involve multiple actions? or should we have multiple actions anyway?
+			$events = NULL;
+			$dateTime = new \DateTime();
+			if (isset($this->settings['event']['dateAt'][0])) {
 				// @FIX temp?
-				$this->settings['event']['dateTo'] = strtotime($this->settings['event']['dateTo']);
-				$dateEnd->setTimestamp((int)$this->settings['event']['dateTo']);
+				$this->settings['event']['dateAt'] = strtotime($this->settings['event']['dateAt']);
+				$dateTime->setTimestamp((int)$this->settings['event']['dateAt']);
+				$events = $this->eventRepository->findAtDate($dateTime);
 			} else {
-				// @LOW should we set "now" as default value if dateFrom exists?
-				$dateEnd = NULL;
+				// @FIX temp?
+				$this->settings['event']['dateFrom'] = strtotime($this->settings['event']['dateFrom']);
+				$dateTime->setTimestamp((int)$this->settings['event']['dateFrom']);
+				if (isset($this->settings['event']['dateTo'][0])) {
+					$dateEnd = new \DateTime();
+					// @FIX temp?
+					$this->settings['event']['dateTo'] = strtotime($this->settings['event']['dateTo']);
+					$dateEnd->setTimestamp((int)$this->settings['event']['dateTo']);
+				} else {
+					// @LOW should we set "now" as default value if dateFrom exists?
+					$dateEnd = NULL;
+				}
+				$events = $this->eventRepository->findBetweenDateTimeRange($dateTime, $dateEnd);
 			}
-			$events = $this->eventRepository->findBetweenDateTimeRange($dateTime, $dateEnd);
-		}
-		// @TODO error handling of lack of proper dates?
+			// @TODO error handling of lack of proper dates?
 
-		/* @var $eventService \Innologi\StreamovationsVp\Domain\Service\EventServiceInterface */
-		$eventService = $this->objectManager->get('Innologi\\StreamovationsVp\\Domain\\Service\\EventServiceInterface');
-		$events = $eventService->filterOutLiveStreams($events);
+			/* @var $eventService \Innologi\StreamovationsVp\Domain\Service\EventServiceInterface */
+			$eventService = $this->objectManager->get('Innologi\\StreamovationsVp\\Domain\\Service\\EventServiceInterface');
+			$events = $eventService->filterOutLiveStreams($events);
 
-		$this->view->assign('events', $events);
+			$this->view->assign('events', $events);
 
-		// pid fallback, seeing as how there is NONE unless we pass a NULL value
-		// .. which is impossible in TYPO3 Fluid
-		if (!isset($this->settings['showPid'][0])) {
-			$this->settings['showPid'] = $GLOBALS['TSFE']->id;
-			$this->view->assign('settings', $this->settings);
+			// pid fallback, seeing as how there is NONE unless we pass a NULL value
+			// .. which is impossible in TYPO3 Fluid
+			if (!isset($this->settings['showPid'][0])) {
+				$this->settings['showPid'] = $GLOBALS['TSFE']->id;
+				$this->view->assign('settings', $this->settings);
+			}
+
+		} catch(HttpReturnedError $e) {
+			// no streams found returns a 404, which in this case really isn't an error
+			// @TODO llang
+			$this->addFlashMessage(
+				'Geen videostreams beschikbaar of gevonden.',
+				'Geen videostreams',
+				FlashMessage::INFO,
+				FALSE
+			);
 		}
 	}
 
@@ -220,12 +232,19 @@ class VideoController extends ActionController {
 	public function presetShowAction() {
 		if (isset($this->settings['playlist']['hash'][0])) {
 			$arguments = array(
-				'hash' => $this->settings['playlist']['hash']
+				'hash' => $this->settings['playlist']['hash'],
+				'__noRedirectOnException' => TRUE
 			);
 			$this->forward('show', NULL, NULL, $arguments);
-		} else {
-			// @TODO report no stream found on hash
 		}
+
+		// @TODO llang
+		$this->addFlashMessage(
+			'Er is geen videostream geconfigureerd.',
+			'Configuratiefout',
+			FlashMessage::WARNING,
+			FALSE
+		);
 	}
 
 	/**
@@ -234,23 +253,35 @@ class VideoController extends ActionController {
 	 * @return void
 	 */
 	public function liveStreamAction() {
-		// there is no need to 'filter out' VODs, because only LIVEstreams are active @ requested time (=now)
-		$events = $this->eventRepository
-			->setCategory($this->settings['event']['category'])
-			->setSubCategory($this->settings['event']['subCategory'])
-			->setTags($this->settings['event']['tags'])
-			->findAtDateTime(new \DateTime());
+		try {
+			// there is no need to 'filter out' VODs, because only LIVEstreams are active @ requested time (=now)
+			$events = $this->eventRepository
+				->setCategory($this->settings['event']['category'])
+				->setSubCategory($this->settings['event']['subCategory'])
+				->setTags($this->settings['event']['tags'])
+				->findAtDateTime(new \DateTime());
 
-		if (isset($events[0])) {
-			$arguments = array(
-				// @TODO try/catch would be better
-				'hash' => $events[0]->getEventId(),
-				'isLiveStream' => TRUE
-			);
-			$this->forward('show', NULL, NULL, $arguments);
-		} else {
-			// @TODO report no livestream event
+			if (isset($events[0])) {
+				$arguments = array(
+					// @TODO try/catch would be better
+					'hash' => $events[0]->getEventId(),
+					'isLiveStream' => TRUE,
+					'__noRedirectOnException' => TRUE
+				);
+				$this->forward('show', NULL, NULL, $arguments);
+			}
+		} catch (HttpReturnedError $e) {
+			// no streams found returns a 404, which in this case really isn't an error
 		}
+
+		// @TODO llang
+		// no livestream available
+		$this->addFlashMessage(
+			'Geen livestream beschikbaar of gevonden.',
+			'Geen activiteit',
+			FlashMessage::INFO,
+			FALSE
+		);
 	}
 
 }
