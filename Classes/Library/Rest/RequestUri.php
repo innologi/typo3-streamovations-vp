@@ -174,7 +174,6 @@ class RequestUri implements RequestUriInterface {
 			// @LOW can't we speed this up with some kind of join? note the need for array keys
 			$this->requestUri .= $parameter . '/' . $value . '/';
 		}
-		// @TODO evaluation of URL and throwing of exception?
 	}
 
 	/**

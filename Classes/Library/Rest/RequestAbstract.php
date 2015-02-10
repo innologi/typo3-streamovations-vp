@@ -119,10 +119,40 @@ abstract class RequestAbstract {
 
 		// implementation logic
 
-		// @TODO what to return on errors?
 		return $this->forceRawResponse || $returnRawResponse
 			? $rawResponse
 			: $this->mapResponseToObjects($rawResponse);
+	}
+
+	/**
+	 * Halts request and throws exception.
+	 *
+	 * @param array $data
+	 * @param string $response
+	 * @throws Exception\HttpReturnedError
+	 * @throws Exception\HostUnreachable
+	 * @throws Exception\MalformedUrl
+	 * @throws Exception\Request
+	 * @return void
+	 */
+	protected function haltRequest(array $data, $response) {
+		switch ($data['lib']) {
+			case 'cURL':
+				// @see http://curl.haxx.se/libcurl/c/libcurl-errors.html
+				switch ($data['error']) {
+					case 22:
+						// @TODO llang
+						throw new Exception\HttpReturnedError('De gekozen videostream is niet beschikbaar.');
+					case 6:
+						// @TODO llang
+						throw new Exception\HostUnreachable('Bron videostreaming is niet bereikbaar.');
+					case 3:
+						throw new Exception\MalformedUrl($data['message']);
+				}
+			default:
+				// @LOW log errormessage + request uri?
+				throw new Exception\Request($data['message']);
+		}
 	}
 
 	/**
