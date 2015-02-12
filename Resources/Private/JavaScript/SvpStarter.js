@@ -110,9 +110,8 @@ var SvpStarter = (function($) {
 	 * @return void
 	 */
 	function addNewElements(array, type) {
-		// @TODO for performance improvement, use filter(':first') everywhere where you use :first in the selector
 		// @TODO what if there is no template?
-		var $template = $('.' + _this.select.container + ' .' + type + 's .' + type).filter(':last');
+		var $template = $('.' + _this.select.container + ' .' + type + 's .' + type).last();
 		// @TODO if we replace insertAfter() with something like add(), can we put the for-order back to normal?
 		for (var i=array.length-1; i >= 0; i--) {
 			var $temp = $template.clone(),
@@ -220,7 +219,7 @@ var SvpStarter = (function($) {
 		init: function() {
 			// check if necessary elements exist
 			var $player = $('#' + this.select.player),
-				$data = $('#' + this.select.data + ':first');
+				$data = $('#' + this.select.data).first();
 			if (!$player.exists() || !$data.exists()) {
 				// at least one of necessary elements does not exist
 				log('The player element or player data is not available', true);
@@ -418,8 +417,8 @@ var SvpStarter = (function($) {
 			});
 
 			// parse meeting data
-			var $topicTimeline = $('#' + this.select.topicTimeline + ':first');
-			var $speakerTimeline = $('#' + this.select.speakerTimeline + ':first');
+			var $topicTimeline = $('#' + this.select.topicTimeline).first();
+			var $speakerTimeline = $('#' + this.select.speakerTimeline).first();
 
 			if ($topicTimeline.exists()) {
 				// @TODO try/catch for every JSON.parse call?
@@ -583,7 +582,7 @@ var SvpStarter = (function($) {
 		// activate topic/speaker
 		activateElement: function(id, type) {
 			this.deactivateElement(type);
-			$('.' + this.select.container + ' .' + type + 's .' + type + '[data-' + type + '=' + id + ']:first').addClass('active');
+			$('.' + this.select.container + ' .' + type + 's .' + type + '[data-' + type + '=' + id + ']').first().addClass('active');
 			this.active[type] = id;
 			log('Activated ' + type + ' ' + id, false);
 		},
