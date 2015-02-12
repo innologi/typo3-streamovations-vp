@@ -39,15 +39,23 @@ namespace Innologi\StreamovationsVp\Library\Rest;
  * purpose, and possibly having to throw them away later on.
  *
  * The reason this is not meant for production-ready extensions,
- * is performance and lack of documented domain models.
+ * is performance and obvious lack of defining domain models.
+ * It's a hack that goes against the DDD-principle.
  *
  * @package streamovations_vp
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
 class MagicResponse implements ResponseInterface {
-	// @TODO doc
 
+	/**
+	 * Constructor
+	 *
+	 * Sets properties as given by array as public properties.
+	 *
+	 * @param array $properties
+	 * @return void
+	 */
 	public function __construct(array $properties) {
 		foreach ($properties as $property => $value) {
 			$this->$property = $value;
@@ -79,6 +87,11 @@ class MagicResponse implements ResponseInterface {
 		//throw new \TYPO3\CMS\Extbase\Persistence\Generic\Exception\UnsupportedMethodException('The method "' . $methodName . '" is not supported by the repository.', 1233180480);
 	}
 
+	/**
+	 * Provides string representation of class through serialization.
+	 *
+	 * @return string
+	 */
 	public function __toString() {
 		return serialize($this);
 	}
