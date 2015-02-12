@@ -205,8 +205,12 @@ class VideoController extends Controller {
 					}
 				}
 
-				// @FIX the option provided is not supported for PHP < 5.4
-				$playlist = json_encode($playlistData, JSON_UNESCAPED_SLASHES);
+				// javascript JSON.parse already deals with escaped slashes, but
+				// still I found it inconvenient to have them when debugging, so..
+				$playlist = version_compare(PHP_VERSION, '5.4', '<')
+					? str_replace('\\/', '/', json_encode($playlistData))
+					: json_encode($playlistData, JSON_UNESCAPED_SLASHES);
+
 			}
 			// @TODO make meetingdata optional
 			$meetingdata = $this->meetingdataRepository->findByHash($hash);
