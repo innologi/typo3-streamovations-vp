@@ -62,9 +62,8 @@ class GroupedForDateTimeViewHelper extends GroupedForViewHelper {
 				throw new \TYPO3\CMS\Fluid\Core\ViewHelper\Exception('GroupedForViewHelper only supports multi-dimensional arrays and objects', 1253120365);
 			}
 
-			//<-- @TODO finish cleaning up
+			//<-- BEGIN added code
 			$format = $this->arguments['dateTimeFormat'];
-
 			if (!$currentGroupIndex instanceof \DateTime) {
 				if (is_numeric($currentGroupIndex)) {
 					$temp = new \DateTime();
@@ -74,13 +73,8 @@ class GroupedForDateTimeViewHelper extends GroupedForViewHelper {
 					$currentGroupIndex = new \DateTime($currentGroupIndex);
 				}
 			}
-
-			if (strpos($format, '%') !== FALSE) {
-				$currentGroupIndex = strftime($format, $currentGroupIndex->format('U'));
-			} else {
-				$currentGroupIndex = $currentGroupIndex->format($format);
-			}
-			//-->
+			$currentGroupIndex = $currentGroupIndex->format($format);
+			// END added code -->
 
 			$currentGroupKeyValue = $currentGroupIndex;
 			if (is_object($currentGroupIndex)) {
