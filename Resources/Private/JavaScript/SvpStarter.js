@@ -196,7 +196,6 @@ var SvpStarter = (function($) {
 				previous: null,
 				setQualityLevel: null,
 				setAudioLanguage: null
-				// @TODO aren't you forgetting some properties here?
 			}
 		},
 
