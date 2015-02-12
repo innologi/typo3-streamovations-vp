@@ -32,7 +32,7 @@ plugin.tx_streamovationsvp {
 			
 		}
 		
-		pollingInterval = 5
+		polling.interval = 5
 		
 		live.languages = or,nl,en
 		topics.enable = 1

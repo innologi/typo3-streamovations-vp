@@ -17,6 +17,20 @@ var SvpStarter = (function($) {
 	var speakerImageDir = '###SPEAKER_IMAGE_DIR###';
 
 	/**
+	 * Interval for polling script SVPP, configured via TS
+	 *
+	 * @var int
+	 */
+	var pollingInterval = parseInt('###POLLING_INTERVAL###');
+
+	/**
+	 * Current TYPO3 page ID, provided via TS
+	 *
+	 * @var int
+	 */
+	var currentPage = parseInt('###CURRENT_PAGE_ID###');
+
+	/**
 	 * Counter of processed meetingdata elements (live streams)
 	 *
 	 * @var object
@@ -44,6 +58,34 @@ var SvpStarter = (function($) {
 		count.topic = $('.topics .topic', $container).length;
 		count.speaker = $('.speakers .speaker', $container).length;
 		// timeline's are produced via polling, so no need to initialize them here
+	}
+
+	/**
+	 * Initialize polling, detects and starts SVPP.
+	 * Is disabled when polling interval is set to 0.
+	 *
+	 * @return void
+	 */
+	function initPolling() {
+		if (pollingInterval > 0) {
+			if (typeof(SvpPolling) !== 'undefined') {
+				var interval = pollingInterval * 1000,
+					hash = $('#' + _this.select.data).attr('data-hash');
+
+				this.player.onPlay(function() {
+					SvpPolling.init(hash, currentPage, interval);
+				});
+				this.player.onPause(function() {
+					SvpPolling.stop();
+					_this.deactivateElement('speaker');
+					_this.deactivateElement('topic');
+				});
+			} else {
+				log('SVPP not loaded, polling inactive', true);
+			}
+		} else {
+			log('Polling disabled', false);
+		}
 	}
 
 	/**
@@ -222,7 +264,7 @@ var SvpStarter = (function($) {
 
 			if (this.isLiveStream) {
 				initLiveCounters();
-				this.initPolling();
+				initPolling();
 			} else {
 				this.initEventHandlers();
 			}
@@ -617,28 +659,6 @@ var SvpStarter = (function($) {
 		// find out if time is valid for current playlist item
 		timeIsOnPlaylist: function(t) {
 			return this.idMap.playlist[t.streamfileId] === this.player.getPlaylistIndex();
-		},
-
-		// initialize polling function
-		initPolling: function() {
-			// #@TODO allow disabling?
-			if (typeof(SvpPolling) !== 'undefined') {
-				var interval = parseInt('###POLLING_INTERVAL###') * 1000,
-					pid = parseInt('###CURRENT_PAGE_ID###'),
-					//hash = '###HASH###';
-					hash = $('#' + this.select.data).attr('data-hash');
-
-				this.player.onPlay(function() {
-					SvpPolling.init(hash, pid, interval);
-				});
-				this.player.onPause(function() {
-					SvpPolling.stop();
-					_this.deactivateElement('speaker');
-					_this.deactivateElement('topic');
-				});
-			} else {
-				log('SVPP not loaded, polling inactive', true);
-			}
 		}
 	}
 

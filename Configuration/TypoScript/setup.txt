@@ -145,7 +145,7 @@ plugin.tx_streamovationsvp {
 				PLAYER_TYPE = TEXT
 				PLAYER_TYPE.value = {$plugin.tx_streamovationsvp.settings.player}
 				POLLING_INTERVAL = TEXT
-				POLLING_INTERVAL.value = {$plugin.tx_streamovationsvp.settings.pollingInterval}
+				POLLING_INTERVAL.value = {$plugin.tx_streamovationsvp.settings.polling.interval}
 				CURRENT_PAGE_ID = TEXT
 				CURRENT_PAGE_ID.data = TSFE:id
 				# doesn't work if livestream doesn't put hash in GETvar, idiot!
