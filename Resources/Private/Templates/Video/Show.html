@@ -4,7 +4,6 @@
 <!--
 	@TODO make types of meetingdata optional
 	@TODO put stuff in partials
-	@TODO language in llang
 -->
 
 <f:section name="main">
@@ -15,22 +14,25 @@
 	
 	<f:if condition="{backPid}">
 		<f:link.page
-			title="Terug naar vorige pagina"
+			title="{f:translate(key:'tx_streamovationsvp_video.go_back_title')}"
 			class="back-link"
 			pageUid="{backPid}"
-		>Terug</f:link.page>
+		><f:translate key="tx_streamovationsvp_video.go_back" /></f:link.page>
 	</f:if>
 	
 	<f:if condition="{meetingdata.topics}">
 		<div class="topics">
-			<p class="header">Agendapunten</p>
+			<p class="header"><f:translate key="tx_streamovationsvp_video.topic_header" /></p>
 			<ol>
 				<f:for each="{meetingdata.topics}" as="topic">
 					<li class="topic"  data-topic="{topic.id}">
 						<f:if condition="{isLiveStream}">
 							<f:then><span class="topic-title">{topic.title}</span></f:then>
 							<f:else>
-								<a href="#" class="topic-link topic-title" title="Spring naar dit agendapunt in de video">{topic.title}</a>
+								<a href="#"
+									class="topic-link topic-title"
+									title="{f:translate(key:'tx_streamovationsvp_video.topic_link_title')}"
+								>{topic.title}</a>
 							</f:else>
 						</f:if>
 						<span class="topic-description">{topic.description -> f:format.raw()}</span>
@@ -45,7 +47,7 @@
 			<ul>
 				<f:for each="{meetingdata.speakers}" as="speaker">
 					<li class="speaker" data-speaker="{speaker.id}">
-						<p class="header">Spreker</p>
+						<p class="header"><f:translate key="tx_streamovationsvp_video.speaker_header" /></p>
 						<f:alias map="{speakerAvatar: '{settings.speakers.imgDir}{speaker.photo}'}">
 							<f:image
 								class="speaker-avatar"
@@ -82,7 +84,7 @@
 	
 </f:then>
 <f:else>
-	<p>Geen videostream gevonden.</p>
+	<p><f:translate key="tx_streamovationsvp_video.no_stream" /></p>
 </f:else>
 </f:if>
 

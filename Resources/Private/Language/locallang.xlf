@@ -3,6 +3,38 @@
 	<file source-language="en" datatype="plaintext" original="messages" date="2014-10-22T16:06:17Z" product-name="streamovations_vp">
 		<header/>
 		<body>
+			<trans-unit id="tx_streamovationsvp_video.topic_header">
+				<source>Agendapunten</source>
+			</trans-unit>
+			<trans-unit id="tx_streamovationsvp_video.speaker_header">
+				<source>Sprekers</source>
+			</trans-unit>
+			<trans-unit id="tx_streamovationsvp_video.no_stream">
+				<source>Geen videostream om af te spelen.</source>
+			</trans-unit>
+			<trans-unit id="tx_streamovationsvp_video.no_list">
+				<source>Geen videostreams gevonden.</source>
+			</trans-unit>
+			<trans-unit id="tx_streamovationsvp_video.go_back">
+				<source>Terug</source>
+			</trans-unit>
+			<trans-unit id="tx_streamovationsvp_video.go_back_title">
+				<source>Terug naar vorige pagina</source>
+			</trans-unit>
+			<trans-unit id="tx_streamovationsvp_video.topic_link_title">
+				<source>Spring naar dit agendapunt in de video</source>
+			</trans-unit>
+			<trans-unit id="tx_streamovationsvp_video.event_link_title">
+				<source>Videostream</source>
+			</trans-unit>
+			
+			<trans-unit id="tx_streamovationsvp_video.error_title">
+				<source>Foutmelding</source>
+			</trans-unit>
+			<trans-unit id="tx_streamovationsvp_video.noscript">
+				<source>De applicatie op deze pagina vereist JavaScript-ondersteuning, maar dit is niet beschikbaar in uw browser.</source>
+			</trans-unit>
+			
 		</body>
 	</file>
 </xliff>
