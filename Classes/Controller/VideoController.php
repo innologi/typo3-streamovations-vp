@@ -70,28 +70,30 @@ class VideoController extends Controller {
 
 			// @LOW this is really ugly. isn't there a cleaner way that doesn't involve multiple actions? or should we have multiple actions anyway?
 			$events = NULL;
-			$dateTime = new \DateTime();
 			if (isset($this->settings['event']['dateAt'][0])) {
 				// @FIX temp?
-				$this->settings['event']['dateAt'] = strtotime($this->settings['event']['dateAt']);
-				$dateTime->setTimestamp((int)$this->settings['event']['dateAt']);
+				$time = (int) strtotime($this->settings['event']['dateAt']);
+				$dateTime = new \DateTime();
+				$dateTime->setTimestamp($time);
 				$events = $this->eventRepository->findAtDate($dateTime);
 			} else {
-				// @FIX temp?
-				$this->settings['event']['dateFrom'] = strtotime($this->settings['event']['dateFrom']);
-				$dateTime->setTimestamp((int)$this->settings['event']['dateFrom']);
-				if (isset($this->settings['event']['dateTo'][0])) {
-					$dateEnd = new \DateTime();
+				$dateStart = NULL;
+				if (isset($this->settings['event']['dateFrom'][0])) {
 					// @FIX temp?
-					$this->settings['event']['dateTo'] = strtotime($this->settings['event']['dateTo']);
-					$dateEnd->setTimestamp((int)$this->settings['event']['dateTo']);
-				} else {
-					// @LOW should we set "now" as default value if dateFrom exists?
-					$dateEnd = NULL;
+					$time = (int) strtotime($this->settings['event']['dateFrom']);
+					$dateStart = new \DateTime();
+					$dateStart->setTimestamp($time);
 				}
-				$events = $this->eventRepository->findBetweenDateTimeRange($dateTime, $dateEnd);
+				$dateEnd = NULL;
+				if (isset($this->settings['event']['dateTo'][0])) {
+					// @FIX temp?
+					$time = (int) strtotime($this->settings['event']['dateTo']);
+					$dateEnd = new \DateTime();
+					$dateEnd->setTimestamp($time);
+				}
+				$events = $this->eventRepository->findBetweenDateTimeRange($dateStart, $dateEnd);
 			}
-			// @TODO error handling of lack of proper dates?
+			// @LOW error handling of lack of proper dates?
 
 			/* @var $eventService \Innologi\StreamovationsVp\Domain\Service\EventServiceInterface */
 			$eventService = $this->objectManager->get('Innologi\\StreamovationsVp\\Domain\\Service\\EventServiceInterface');

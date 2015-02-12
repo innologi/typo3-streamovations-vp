@@ -134,13 +134,15 @@ class EventRepository extends Repository {
 	/**
 	 * Returns events between and including(!) $from and $to dates/times
 	 *
-	 * @param \DateTime $from
+	 * @param \DateTime $from (optional)
 	 * @param \DateTime $to (optional)
 	 * @return array
 	 */
-	public function findBetweenDateTimeRange(\DateTime $from, \DateTime $to = NULL) {
-		$request = $this->createRequest()
-			->addArgument('from', $from->format(self::FORMAT_DATETIME));
+	public function findBetweenDateTimeRange(\DateTime $from = NULL, \DateTime $to = NULL) {
+		$request = $this->createRequest();
+		if ($from !== NULL) {
+			$request->addArgument('from', $from->format(self::FORMAT_DATETIME));
+		}
 		if ($to !== NULL) {
 			$request->addArgument('through', $to->format(self::FORMAT_DATETIME));
 		}
