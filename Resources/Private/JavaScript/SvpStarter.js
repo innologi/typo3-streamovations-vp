@@ -94,6 +94,20 @@ var SvpStarter = (function($) {
 		}
 	}
 
+	/**
+	 * Logs message to console, and allows to differentiate between errors and info
+	 *
+	 * @param message string Message to log
+	 * @param error boolean Set true if error message, otherwise false
+	 * @return void
+	 */
+	function log(message, error) {
+		console.log('SVPS | ' + message);
+		if (error) {
+			// @LOW introduce some frontend messaging library for all these logs? especially in jumpToTopic()!
+		}
+	}
+
 	// actual SVPS object
 	var _this = {
 
@@ -168,6 +182,7 @@ var SvpStarter = (function($) {
 				$data = $('#' + this.select.data + ':first');
 			if (!$player.exists() || !$data.exists()) {
 				// at least one of necessary elements does not exist
+				log('The player element or player data is not available', true);
 				return false;
 			}
 
@@ -175,21 +190,25 @@ var SvpStarter = (function($) {
 			// read & parse data
 			var data = JSON.parse($data.html().trim());
 			$data.html('');
-			if (typeof data !== 'object') {
-				alert('###ERROR_INVALID_JSON###');
+			if (typeof(data) !== 'object') {
+				log('Player data is invalid or in an unsupported format', true)
 				return false;
 			}
 
 			switch ('###PLAYER_TYPE###') {
 				case '2':
-					this.createSmvPlayer(data);
+					if (!this.createSmvPlayer(data)) {
+						return false;
+					}
 					break;
 				case '1':
-					this.createJwPlayer(data);
+					if (!this.createJwPlayer(data)) {
+						return false
+					}
 					break;
 				default:
 					// no valid player configuration
-					alert('###ERROR_NO_VALIDPLAYER###');
+					log('No supported player configured', true);
 					return false;
 			}
 
@@ -213,16 +232,15 @@ var SvpStarter = (function($) {
 		// initialize JW Player
 		initJwPlayer: function(requireLicense) {
 			var licenseKey = '###JWPLAYER_KEY###';
-			// #@TODO test these kind of errors btw
-			if (!jwplayer) {
-				alert('###ERROR_NO_JWPLAYER###');
+			if (typeof(jwplayer) === 'undefined') {
+				log('No jwplayer loaded', true);
 				return false;
 			}
 
 			if (licenseKey) {
 				jwplayer.key = licenseKey;
 			} else if(requireLicense) {
-				alert('###ERROR_NO_KEY###');
+				log('A jwplayer license key is required', true);
 				return false;
 			}
 			return true;
@@ -230,83 +248,84 @@ var SvpStarter = (function($) {
 
 		// initialize Streamovations Player
 		createSmvPlayer: function(data) {
-			// #@FIX do a more proper error handling
 			if (this.initJwPlayer(true)) {
 				// smvplayer object needs to exist
-				// #@FIX this produced an exception when smvplayer wasn't loaded, so this doesn't work
-				if (!smvplayer) {
-					alert('###ERROR_NO_SMVPLAYER###');
-					return;
-				}
+				if (typeof(smvplayer) !== 'undefined') {
 
-				this.player = smvplayer(this.select.player);
-				this.player.init(data);
-				this.jw = jwplayer(this.select.player);
+					this.player = smvplayer(this.select.player);
+					this.player.init(data);
+					this.jw = jwplayer(this.select.player);
 
-				// Smvplayer calls jwplayer.remove() on moving in the playlist, which clears the entire jwplayer
-				// instance, including event handlers, so we need a construct that reassigns this.jw and
-				// all of the event handler callbacks. This is what reset() is for.
-				this.player.onTime = function(callback) {
-					_this.callbacks.onTime.push(callback);
-					_this.jw.onTime(callback);
-				}
-				this.player.onSeek = function(callback) {
-					_this.callbacks.onSeek.push(callback);
-					_this.jw.onSeek(callback);
-				}
-				this.player.onPlay = function(callback) {
-					_this.callbacks.onPlay.push(callback);
-					_this.jw.onPlay(callback);
-				}
-				this.player.onPause = function(callback) {
-					_this.callbacks.onPause.push(callback);
-					_this.jw.onPause(callback);
-				}
-				// overrule player.next()
-				this.orig.player.next = this.player.next;
-				this.player.next = function() {
-					_this.orig.player.next();
-					_this.reset();
-				}
-				// overrule player.previous()
-				this.orig.player.previous = this.player.previous;
-				this.player.previous = function() {
-					_this.orig.player.previous();
-					_this.reset();
-				}
-				// overrule player.setQualityLevel()
-				this.orig.player.setQualityLevel = this.player.setQualityLevel;
-				this.player.setQualityLevel = function(q) {
-					_this.orig.player.setQualityLevel(q);
-					_this.reset();
-				}
-				// overrule player.setAudioLanguage()
-				this.orig.player.setAudioLanguage = this.player.setAudioLanguage;
-				this.player.setAudioLanguage = function(l) {
-					_this.orig.player.setAudioLanguage(l);
-					_this.reset();
-				}
-				// because smvplayer doesnt use the playlist as jwplayer does, we emulate
-				// some specific playlist methods on this.player to create a shared api
-				// where this is covenient for SVPS
-				this.player.getPlaylistIndex = function() {
-					return _this.player.getTimeline().currentItem;
-				}
-				this.player.playlistNext = function() {
-					_this.player.next();
-				}
-				this.player.playlistPrev = function() {
-					_this.player.previous();
-				}
-				this.player.playlistItem = function(index) {
-					moveAction = index - _this.player.getPlaylistIndex();
-					if (moveAction > 0) {
-						_this.recursiveMoveNext(0, moveAction);
-					} else if(moveAction < 0) {
-						_this.recursiveMovePrevious(0, moveAction);
+					// Smvplayer calls jwplayer.remove() on moving in the playlist, which clears the entire jwplayer
+					// instance, including event handlers, so we need a construct that reassigns this.jw and
+					// all of the event handler callbacks. This is what reset() is for.
+					this.player.onTime = function(callback) {
+						_this.callbacks.onTime.push(callback);
+						_this.jw.onTime(callback);
 					}
+					this.player.onSeek = function(callback) {
+						_this.callbacks.onSeek.push(callback);
+						_this.jw.onSeek(callback);
+					}
+					this.player.onPlay = function(callback) {
+						_this.callbacks.onPlay.push(callback);
+						_this.jw.onPlay(callback);
+					}
+					this.player.onPause = function(callback) {
+						_this.callbacks.onPause.push(callback);
+						_this.jw.onPause(callback);
+					}
+					// overrule player.next()
+					this.orig.player.next = this.player.next;
+					this.player.next = function() {
+						_this.orig.player.next();
+						_this.reset();
+					}
+					// overrule player.previous()
+					this.orig.player.previous = this.player.previous;
+					this.player.previous = function() {
+						_this.orig.player.previous();
+						_this.reset();
+					}
+					// overrule player.setQualityLevel()
+					this.orig.player.setQualityLevel = this.player.setQualityLevel;
+					this.player.setQualityLevel = function(q) {
+						_this.orig.player.setQualityLevel(q);
+						_this.reset();
+					}
+					// overrule player.setAudioLanguage()
+					this.orig.player.setAudioLanguage = this.player.setAudioLanguage;
+					this.player.setAudioLanguage = function(l) {
+						_this.orig.player.setAudioLanguage(l);
+						_this.reset();
+					}
+					// because smvplayer doesnt use the playlist as jwplayer does, we emulate
+					// some specific playlist methods on this.player to create a shared api
+					// where this is covenient for SVPS
+					this.player.getPlaylistIndex = function() {
+						return _this.player.getTimeline().currentItem;
+					}
+					this.player.playlistNext = function() {
+						_this.player.next();
+					}
+					this.player.playlistPrev = function() {
+						_this.player.previous();
+					}
+					this.player.playlistItem = function(index) {
+						moveAction = index - _this.player.getPlaylistIndex();
+						if (moveAction > 0) {
+							_this.recursiveMoveNext(0, moveAction);
+						} else if(moveAction < 0) {
+							_this.recursiveMovePrevious(0, moveAction);
+						}
+					}
+
+					return true;
 				}
+
+				log('No smvplayer loaded', true);
 			}
+			return false;
 		},
 
 		// initialize JW Player
@@ -322,7 +341,9 @@ var SvpStarter = (function($) {
 					_this.deactivateElement('speaker');
 					_this.deactivateElement('topic');
 				});
+				return true;
 			}
+			return false;
 		},
 
 		// initialize Native HTML5 Player
@@ -331,7 +352,8 @@ var SvpStarter = (function($) {
 			if (!!document.createElement('video').canPlayType) {
 				// fallback
 			}
-			console.log('ERROR: unfinished implementation');
+			log('ERROR: unfinished implementation', true);
+			return false;
 		},
 
 		// meetingdata refers to streamfile id's, but we can only request playlist id from jwplayer object
@@ -344,7 +366,7 @@ var SvpStarter = (function($) {
 
 		// prepare all eventhandlers
 		initEventHandlers: function() {
-			console.log('SVPS | initializing event handlers');
+			log('initializing event handlers', false);
 
 			// set jump event on topic clicks
 			$('.' + this.select.container + ' .topics').on('click', '.topic .topic-link', function(e) {
@@ -508,7 +530,7 @@ var SvpStarter = (function($) {
 			for (var c in this.callbacks.onPause) {
 				this.jw.onPause(this.callbacks.onPause[c]);
 			}
-			console.log('SVPS | Reattached event callbacks');
+			log('Reattached event callbacks', false);
 		},
 
 		// deactivate all topics/speakers
@@ -522,7 +544,7 @@ var SvpStarter = (function($) {
 			this.deactivateElement(type);
 			$('.' + this.select.container + ' .' + type + 's .' + type + '[data-' + type + '=' + id + ']:first').addClass('active');
 			this.active[type] = id;
-			console.log('SVPS | Activated ' + type + ' ' + id);
+			log('Activated ' + type + ' ' + id, false);
 		},
 
 		// jump to the correct topic after finding its playlist item
@@ -542,8 +564,7 @@ var SvpStarter = (function($) {
 					this.player.seek(topic.time);
 				}
 			} else {
-				// @LOW throw error?
-				console.log('SVPS | Topic has no registered timestamps');
+				log('Topic has no registered timestamps', true);
 			}
 		},
 
@@ -601,24 +622,23 @@ var SvpStarter = (function($) {
 		// initialize polling function
 		initPolling: function() {
 			// #@TODO allow disabling?
-			// #@TODO test these kind of errors btw
-			if (!SvpPolling) {
-				alert('###ERROR_NO_POLLING###');
-				return false;
-			}
-			var interval = parseInt('###POLLING_INTERVAL###') * 1000,
-				pid = parseInt('###CURRENT_PAGE_ID###'),
-				//hash = '###HASH###';
-				hash = $('#' + this.select.data).attr('data-hash');
+			if (typeof(SvpPolling) !== 'undefined') {
+				var interval = parseInt('###POLLING_INTERVAL###') * 1000,
+					pid = parseInt('###CURRENT_PAGE_ID###'),
+					//hash = '###HASH###';
+					hash = $('#' + this.select.data).attr('data-hash');
 
-			this.player.onPlay(function() {
-				SvpPolling.init(hash, pid, interval);
-			});
-			this.player.onPause(function() {
-				SvpPolling.stop();
-				_this.deactivateElement('speaker');
-				_this.deactivateElement('topic');
-			});
+				this.player.onPlay(function() {
+					SvpPolling.init(hash, pid, interval);
+				});
+				this.player.onPause(function() {
+					SvpPolling.stop();
+					_this.deactivateElement('speaker');
+					_this.deactivateElement('topic');
+				});
+			} else {
+				log('SVPP not loaded, polling inactive', true);
+			}
 		}
 	}
 
