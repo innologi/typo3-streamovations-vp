@@ -13,6 +13,7 @@
 		<switchableControllerActions>
 			<TCEforms>
 				<label>Type</label>
+				<onChange>reload</onChange>
 				<config>
 					<type>select</type>
 					<items type="array">
@@ -34,6 +35,135 @@
 				</config>
 			</TCEforms>
 		</switchableControllerActions>
+		<settings.event.dateAt>
+			<TCEforms>
+				<label>Date At</label>
+				<displayCond>FIELD:switchableControllerActions:=:Video->list;Video->show</displayCond>
+				<config>
+					<type>input</type>
+					<size>6</size>
+					<eval>date</eval>
+					<default></default>
+				</config>
+			</TCEforms>
+		</settings.event.dateAt>
+		<settings.event.dateFrom>
+			<TCEforms>
+				<label>Date From</label>
+				<displayCond>FIELD:switchableControllerActions:=:Video->list;Video->show</displayCond>
+				<config>
+					<type>input</type>
+					<size>9</size>
+					<eval>datetime</eval>
+					<default></default>
+				</config>
+			</TCEforms>
+		</settings.event.dateFrom>
+		<settings.event.dateTo>
+			<TCEforms>
+				<label>Date To</label>
+				<displayCond>FIELD:switchableControllerActions:=:Video->list;Video->show</displayCond>
+				<config>
+					<type>input</type>
+					<size>9</size>
+					<eval>datetime</eval>
+					<default></default>
+				</config>
+			</TCEforms>
+		</settings.event.dateTo>
+		<settings.event.category>
+			<TCEforms>
+				<label>Category</label>
+				<displayCond>FIELD:switchableControllerActions:!=:Video->presetShow</displayCond>
+				<config>
+					<type>input</type>
+					<size>50</size>
+					<max>255</max>
+					<eval>trim,alphanum_x</eval>
+					<default></default>
+				</config>
+			</TCEforms>
+		</settings.event.category>
+		<settings.event.subCategory>
+			<TCEforms>
+				<label>Sub Category</label>
+				<displayCond>FIELD:switchableControllerActions:!=:Video->presetShow</displayCond>
+				<config>
+					<type>input</type>
+					<size>50</size>
+					<max>255</max>
+					<eval>trim,alphanum_x</eval>
+					<default></default>
+				</config>
+			</TCEforms>
+		</settings.event.subCategory>
+		<settings.event.tags>
+			<TCEforms>
+				<label>Tags</label>
+				<displayCond>FIELD:switchableControllerActions:!=:Video->presetShow</displayCond>
+				<config>
+					<type>input</type>
+					<size>50</size>
+					<max>255</max>
+					<!-- @LOW allow only alphanum, _ and : ? -->
+					<eval>trim</eval>
+					<default></default>
+				</config>
+			</TCEforms>
+		</settings.event.tags>
+		<settings.playlist.hash>
+			<TCEforms>
+				<label>Session Hash</label>
+				<displayCond>FIELD:switchableControllerActions:=:Video->presetShow</displayCond>
+				<config>
+					<type>input</type>
+					<size>30</size>
+					<max>32</max>
+					<eval>trim,alphanum,required</eval>
+					<default></default>
+				</config>
+			</TCEforms>
+		</settings.playlist.hash>
+		<settings.showPid>
+			<TCEforms>
+				<label>Show PID</label>
+				<displayCond>FIELD:switchableControllerActions:=:Video->list;Video->show</displayCond>
+				<config>
+					<type>group</type>
+					<internal_type>db</internal_type>
+					<allowed>pages</allowed>
+					<size>1</size>
+					<maxitems>1</maxitems>
+					<minitems>0</minitems>
+					<show_thumbs>1</show_thumbs>
+					<wizards>
+						<suggest>
+							<type>suggest</type>
+						</suggest>
+					</wizards>
+				</config>
+			</TCEforms>
+		</settings.showPid>
+		<settings.backPid>
+			<TCEforms>
+				<label>Back PID</label>
+				<displayCond>FIELD:switchableControllerActions:=:Video->list;Video->show</displayCond>
+				<config>
+					<type>group</type>
+					<internal_type>db</internal_type>
+					<allowed>pages</allowed>
+					<size>1</size>
+					<maxitems>1</maxitems>
+					<minitems>0</minitems>
+					<show_thumbs>1</show_thumbs>
+					<wizards>
+						<suggest>
+							<type>suggest</type>
+						</suggest>
+					</wizards>
+				</config>
+			</TCEforms>
+		</settings.backPid>
     </el>
    </ROOT>
   </sDEF>

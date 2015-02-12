@@ -85,9 +85,6 @@ plugin.tx_streamovationsvp {
 		}
 	}
 	settings {
-		showPid =
-		backPid =
-		
 		player = {$plugin.tx_streamovationsvp.settings.player}
 		live {
 			languages = {$plugin.tx_streamovationsvp.settings.live.language}
@@ -108,8 +105,9 @@ plugin.tx_streamovationsvp {
 			imgWidth = {$plugin.tx_streamovationsvp.settings.speakers.imgWidth}
 			imgDefault = {$plugin.tx_streamovationsvp.settings.speakers.imgDefault}
 		}
+		
+		# these are all overruled by flexform for now
 		event {
-			# supported formats: http://php.net/manual/en/datetime.formats.php
 			dateFrom =
 			dateTo =
 			dateAt =
@@ -120,6 +118,8 @@ plugin.tx_streamovationsvp {
 		playlist {
 			hash =
 		}
+		showPid =
+		backPid =
 	}
 	javascript {
 		jQuery.external = 0

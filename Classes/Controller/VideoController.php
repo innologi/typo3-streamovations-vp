@@ -67,33 +67,26 @@ class VideoController extends Controller {
 				->setCategory($this->settings['event']['category'])
 				->setSubCategory($this->settings['event']['subCategory'])
 				->setTags($this->settings['event']['tags']);
-
-			// @LOW this is really ugly. isn't there a cleaner way that doesn't involve multiple actions? or should we have multiple actions anyway?
+			// @LOW support time strings?
+			// @LOW error handling of lack of proper dates?
 			$events = NULL;
-			if (isset($this->settings['event']['dateAt'][0])) {
-				// @FIX temp?
-				$time = (int) strtotime($this->settings['event']['dateAt']);
+			if (isset($this->settings['event']['dateAt'][1])) {
 				$dateTime = new \DateTime();
-				$dateTime->setTimestamp($time);
+				$dateTime->setTimestamp((int) $this->settings['event']['dateAt']);
 				$events = $this->eventRepository->findAtDate($dateTime);
 			} else {
 				$dateStart = NULL;
-				if (isset($this->settings['event']['dateFrom'][0])) {
-					// @FIX temp?
-					$time = (int) strtotime($this->settings['event']['dateFrom']);
+				if (isset($this->settings['event']['dateFrom'][1])) {
 					$dateStart = new \DateTime();
-					$dateStart->setTimestamp($time);
+					$dateStart->setTimestamp((int) $this->settings['event']['dateFrom']);
 				}
 				$dateEnd = NULL;
-				if (isset($this->settings['event']['dateTo'][0])) {
-					// @FIX temp?
-					$time = (int) strtotime($this->settings['event']['dateTo']);
+				if (isset($this->settings['event']['dateTo'][1])) {
 					$dateEnd = new \DateTime();
-					$dateEnd->setTimestamp($time);
+					$dateEnd->setTimestamp((int) $this->settings['event']['dateTo']);
 				}
 				$events = $this->eventRepository->findBetweenDateTimeRange($dateStart, $dateEnd);
 			}
-			// @LOW error handling of lack of proper dates?
 
 			/* @var $eventService \Innologi\StreamovationsVp\Domain\Service\EventServiceInterface */
 			$eventService = $this->objectManager->get('Innologi\\StreamovationsVp\\Domain\\Service\\EventServiceInterface');
@@ -224,6 +217,16 @@ class VideoController extends Controller {
 		// @LOW we should autodetect this once we allow livestreams via list
 		$this->view->assign('isLiveStream', $isLiveStream);
 		$this->view->assign('hash', $hash);
+
+		// unless __noBackPid was set, assign a back-page
+		if ($this->request->getInternalArgument('__noBackPid') !== TRUE) {
+			$this->view->assign(
+				'backPid',
+				isset($this->settings['backPid'][0])
+					? $this->settings['backPid']
+					: $GLOBALS['TSFE']->id
+			);
+		}
 	}
 
 	/**
@@ -235,7 +238,8 @@ class VideoController extends Controller {
 		if (isset($this->settings['playlist']['hash'][0])) {
 			$arguments = array(
 				'hash' => $this->settings['playlist']['hash'],
-				'__noRedirectOnException' => TRUE
+				'__noRedirectOnException' => TRUE,
+				'__noBackPid' => TRUE
 			);
 			$this->forward('show', NULL, NULL, $arguments);
 		}
@@ -268,7 +272,8 @@ class VideoController extends Controller {
 					// @TODO try/catch would be better
 					'hash' => $events[0]->getEventId(),
 					'isLiveStream' => TRUE,
-					'__noRedirectOnException' => TRUE
+					'__noRedirectOnException' => TRUE,
+					'__noBackPid' => TRUE
 				);
 				$this->forward('show', NULL, NULL, $arguments);
 			}
