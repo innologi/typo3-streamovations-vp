@@ -15,7 +15,7 @@
 								<f:link.action
 									action="show"
 									arguments="{hash:event.eventId}"
-									title="{f:translate(key:'tx_streamovationsvp_video.event_link_title')} {f:format.date(format:'d-m-Y, H:i', date:'@{event.startUnix}')} - {f:format.date(format:'H:i', date:'@{event.endUnix}')}"
+									title="{f:translate(key:'event_link_title')} {f:format.date(format:'d-m-Y, H:i', date:'@{event.startUnix}')} - {f:format.date(format:'H:i', date:'@{event.endUnix}')}"
 									class="event-link"
 									pageUid="{settings.showPid}"
 								>
@@ -29,7 +29,7 @@
 	</ul>
 </f:then>
 <f:else>
-	<p><f:translate key="tx_streamovationsvp_video.no_list" /></p>
+	<p><f:translate key="no_list" /></p>
 </f:else>
 </f:if>
 

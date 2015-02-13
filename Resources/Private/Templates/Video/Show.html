@@ -12,7 +12,7 @@
 <f:then>
 	<f:if condition="{meetingdata.topics}">
 		<div class="topics">
-			<p class="header"><f:translate key="tx_streamovationsvp_video.topic_header" /></p>
+			<p class="header"><f:translate key="topic_header" /></p>
 			<ol>
 				<f:for each="{meetingdata.topics}" as="topic">
 					<li class="topic"  data-topic="{topic.id}">
@@ -21,7 +21,7 @@
 							<f:else>
 								<a href="#"
 									class="topic-link topic-title"
-									title="{f:translate(key:'tx_streamovationsvp_video.topic_link_title')}"
+									title="{f:translate(key:'topic_link_title')}"
 								>{topic.title}</a>
 							</f:else>
 						</f:if>
@@ -36,10 +36,10 @@
 	
 	<f:if condition="{backPid}">
 		<f:link.page
-			title="{f:translate(key:'tx_streamovationsvp_video.go_back_title')}"
+			title="{f:translate(key:'go_back_title')}"
 			class="back-link"
 			pageUid="{backPid}"
-		><f:translate key="tx_streamovationsvp_video.go_back" /></f:link.page>
+		><f:translate key="go_back" /></f:link.page>
 	</f:if>
 	
 	<f:if condition="{meetingdata.speakers}">
@@ -47,7 +47,7 @@
 			<ul>
 				<f:for each="{meetingdata.speakers}" as="speaker">
 					<li class="speaker" data-speaker="{speaker.id}">
-						<p class="header"><f:translate key="tx_streamovationsvp_video.speaker_header" /></p>
+						<p class="header"><f:translate key="speaker_header" /></p>
 						<f:alias map="{speakerAvatar: '{settings.speakers.imgDir}{speaker.photo}'}">
 							<f:image
 								class="speaker-avatar"
@@ -84,7 +84,7 @@
 	
 </f:then>
 <f:else>
-	<p><f:translate key="tx_streamovationsvp_video.no_stream" /></p>
+	<p><f:translate key="no_stream" /></p>
 </f:else>
 </f:if>
 
