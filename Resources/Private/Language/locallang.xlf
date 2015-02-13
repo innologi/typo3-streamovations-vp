@@ -28,7 +28,7 @@
 				<source>Videostream</source>
 			</trans-unit>
 			
-			<trans-unit id="tx_streamovationsvp_video.error_title">
+			<trans-unit id="tx_streamovationsvp_video.error_header">
 				<source>Foutmelding</source>
 			</trans-unit>
 			<trans-unit id="tx_streamovationsvp_video.noscript">
