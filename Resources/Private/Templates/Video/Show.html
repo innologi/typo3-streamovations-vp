@@ -10,16 +10,6 @@
 
 <f:if condition="{playlist}">
 <f:then>
-	<div id="tx-streamovations-vp-play" class="video-player"></div>
-	
-	<f:if condition="{backPid}">
-		<f:link.page
-			title="{f:translate(key:'tx_streamovationsvp_video.go_back_title')}"
-			class="back-link"
-			pageUid="{backPid}"
-		><f:translate key="tx_streamovationsvp_video.go_back" /></f:link.page>
-	</f:if>
-	
 	<f:if condition="{meetingdata.topics}">
 		<div class="topics">
 			<p class="header"><f:translate key="tx_streamovationsvp_video.topic_header" /></p>
@@ -40,6 +30,16 @@
 				</f:for>
 			</ol>
 		</div>
+	</f:if>
+
+	<div id="tx-streamovations-vp-play" class="video-player"></div>
+	
+	<f:if condition="{backPid}">
+		<f:link.page
+			title="{f:translate(key:'tx_streamovationsvp_video.go_back_title')}"
+			class="back-link"
+			pageUid="{backPid}"
+		><f:translate key="tx_streamovationsvp_video.go_back" /></f:link.page>
 	</f:if>
 	
 	<f:if condition="{meetingdata.speakers}">
