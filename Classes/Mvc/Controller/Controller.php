@@ -25,7 +25,10 @@ namespace Innologi\StreamovationsVp\Mvc\Controller;
  ***************************************************************/
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use Innologi\StreamovationsVp\Library\Rest\Exception\RestException;
+use Innologi\StreamovationsVp\Library\Rest\Exception\HttpReturnedError;
+use Innologi\StreamovationsVp\Library\Rest\Exception\HostUnreachable;
 use Innologi\StreamovationsVp\Exception\ErrorException;
 /**
  * Video Controller
@@ -56,11 +59,27 @@ class Controller extends ActionController {
 	protected function callActionMethod() {
 		try {
 			parent::callActionMethod();
+		} catch (HttpReturnedError $e) {
+			$this->extensionErrorHandler(
+				new ErrorException(
+					LocalizationUtility::translate('stream_n_a', $this->extensionName),
+					0,
+					$e
+				)
+			);
+		} catch (HostUnreachable $e) {
+			$this->extensionErrorHandler(
+				new ErrorException(
+					LocalizationUtility::translate('host_n_a', $this->extensionName),
+					0,
+					$e
+				)
+			);
 		} catch (RestException $e) {
 			$this->extensionErrorHandler($e);
-		}/* catch (ErrorException $e) {
+		} catch (ErrorException $e) {
 			$this->extensionErrorHandler($e);
-		}*/
+		}
 		// we don't want to interfere with Extbase's own exceptions
 	}
 
@@ -73,10 +92,9 @@ class Controller extends ActionController {
 	protected function extensionErrorHandler(\Exception $e) {
 		$this->clearCacheOnError();
 
-		// @TODO llang
 		$this->addFlashMessage(
 			$e->getMessage(),
-			'Foutmelding',
+			LocalizationUtility::translate('error_header', $this->extensionName),
 			FlashMessage::ERROR
 		);
 

@@ -9,12 +9,6 @@
 			<trans-unit id="speaker_header">
 				<source>Sprekers</source>
 			</trans-unit>
-			<trans-unit id="no_stream">
-				<source>Geen videostream om af te spelen.</source>
-			</trans-unit>
-			<trans-unit id="no_list">
-				<source>Geen videostreams gevonden.</source>
-			</trans-unit>
 			<trans-unit id="go_back">
 				<source>Terug</source>
 			</trans-unit>
@@ -28,9 +22,39 @@
 				<source>Videostream</source>
 			</trans-unit>
 			
+			<trans-unit id="host_n_a">
+				<source>Bron videostreaming is niet bereikbaar.</source>
+			</trans-unit>
+			<trans-unit id="stream_n_a">
+				<source>De gekozen videostream is niet beschikbaar.</source>
+			</trans-unit>
+			<trans-unit id="no_stream">
+				<source>Geen videostream om af te spelen.</source>
+			</trans-unit>
+			<trans-unit id="no_livestream">
+				<source>Geen livestream beschikbaar.</source>
+			</trans-unit>
+			<trans-unit id="no_list">
+				<source>Geen videostreams beschikbaar of gevonden.</source>
+			</trans-unit>
+			<trans-unit id="config_missing_hash">
+				<source>Er is geen videostream geconfigureerd.</source>
+			</trans-unit>
+			
 			<trans-unit id="error_header">
 				<source>Foutmelding</source>
 			</trans-unit>
+			<trans-unit id="config_error_header">
+				<source>Configuratiefout</source>
+			</trans-unit>
+			<trans-unit id="no_livestream_header">
+				<source>Geen activiteit</source>
+			</trans-unit>
+			<trans-unit id="no_list_header">
+				<source>Geen videostreams</source>
+			</trans-unit>
+			
+			
 			<trans-unit id="noscript">
 				<source>De applicatie op deze pagina vereist JavaScript-ondersteuning, maar dit is niet beschikbaar in uw browser.</source>
 			</trans-unit>

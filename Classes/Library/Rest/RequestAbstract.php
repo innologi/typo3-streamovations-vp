@@ -141,11 +141,9 @@ abstract class RequestAbstract {
 				// @see http://curl.haxx.se/libcurl/c/libcurl-errors.html
 				switch ($data['error']) {
 					case 22:
-						// @TODO llang
-						throw new Exception\HttpReturnedError('De gekozen videostream is niet beschikbaar.');
+						throw new Exception\HttpReturnedError($data['message']);
 					case 6:
-						// @TODO llang
-						throw new Exception\HostUnreachable('Bron videostreaming is niet bereikbaar.');
+						throw new Exception\HostUnreachable($data['message']);
 					case 3:
 						throw new Exception\MalformedUrl($data['message']);
 				}

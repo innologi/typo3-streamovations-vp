@@ -25,6 +25,7 @@ namespace Innologi\StreamovationsVp\Controller;
  ***************************************************************/
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use Innologi\StreamovationsVp\Domain\Utility\EventUtility;
 use Innologi\StreamovationsVp\Library\Rest\ResponseInterface;
 use Innologi\StreamovationsVp\Library\Rest\Exception\HttpReturnedError;
@@ -103,10 +104,9 @@ class VideoController extends Controller {
 
 		} catch(HttpReturnedError $e) {
 			// no streams found returns a 404, which in this case really isn't an error
-			// @TODO llang
 			$this->addFlashMessage(
-				'Geen videostreams beschikbaar of gevonden.',
-				'Geen videostreams',
+				LocalizationUtility::translate('no_list', $this->extensionName),
+				LocalizationUtility::translate('no_list_header', $this->extensionName),
 				FlashMessage::INFO,
 				FALSE
 			);
@@ -248,10 +248,9 @@ class VideoController extends Controller {
 			$this->forward('show', NULL, NULL, $arguments);
 		}
 
-		// @TODO llang
 		$this->addFlashMessage(
-			'Er is geen videostream geconfigureerd.',
-			'Configuratiefout',
+			LocalizationUtility::translate('config_missing_hash', $this->extensionName),
+			LocalizationUtility::translate('config_error_header', $this->extensionName),
 			FlashMessage::WARNING,
 			FALSE
 		);
@@ -285,11 +284,10 @@ class VideoController extends Controller {
 			// no streams found returns a 404, which in this case really isn't an error
 		}
 
-		// @TODO llang
 		// no livestream available
 		$this->addFlashMessage(
-			'Geen livestream beschikbaar of gevonden.',
-			'Geen activiteit',
+			LocalizationUtility::translate('no_livestream', $this->extensionName),
+			LocalizationUtility::translate('no_livestream_header', $this->extensionName),
 			FlashMessage::INFO,
 			FALSE
 		);
