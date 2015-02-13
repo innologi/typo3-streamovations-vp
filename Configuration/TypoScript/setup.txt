@@ -229,23 +229,15 @@ plugin.tx_streamovationsvp._CSS_DEFAULT_STYLE (
 	.tx-streamovations-vp .topics {
 		float:right;
 		width:325px;
-		font-size:.9rem;
+		font-size:.8rem;
 	}
-	.tx-streamovations-vp .topic,
-	.tx-streamovations-vp .topic-link {
-		padding:2px;
-		color:#000;
-		text-decoration:none;
+	.tx-streamovations-vp .topic {
+		padding-bottom:8px;
 	}
 	.tx-streamovations-vp .topic.active,
 	.tx-streamovations-vp .topic.active .topic-link {
 		background-color:#e2eeff;
 		font-weight:bold;
-	}
-	
-	.tx-streamovations-vp .topic-link:hover,
-	.tx-streamovations-vp .topic-link:focus {
-		text-decoration:underline;
 	}
 	
 	.tx-streamovations-vp .speakers {
