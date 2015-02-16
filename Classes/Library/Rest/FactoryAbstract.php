@@ -52,7 +52,7 @@ abstract class FactoryAbstract {
 	 * @return void
 	 */
 	public function __construct(\TYPO3\CMS\Extbase\Object\ObjectManagerInterface $objectManager) {
-		// it's this once, or DI + an if on each create(), or DI + an entire init on each create()
+		// because we want objectManager in __construct, we can't rely on DI as it is always later
 		$this->objectManager = $objectManager;
 		$this->initializeConfiguration();
 	}
