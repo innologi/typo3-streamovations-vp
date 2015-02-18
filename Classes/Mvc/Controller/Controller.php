@@ -40,6 +40,27 @@ use Innologi\StreamovationsVp\Exception\ErrorException;
 class Controller extends ActionController {
 
 	/**
+	 * @var \Innologi\StreamovationsVp\Library\AssetProvider\ProviderServiceInterface
+	 * @inject
+	 */
+	protected $assetProviderService;
+
+	/**
+	 * Initializes the controller before invoking an action method.
+	 *
+	 * @return void
+	 * @api
+	 */
+	protected function initializeAction() {
+		parent::initializeAction();
+		// provide assets as configured per action
+		$this->assetProviderService->provideAssets(
+			$this->request->getControllerName(),
+			$this->request->getControllerActionName()
+		);
+	}
+
+	/**
 	 * Display nothing but flash messages. Only use it for forward()
 	 *
 	 * @return void

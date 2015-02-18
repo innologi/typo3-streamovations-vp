@@ -20,6 +20,13 @@ config.tx_extbase.objects {
 	Innologi\StreamovationsVp\Library\Rest\RequestUriInterface {
 		className = Innologi\StreamovationsVp\Library\Rest\RequestUri
 	}
+	Innologi\StreamovationsVp\Library\AssetProvider\ProviderServiceInterface {
+		className = Innologi\StreamovationsVp\Library\AssetProvider\ProviderService
+	}
+	# Allow overruling of assetproviders like so
+	#Innologi\StreamovationsVp\Library\AssetProvider\Provider\JavascriptProvider {
+	#	className = Innologi\StreamovationsVp\Library\AssetProvider\Provider\JavascriptProvider
+	#}
 }
 
 plugin.tx_streamovationsvp {
@@ -31,6 +38,8 @@ plugin.tx_streamovationsvp {
 	persistence {
 		storagePid = {$plugin.tx_streamovationsvp.persistence.storagePid}
 	}
+	
+	# rest repository configuration
 	rest {
 		features {
 			# only works for request types that support it
@@ -84,6 +93,57 @@ plugin.tx_streamovationsvp {
 			}
 		}
 	}
+	
+	# assets provider configuration
+	assets {
+		controller.Video.action.show {
+			javascript {
+				libs {
+					jQuery = {$plugin.tx_streamovationsvp.javascript.jqueryLib}
+					jQuery.if.value = {$plugin.tx_streamovationsvp.javascript.includeJquery}
+					jQuery.if.equals = 1
+					jQuery.forceOnTop = 1
+					jwPlayer = {$plugin.tx_streamovationsvp.javascript.jwPlayerLib}
+					jwPlayer.placeInFooter = 1
+					smvPlayer = {$plugin.tx_streamovationsvp.javascript.smvPlayerLib}
+					smvPlayer.placeInFooter = 1
+					# this sucks, but if not loaded from original location, it can't find its dependencies out of the box
+					jwPlayer.disableCompression = 1
+					jwPlayer.excludeFromConcatenation = 1
+					smvPlayer.disableCompression = 1
+					smvPlayer.excludeFromConcatenation = 1
+				}
+				inline {
+					tx_streamovationsvp_jsInline {
+						# SvpStarter
+						10 = TEMPLATE
+						10.template = FILE
+						10.template.file = {$plugin.tx_streamovationsvp.javascript.starterFile}
+						10.marks {
+							JWPLAYER_KEY = TEXT
+							JWPLAYER_KEY.value = {$plugin.tx_streamovationsvp.settings.jwPlayer.key}
+							PLAYER_TYPE = TEXT
+							PLAYER_TYPE.value = {$plugin.tx_streamovationsvp.settings.player}
+							POLLING_INTERVAL = TEXT
+							POLLING_INTERVAL.value = {$plugin.tx_streamovationsvp.settings.polling.interval}
+							CURRENT_PAGE_ID = TEXT
+							CURRENT_PAGE_ID.data = TSFE:id
+							SPEAKER_IMAGE_DIR = TEXT
+							SPEAKER_IMAGE_DIR.value = {$plugin.tx_streamovationsvp.settings.speakers.imgDir}
+						}
+						# SvpPolling
+						20 = FILE
+						20.file = {$plugin.tx_streamovationsvp.javascript.pollingFile}
+						# init
+						30 = FILE
+						30.file = {$plugin.tx_streamovationsvp.javascript.initFile}
+						placeInFooter = 1
+					}
+				}
+			}
+		}
+	}
+	
 	settings {
 		player = {$plugin.tx_streamovationsvp.settings.player}
 		live {
@@ -121,58 +181,7 @@ plugin.tx_streamovationsvp {
 		showPid =
 		backPid =
 	}
-	javascript {
-		jQuery.external = 0
-		jQuery = {$plugin.tx_streamovationsvp.javascript.jqueryLib}
-		jwPlayer.external = 0
-		jwPlayer = {$plugin.tx_streamovationsvp.javascript.jwPlayerLib}
-		# this sucks, but if not loaded from original location, it can't find its dependencies out of the box
-		jwPlayer.disableCompression = 1
-		smvPlayer.external = 0
-		smvPlayer = {$plugin.tx_streamovationsvp.javascript.smvPlayerLib}
-		# same as jwplayer
-		smvPlayer.disableCompression = 1
-		
-		inlineJS = COA
-		inlineJS {
-			# SvpStarter
-			10 = TEMPLATE
-			10.template = FILE
-			10.template.file = {$plugin.tx_streamovationsvp.javascript.starterFile}
-			10.marks {
-				JWPLAYER_KEY = TEXT
-				JWPLAYER_KEY.value = {$plugin.tx_streamovationsvp.settings.jwPlayer.key}
-				PLAYER_TYPE = TEXT
-				PLAYER_TYPE.value = {$plugin.tx_streamovationsvp.settings.player}
-				POLLING_INTERVAL = TEXT
-				POLLING_INTERVAL.value = {$plugin.tx_streamovationsvp.settings.polling.interval}
-				CURRENT_PAGE_ID = TEXT
-				CURRENT_PAGE_ID.data = TSFE:id
-				# doesn't work if livestream doesn't put hash in GETvar, idiot!
-				#HASH = TEXT
-				#HASH.data = GP:tx_streamovationsvp_video|hash
-				SPEAKER_IMAGE_DIR = TEXT
-				SPEAKER_IMAGE_DIR.value < plugin.tx_streamovationsvp.settings.speakers.imgDir
-			}
-			# SvpPolling
-			20 = FILE
-			20.file = {$plugin.tx_streamovationsvp.javascript.pollingFile}
-		}
-	}
 }
-
-[globalVar = LIT:0 < {$plugin.tx_streamovationsvp.javascript.includeJquery}] 
-page.includeJSlibs.streamovationsvp_jQuery < plugin.tx_streamovationsvp.javascript.jQuery
-
-[globalVar = LIT:0 < {$plugin.tx_streamovationsvp.settings.player}]
-page.includeJSlibs.streamovationsvp_jwPlayer < plugin.tx_streamovationsvp.javascript.jwPlayer
-page.jsInline.198111210 < plugin.tx_streamovationsvp.javascript.inlineJS
-
-[globalVar = LIT:1 < {$plugin.tx_streamovationsvp.settings.player}]
-page.includeJSlibs.streamovationsvp_smvPlayer < plugin.tx_streamovationsvp.javascript.smvPlayer
-
-
-[global]
 
 plugin.tx_streamovationsvp._CSS_DEFAULT_STYLE (
 

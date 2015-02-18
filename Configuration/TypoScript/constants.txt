@@ -56,5 +56,6 @@ plugin.tx_streamovationsvp {
 		
 		starterFile = EXT:streamovations_vp/Resources/Private/JavaScript/SvpStarter.js
 		pollingFile = EXT:streamovations_vp/Resources/Private/JavaScript/SvpPolling.js
+		initFile = EXT:streamovations_vp/Resources/Private/JavaScript/init.js
 	}
 }

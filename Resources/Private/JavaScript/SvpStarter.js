@@ -682,11 +682,5 @@ var SvpStarter = (function($) {
 		}
 	}
 
-	// initialize when document is loaded
-	$(document).ready(function() {
-		// @TODO this should be done outside of this script via SVPS.init();
-		_this.init();
-	});
-
 	return _this;
 })(jQuery);
