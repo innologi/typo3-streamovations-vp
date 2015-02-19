@@ -29,7 +29,6 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use Innologi\StreamovationsVp\Library\RestRepository\Exception\RestException;
 use Innologi\StreamovationsVp\Library\RestRepository\Exception\HttpReturnedError;
 use Innologi\StreamovationsVp\Library\RestRepository\Exception\HostUnreachable;
-use Innologi\StreamovationsVp\Exception\ErrorException;
 /**
  * Video Controller
  *
@@ -82,7 +81,7 @@ class Controller extends ActionController {
 			parent::callActionMethod();
 		} catch (HttpReturnedError $e) {
 			$this->extensionErrorHandler(
-				new ErrorException(
+				new \Exception(
 					LocalizationUtility::translate('stream_n_a', $this->extensionName),
 					0,
 					$e
@@ -90,15 +89,13 @@ class Controller extends ActionController {
 			);
 		} catch (HostUnreachable $e) {
 			$this->extensionErrorHandler(
-				new ErrorException(
+				new \Exception(
 					LocalizationUtility::translate('host_n_a', $this->extensionName),
 					0,
 					$e
 				)
 			);
 		} catch (RestException $e) {
-			$this->extensionErrorHandler($e);
-		} catch (ErrorException $e) {
 			$this->extensionErrorHandler($e);
 		}
 		// we don't want to interfere with Extbase's own exceptions
