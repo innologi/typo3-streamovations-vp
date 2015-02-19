@@ -62,8 +62,8 @@ class JavascriptProvider extends ProviderAbstract implements ProviderInterface {
 	 * @return void
 	 */
 	public function addLibrary(array $conf, $id = '') {
-		// @see http://docs.typo3.org/typo3cms/TyposcriptReference/Setup/Page/Index.html#includejslibs-array
 		$methodName = (bool) $conf['placeInFooter'] ? 'addJsFooterLibrary' : 'addJsLibrary';
+		// @see http://docs.typo3.org/typo3cms/TyposcriptReference/Setup/Page/Index.html#includejslibs-array
 		$this->pageRenderer->$methodName(
 			$id,
 			$conf['file'],
@@ -84,8 +84,8 @@ class JavascriptProvider extends ProviderAbstract implements ProviderInterface {
 	 */
 	public function addFile(array $conf, $id = '') {
 		// @TODO test this
-		// @see http://docs.typo3.org/typo3cms/TyposcriptReference/Setup/Page/Index.html#includejs-array
 		$methodName = (bool) $conf['placeInFooter'] ? 'addJsFooterFile' : 'addJsFile';
+		// @see http://docs.typo3.org/typo3cms/TyposcriptReference/Setup/Page/Index.html#includejs-array
 		$this->pageRenderer->$methodName(
 			$conf['file'],
 			$conf['type'],
@@ -111,8 +111,8 @@ class JavascriptProvider extends ProviderAbstract implements ProviderInterface {
 			$conf['file'] = PageGenerator::inline2TempFile($inline, 'js');
 			$this->addFile($conf, $key);
 		} else {
-			// @see http://docs.typo3.org/typo3cms/TyposcriptReference/Setup/Page/Index.html#jsinline
 			$methodName = (bool) $conf['placeInFooter'] ? 'addJsFooterInlineCode' : 'addJsInlineCode';
+			// @see http://docs.typo3.org/typo3cms/TyposcriptReference/Setup/Page/Index.html#jsinline
 			$this->pageRenderer->$methodName(
 				$id,
 				$inline,
