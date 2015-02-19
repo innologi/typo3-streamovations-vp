@@ -135,6 +135,8 @@ abstract class ProviderAbstract implements ProviderInterface {
 	 * Adds filepath from node to $conf['file'] element.
 	 *
 	 * @param mixed $conf
+	 * @throws Exception\FailedCondition
+	 * @throws Exception\FileNotFound
 	 * @return array
 	 */
 	protected function convertConfig($conf) {
