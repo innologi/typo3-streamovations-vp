@@ -34,7 +34,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class Typo3Request extends RequestAbstract implements RequestInterface {
+class Typo3Request extends RequestAbstract {
 
 	/**
 	 * Sends Request, returns response

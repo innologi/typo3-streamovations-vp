@@ -34,7 +34,7 @@ namespace Innologi\StreamovationsVp\Library\AssetProvider\Provider;
  * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-abstract class ProviderAbstract {
+abstract class ProviderAbstract implements ProviderInterface {
 
 	/**
 	 * @var \TYPO3\CMS\Core\Page\PageRenderer

@@ -32,7 +32,7 @@ use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
  * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-abstract class ProviderServiceAbstract {
+abstract class ProviderServiceAbstract implements ProviderServiceInterface {
 
 	/**
 	 * @var \TYPO3\CMS\Extbase\Object\ObjectManagerInterface

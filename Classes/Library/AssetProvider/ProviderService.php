@@ -32,7 +32,7 @@ namespace Innologi\StreamovationsVp\Library\AssetProvider;
  * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class ProviderService extends ProviderServiceAbstract implements ProviderServiceInterface {
+class ProviderService extends ProviderServiceAbstract {
 	# @LOW find a way to make this a singleton, without impacting multiple plugins of different exts, as this could benefit any forward() call
 
 	/**

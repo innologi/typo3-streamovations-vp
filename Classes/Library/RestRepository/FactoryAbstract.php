@@ -24,6 +24,7 @@ namespace Innologi\StreamovationsVp\Library\RestRepository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use TYPO3\CMS\Core\SingletonInterface;
 /**
  * Factory Abstract
  *
@@ -32,7 +33,7 @@ use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
  * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-abstract class FactoryAbstract {
+abstract class FactoryAbstract implements SingletonInterface {
 
 	/**
 	 * @var \TYPO3\CMS\Extbase\Object\ObjectManagerInterface

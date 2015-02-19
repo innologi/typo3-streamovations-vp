@@ -32,7 +32,7 @@ namespace Innologi\StreamovationsVp\Library\RestRepository;
  * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-abstract class RequestAbstract {
+abstract class RequestAbstract implements RequestInterface {
 
 	/**
 	 * @var \TYPO3\CMS\Extbase\Object\ObjectManagerInterface

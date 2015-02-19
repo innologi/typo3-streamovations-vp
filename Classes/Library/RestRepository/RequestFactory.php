@@ -23,7 +23,7 @@ namespace Innologi\StreamovationsVp\Library\RestRepository;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use TYPO3\CMS\Core\SingletonInterface;
+
 /**
  * REST Request Factory
  *
@@ -32,7 +32,7 @@ use TYPO3\CMS\Core\SingletonInterface;
  * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class RequestFactory extends FactoryAbstract implements RequestFactoryInterface,SingletonInterface {
+class RequestFactory extends FactoryAbstract implements RequestFactoryInterface{
 
 	/**
 	 * @var string

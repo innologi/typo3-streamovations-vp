@@ -34,7 +34,7 @@ use TYPO3\CMS\Frontend\Page\PageGenerator;
  * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class JavascriptProvider extends ProviderAbstract implements ProviderInterface {
+class JavascriptProvider extends ProviderAbstract {
 
 	/**
 	 * Default asset configuration as utilized by PageRenderer

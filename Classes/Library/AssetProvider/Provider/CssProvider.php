@@ -34,7 +34,7 @@ namespace Innologi\StreamovationsVp\Library\AssetProvider\Provider;
  * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class CssProvider extends ProviderAbstract implements ProviderInterface {
+class CssProvider extends ProviderAbstract {
 
 	/**
 	 * Default asset configuration as utilized by PageRenderer
