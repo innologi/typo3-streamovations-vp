@@ -25,7 +25,7 @@ namespace Innologi\StreamovationsVp\Library\RestRepository\Exception;
  ***************************************************************/
 
 /**
- * Page Not Found Exception
+ * General Request Exception
  *
  * @package InnologiLibs
  * @subpackage RestRepository

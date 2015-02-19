@@ -25,7 +25,7 @@ namespace Innologi\StreamovationsVp\Library\RestRepository\Exception;
  ***************************************************************/
 
 /**
- * Page Not Found Exception
+ * Malformed Url Exception
  *
  * @package InnologiLibs
  * @subpackage RestRepository

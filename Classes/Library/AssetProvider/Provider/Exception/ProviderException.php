@@ -25,7 +25,7 @@ namespace Innologi\StreamovationsVp\Library\AssetProvider\Provider\Exception;
  ***************************************************************/
 
 /**
- * Asset Exception
+ * Provider Exception
  *
  * @package InnologiLibs
  * @subpackage AssetProvider
