@@ -58,4 +58,8 @@ plugin.tx_streamovationsvp {
 		pollingFile = EXT:streamovations_vp/Resources/Private/JavaScript/SvpPolling.js
 		initFile = EXT:streamovations_vp/Resources/Private/JavaScript/init.js
 	}
+	css {
+		# cat=plugin.tx_streamovationsvp//h; type=string; label=Frontend CSS file location: Provides frontend styling for plugin
+		frontendFile = EXT:streamovations_vp/Resources/Public/Css/frontend.css
+	}
 }
