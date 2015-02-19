@@ -26,9 +26,9 @@ namespace Innologi\StreamovationsVp\Mvc\Controller;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
-use Innologi\StreamovationsVp\Library\Rest\Exception\RestException;
-use Innologi\StreamovationsVp\Library\Rest\Exception\HttpReturnedError;
-use Innologi\StreamovationsVp\Library\Rest\Exception\HostUnreachable;
+use Innologi\StreamovationsVp\Library\RestRepository\Exception\RestException;
+use Innologi\StreamovationsVp\Library\RestRepository\Exception\HttpReturnedError;
+use Innologi\StreamovationsVp\Library\RestRepository\Exception\HostUnreachable;
 use Innologi\StreamovationsVp\Exception\ErrorException;
 /**
  * Video Controller

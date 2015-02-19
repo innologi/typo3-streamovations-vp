@@ -1,9 +1,9 @@
 <?php
-namespace Innologi\StreamovationsVp\Library\Rest;
+namespace Innologi\StreamovationsVp\Library\RestRepository\Exception;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2014 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
+ *  (c) 2015 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
  *
  *  All rights reserved
  *
@@ -25,31 +25,13 @@ namespace Innologi\StreamovationsVp\Library\Rest;
  ***************************************************************/
 
 /**
- * REST Response Factory Interface
+ * Page Not Found Exception
  *
- * @package streamovations_vp
+ * @package InnologiLibs
+ * @subpackage RestRepository
+ * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- *
  */
-interface ResponseFactoryInterface {
-
-	/**
-	 * Create Response objects out of a raw response, and return them in an array
-	 *
-	 * @param string $rawResponse
-	 * @param string $responseType
-	 * @param string $objectType
-	 * @return array
-	 */
-	public function createByRawResponse($rawResponse, $responseType, $objectType);
-
-	/**
-	 * Create Response
-	 *
-	 * @param array $properties
-	 * @param string $objectType
-	 * @return ResponseInterface
-	 */
-	public function create(array $properties = array(), $objectType);
+class RestException extends \Exception {
 
 }

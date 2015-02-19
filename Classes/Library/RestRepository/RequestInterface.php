@@ -1,5 +1,5 @@
 <?php
-namespace Innologi\StreamovationsVp\Library\Rest;
+namespace Innologi\StreamovationsVp\Library\RestRepository;
 /***************************************************************
  *  Copyright notice
  *
@@ -27,9 +27,10 @@ namespace Innologi\StreamovationsVp\Library\Rest;
 /**
  * REST Request Interface
  *
- * @package streamovations_vp
+ * @package InnologiLibs
+ * @subpackage RestRepository
+ * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- *
  */
 interface RequestInterface {
 

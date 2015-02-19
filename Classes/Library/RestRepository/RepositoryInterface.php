@@ -1,5 +1,5 @@
 <?php
-namespace Innologi\StreamovationsVp\Library\Rest;
+namespace Innologi\StreamovationsVp\Library\RestRepository;
 /***************************************************************
  *  Copyright notice
  *
@@ -23,43 +23,24 @@ namespace Innologi\StreamovationsVp\Library\Rest;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
- * TYPO3 REST Request
+ * REST Repository Interface
  *
- * Utilizes api provided by TYPO3 CMS directly
- *
- * @package streamovations_vp
+ * @package InnologiLibs
+ * @subpackage RestRepository
+ * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- *
  */
-class Typo3Request extends RequestAbstract implements RequestInterface {
+interface RepositoryInterface {
 
 	/**
-	 * Sends Request, returns response
+	 * If TRUE, forces RAW response from any request,
+	 * regardless of the applied methods.
 	 *
-	 * @param boolean $returnRawResponse
-	 * @return mixed
+	 * @param boolean $forceRawResponse
+	 * @return Repository
 	 */
-	public function send($returnRawResponse = FALSE) {
-		$data = array();
-		$rawResponse = GeneralUtility::getUrl(
-			$this->requestUri->getRequestUri(),
-			0,
-			$this->headers,
-			$data
-		);
-
-		// unfortunately, Typo3Request doesn't always allow us to read the actual
-		// response. instead, we get a status- and lib-based error message, e.g. 404
-		// this is because of e.g. the forced CURLOPT_FAILONERROR = 1
-		if ($rawResponse === FALSE || $data['error'] > 0) {
-			$this->haltRequest($data, $rawResponse);
-		}
-
-		return $this->forceRawResponse || $returnRawResponse
-			? $rawResponse
-			: $this->mapResponseToObjects($rawResponse);
-	}
+	public function setForceRawResponse($forceRawResponse);
 
 }

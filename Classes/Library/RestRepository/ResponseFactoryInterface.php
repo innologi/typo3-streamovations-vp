@@ -1,5 +1,5 @@
 <?php
-namespace Innologi\StreamovationsVp\Library\Rest;
+namespace Innologi\StreamovationsVp\Library\RestRepository;
 /***************************************************************
  *  Copyright notice
  *
@@ -25,21 +25,32 @@ namespace Innologi\StreamovationsVp\Library\Rest;
  ***************************************************************/
 
 /**
- * REST Repository Interface
+ * REST Response Factory Interface
  *
- * @package streamovations_vp
+ * @package InnologiLibs
+ * @subpackage RestRepository
+ * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- *
  */
-interface RepositoryInterface {
+interface ResponseFactoryInterface {
 
 	/**
-	 * If TRUE, forces RAW response from any request,
-	 * regardless of the applied methods.
+	 * Create Response objects out of a raw response, and return them in an array
 	 *
-	 * @param boolean $forceRawResponse
-	 * @return Repository
+	 * @param string $rawResponse
+	 * @param string $responseType
+	 * @param string $objectType
+	 * @return array
 	 */
-	public function setForceRawResponse($forceRawResponse);
+	public function createByRawResponse($rawResponse, $responseType, $objectType);
+
+	/**
+	 * Create Response
+	 *
+	 * @param array $properties
+	 * @param string $objectType
+	 * @return ResponseInterface
+	 */
+	public function create(array $properties = array(), $objectType);
 
 }

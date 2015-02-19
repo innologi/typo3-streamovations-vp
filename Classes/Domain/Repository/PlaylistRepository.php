@@ -23,7 +23,7 @@ namespace Innologi\StreamovationsVp\Domain\Repository;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use Innologi\StreamovationsVp\Library\Rest\Repository;
+use Innologi\StreamovationsVp\Library\RestRepository\Repository;
 /**
  * Playlist Repository
  *

@@ -1,9 +1,9 @@
 <?php
-namespace Innologi\StreamovationsVp\Library\Rest\Exception;
+namespace Innologi\StreamovationsVp\Library\RestRepository;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2015 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
+ *  (c) 2014 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
  *
  *  All rights reserved
  *
@@ -25,12 +25,38 @@ namespace Innologi\StreamovationsVp\Library\Rest\Exception;
  ***************************************************************/
 
 /**
- * Page Not Found Exception
+ * REST cURL Adapter Request
  *
- * @package streamovations_vp
+ * @package InnologiLibs
+ * @subpackage RestRepository
+ * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- *
  */
-class MalformedUrl extends RestException {
+class CurlAdapterRequest extends RequestAbstract implements RequestInterface {
+	// @TODO finish implementation
+
+	/**
+	 * Constructor
+	 *
+	 * @param RequestUriInterface $requestUri
+	 * @param string $responseObjectType
+	 * @param boolean $forceRawResponse
+	 * @param array $httpConfiguration
+	 * @return void
+	 */
+	public function __construct($requestUri, $responseObjectType, $forceRawResponse = FALSE, array $httpConfiguration = array()) {
+		// @see typo3/contrib/pear/HTTP/Request2/Request2.php
+		// @see typo3/contrib/pear/HTTP/Request2/Adapter/Curl.php
+	}
+
+	/**
+	 * Sends Request, returns response
+	 *
+	 * @param boolean $returnRawResponse
+	 * @return mixed
+	 */
+	public function send($returnRawResponse = FALSE) {
+
+	}
 
 }

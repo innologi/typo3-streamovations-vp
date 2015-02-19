@@ -23,7 +23,7 @@ namespace Innologi\StreamovationsVp\Domain\Repository;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use Innologi\StreamovationsVp\Library\Rest\Repository;
+use Innologi\StreamovationsVp\Library\RestRepository\Repository;
 /**
  * Event/Session Repository
  *
@@ -155,10 +155,10 @@ class EventRepository extends Repository {
 	 * - subcategory
 	 * - tags
 	 *
-	 * @param \Innologi\StreamovationsVp\Library\Rest\RequestInterface $request
-	 * @return \Innologi\StreamovationsVp\Library\Rest\RequestInterface
+	 * @param \Innologi\StreamovationsVp\Library\RestRepository\RequestInterface $request
+	 * @return \Innologi\StreamovationsVp\Library\RestRepository\RequestInterface
 	 */
-	protected function addSharedArguments(\Innologi\StreamovationsVp\Library\Rest\RequestInterface $request) {
+	protected function addSharedArguments(\Innologi\StreamovationsVp\Library\RestRepository\RequestInterface $request) {
 		if (isset($this->category[0])) {
 			$request->addArgument('category', $this->category);
 		}

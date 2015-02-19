@@ -1,5 +1,5 @@
 <?php
-namespace Innologi\StreamovationsVp\Library\Rest;
+namespace Innologi\StreamovationsVp\Library\RestRepository;
 /***************************************************************
  *  Copyright notice
  *
@@ -42,9 +42,10 @@ namespace Innologi\StreamovationsVp\Library\Rest;
  * is performance and obvious lack of defining domain models.
  * It's a hack that goes against the DDD-principle.
  *
- * @package streamovations_vp
+ * @package InnologiLibs
+ * @subpackage RestRepository
+ * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- *
  */
 class MagicResponse implements ResponseInterface {
 

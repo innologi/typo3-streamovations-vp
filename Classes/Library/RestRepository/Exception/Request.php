@@ -1,5 +1,5 @@
 <?php
-namespace Innologi\StreamovationsVp\Library\Rest\Exception;
+namespace Innologi\StreamovationsVp\Library\RestRepository\Exception;
 /***************************************************************
  *  Copyright notice
  *
@@ -27,10 +27,11 @@ namespace Innologi\StreamovationsVp\Library\Rest\Exception;
 /**
  * Page Not Found Exception
  *
- * @package streamovations_vp
+ * @package InnologiLibs
+ * @subpackage RestRepository
+ * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- *
  */
-class RestException extends \Exception {
+class Request extends RestException {
 
 }
