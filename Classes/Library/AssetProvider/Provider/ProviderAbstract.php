@@ -56,12 +56,18 @@ abstract class ProviderAbstract implements ProviderInterface {
 	protected $defaultConfiguration = array();
 
 	/**
+	 * @var string
+	 */
+	protected $assetType;
+
+	/**
 	 * Class Constructer
 	 *
 	 * @return void
 	 */
 	public function __construct() {
 		$this->initializeRenderers();
+		$this->initializeAssetType();
 	}
 
 	/**
@@ -77,6 +83,22 @@ abstract class ProviderAbstract implements ProviderInterface {
 	}
 
 	/**
+	 * Initializes AssetType from class name
+	 *
+	 * @return void
+	 */
+	protected function initializeAssetType() {
+		$className = strtolower(get_class($this));
+		// remove 'provider'
+		$this->assetType = str_replace(
+			'provider',
+			'',
+			// remove namespace
+			substr($className, (strrpos($className, '\\') + 1))
+		);
+	}
+
+	/**
 	 * Processes configuration of asset type
 	 *
 	 * @param array $configuration
@@ -85,12 +107,21 @@ abstract class ProviderAbstract implements ProviderInterface {
 	 */
 	public function processConfiguration(array $configuration, array $typoscript) {
 		// process libs: generally (external) libraries
-		if (isset($configuration['libs'])) {
-			foreach ($configuration['libs'] as $key => $conf) {
+		$cT = 'libs';
+		if (isset($configuration[$cT])) {
+			foreach ($configuration[$cT] as $key => $conf) {
 				try {
 					$conf = $this->convertConfig($conf);
 					$conf = array_merge($this->defaultConfiguration, $conf);
 					$this->addLibrary($conf, $key);
+				} catch (Exception\Configuration $e) {
+					$e->setMessage(
+						sprintf(
+							$e->getMessage(),
+							$this->assetType . '.' . $cT . '.' . $key
+						)
+					);
+					throw $e;
 				} catch (Exception\ProviderException $e) {
 					continue;
 				}
@@ -98,12 +129,21 @@ abstract class ProviderAbstract implements ProviderInterface {
 		}
 
 		// process files: generally (internal) files
-		if (isset($configuration['files'])) {
-			foreach ($configuration['files'] as $key => $conf) {
+		$cT = 'files';
+		if (isset($configuration[$cT])) {
+			foreach ($configuration[$cT] as $key => $conf) {
 				try {
 					$conf = $this->convertConfig($conf);
 					$conf = array_merge($this->defaultConfiguration, $conf);
 					$this->addFile($conf, $key);
+				} catch (Exception\Configuration $e) {
+					$e->setMessage(
+						sprintf(
+							$e->getMessage(),
+							$this->assetType . '.' . $cT . '.' . $key
+						)
+					);
+					throw $e;
 				} catch (Exception\ProviderException $e) {
 					continue;
 				}
@@ -111,17 +151,26 @@ abstract class ProviderAbstract implements ProviderInterface {
 		}
 
 		// process inline: generally small bits, or files to be processed through TypoScript
-		if (isset($configuration['inline'])) {
-			foreach ($configuration['inline'] as $key => $conf) {
+		$cT = 'inline';
+		if (isset($configuration[$cT])) {
+			foreach ($configuration[$cT] as $key => $conf) {
 				try {
 					// treat inline configs as typoscript COA, so subitems can be TEMPLATE etc.
 					$inline = trim(
-						$this->contentObject->COBJ_ARRAY($typoscript['inline.'][$key . '.'])
+						$this->contentObject->COBJ_ARRAY($typoscript[$cT . '.'][$key . '.'])
 					);
 					if (isset($inline[0])) {
 						$conf = array_merge($this->defaultConfiguration, $conf);
 						$this->addInline($inline, $conf, $key);
 					}
+				} catch (Exception\Configuration $e) {
+					$e->setMessage(
+						sprintf(
+							$e->getMessage(),
+							$this->assetType . '.' . $cT . '.' . $key
+						)
+					);
+					throw $e;
 				} catch (Exception\ProviderException $e) {
 					continue;
 				}
@@ -135,12 +184,16 @@ abstract class ProviderAbstract implements ProviderInterface {
 	 * Adds filepath from node to $conf['file'] element.
 	 *
 	 * @param mixed $conf
+	 * @throws Exception\Configuration
 	 * @throws Exception\FailedCondition
 	 * @throws Exception\FileNotFound
 	 * @return array
 	 */
 	protected function convertConfig($conf) {
 		if (is_array($conf)) {
+			if (!isset($conf['_typoScriptNodeValue'])) {
+				throw new Exception\Configuration('Asset Provider Configuration Error: Missing filepath in node-value "%1$s"');
+			}
 			$conf['file'] = $conf['_typoScriptNodeValue'];
 		} else {
 			$conf = array(

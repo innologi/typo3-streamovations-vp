@@ -26,10 +26,10 @@ namespace Innologi\StreamovationsVp\Controller;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
-use Innologi\StreamovationsVp\Domain\Utility\EventUtility;
-use Innologi\StreamovationsVp\Library\Rest\ResponseInterface;
-use Innologi\StreamovationsVp\Library\Rest\Exception\HttpReturnedError;
 use Innologi\StreamovationsVp\Mvc\Controller\Controller;
+use Innologi\StreamovationsVp\Library\RestRepository\ResponseInterface;
+use Innologi\StreamovationsVp\Library\RestRepository\Exception\HttpReturnedError;
+use Innologi\StreamovationsVp\Library\RestRepository\Exception\UnexpectedResponseStructure;
 /**
  * Video Controller
  *
@@ -118,6 +118,7 @@ class VideoController extends Controller {
 	 *
 	 * @param string $hash Playlist Hash
 	 * @param boolean $isLiveStream
+	 * @throws \Innologi\StreamovationsVp\Exception\UnexpectedResponseStructure
 	 * @return void
 	 */
 	public function showAction($hash, $isLiveStream = FALSE) {
@@ -155,7 +156,9 @@ class VideoController extends Controller {
 					$playlistItems = $playlist->getPlaylist();
 					foreach ($playlistItems as $playlistItem) {
 						if (!isset($playlistItem['source']['qualities'])) {
-							// @TODO throw exception
+							throw new UnexpectedResponseStructure(
+								LocalizationUtility::translate('unexpected_response_structure', $this->extensionName)
+							);
 						}
 
 						$uP = $urlParts;
@@ -175,19 +178,36 @@ class VideoController extends Controller {
 						} else {
 							$source = isset($playlistItem['source']['defaultQuality']) && isset($playlistItem['source']['qualities'][$playlistItem['source']['defaultQuality']])
 								? $playlistItem['source']['qualities'][$playlistItem['source']['defaultQuality']]
-								// @TODO test this
 								: array_shift($playlistItem['source']['qualities']);
 							// when livestreaming, $source is an array containing a stream for each available language
 							if ($application === 'rtplive' && is_array($source)) {
 								// livestream does not produce available languages, hence we use a configured csv list
+								$languageFound = FALSE;
 								$languages = GeneralUtility::trimExplode(',', $this->settings['live']['languages']);
 								foreach ($languages as $lang) {
 									if (isset($source[$lang])) {
 										$source = $source[$lang];
+										$languageFound = TRUE;
 										break;
 									}
 								}
-								// @TODO throw exception if lang not found
+								// if configured language is not found, log the issue and just get the first element
+								if (!$languageFound) {
+									reset($source);
+									GeneralUtility::devLog(
+										sprintf(
+											LocalizationUtility::translate('language_not_found', $this->extensionName),
+											// tried languages
+											$this->settings['live']['languages'],
+											// used language (first one)
+											key($source)
+										),
+										$this->extensionName,
+										2
+									);
+									// use first language
+									$source = array_shift($source);
+								}
 							}
 						}
 

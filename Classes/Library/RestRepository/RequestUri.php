@@ -83,7 +83,7 @@ class RequestUri implements RequestUriInterface {
 	 * @return RequestUriInterface
 	 */
 	public function setScheme($scheme) {
-		$this->scheme = $this->processPropertyChange($scheme);
+		$this->scheme = $this->processPropertyChange('__SCHEME__', $scheme);
 		return $this;
 	}
 
@@ -103,7 +103,7 @@ class RequestUri implements RequestUriInterface {
 	 * @return RequestUriInterface
 	 */
 	public function setBaseUri($baseUri) {
-		$this->baseUri = $this->processPropertyChange($baseUri);
+		$this->baseUri = $this->processPropertyChange('__BASEURI__', $baseUri);
 		return $this;
 	}
 
@@ -123,7 +123,7 @@ class RequestUri implements RequestUriInterface {
 	 * @return RequestUriInterface
 	 */
 	public function setApiUri($apiUri) {
-		$this->apiUri = $this->processPropertyChange($apiUri);
+		$this->apiUri = $this->processPropertyChange('__APIURL__', $apiUri);
 		return $this;
 	}
 
@@ -144,8 +144,8 @@ class RequestUri implements RequestUriInterface {
 	 * @return RequestUriInterface
 	 */
 	public function addArgument($name, $value) {
-		$name = $this->processPropertyChange($name);
-		$this->arguments[$name] = $this->processPropertyChange($value);
+		$name = $this->processPropertyChange('__PROPERTYNAME__', $name);
+		$this->arguments[$name] = $this->processPropertyChange($name, $value);
 		return $this;
 	}
 
@@ -180,13 +180,17 @@ class RequestUri implements RequestUriInterface {
 	/**
 	 * Process a changed value and return any correction made
 	 *
-	 * @param string $value
+	 * @param string $propertyName
+	 * @param string $propertyValue
+	 * @throws Exception\InvalidRequestArgument
 	 * @return string
 	 */
-	protected function processPropertyChange($propertyValue) {
+	protected function processPropertyChange($propertyName, $propertyValue) {
 		$propertyValue = trim($propertyValue);
 		if (!isset($propertyValue[0])) {
-			// @TODO throw exception
+			throw new Exception\InvalidRequestArgument(
+				'Empty value not supported for Rest Request Uri argument "' . $propertyName . '"'
+			);
 		}
 		$this->isModified = TRUE;
 		return $propertyValue;

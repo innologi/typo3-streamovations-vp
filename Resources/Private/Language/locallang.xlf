@@ -37,8 +37,14 @@
 			<trans-unit id="no_list">
 				<source>Geen videostreams beschikbaar of gevonden.</source>
 			</trans-unit>
+			<trans-unit id="unexpected_response_structure">
+				<source>De videostream kan niet worden uitgelezen.</source>
+			</trans-unit>
 			<trans-unit id="config_missing_hash">
 				<source>Er is geen videostream geconfigureerd.</source>
+			</trans-unit>
+			<trans-unit id="config_language_n_a">
+				<source>De geconfigureerde livestream talen "%1$s" niet gevonden, de eerst gevonden taal "%2$s" toegepast.</source>
 			</trans-unit>
 			
 			<trans-unit id="error_header">

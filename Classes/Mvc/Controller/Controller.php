@@ -29,6 +29,7 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use Innologi\StreamovationsVp\Library\RestRepository\Exception\RestException;
 use Innologi\StreamovationsVp\Library\RestRepository\Exception\HttpReturnedError;
 use Innologi\StreamovationsVp\Library\RestRepository\Exception\HostUnreachable;
+use Innologi\StreamovationsVp\Library\RestRepository\Exception\Configuration;
 /**
  * Video Controller
  *
@@ -73,12 +74,16 @@ class Controller extends ActionController {
 	 * response object. If the action doesn't return anything and a valid
 	 * view exists, the view is rendered automatically.
 	 *
+	 * @throws \Innologi\StreamovationsVp\Library\RestRepository\Exception\Configuration
 	 * @return void
 	 * @api
 	 */
 	protected function callActionMethod() {
 		try {
 			parent::callActionMethod();
+		} catch (Configuration $e) {
+			// pass these through
+			throw $e;
 		} catch (HttpReturnedError $e) {
 			$this->extensionErrorHandler(
 				new \Exception(
@@ -98,7 +103,7 @@ class Controller extends ActionController {
 		} catch (RestException $e) {
 			$this->extensionErrorHandler($e);
 		}
-		// we don't want to interfere with Extbase's own exceptions
+		// we don't want to interfere with Extbase's own exceptions, so we can't catch \Exception
 	}
 
 	/**

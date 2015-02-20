@@ -46,13 +46,14 @@ class EidUtility extends \TYPO3\CMS\Frontend\Utility\EidUtility {
 	 * it here so that it won't be recreated.
 	 *
 	 * @var \TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication $feUser
+	 * @throws \Exception
 	 * @return void
 	 */
 	static public function initTSFE(\TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication $feUser = NULL) {
 		// get page id
 		$pid = (int)GeneralUtility::_GP('id');
 		if (!$pid) {
-			// @TODO throw error
+			throw new \Exception('A page-id needs to be provided as \'id\' parameter, to retrieve active frontend configuration.');
 		}
 
 		// initialize TSFE

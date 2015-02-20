@@ -40,6 +40,7 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 	 * @param string $rawResponse
 	 * @param string $responseType
 	 * @param string $objectType
+	 * @throws Exception\UnexpectedResponseStructure
 	 * @return mixed Array or object
 	 */
 	public function createByRawResponse($rawResponse, $responseType, $objectType) {
@@ -69,8 +70,9 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 						$output = $output[$key];
 					} else {
 						// unexpected structure, does not compute
-						// @TODO throw RELEVANT exception
-						throw new \Exception('Unexpected response-structure');
+						throw new Exception\UnexpectedResponseStructure(
+							'Rest Repository Configuration error: container "' . $key . '" not found in REST response'
+						);
 					}
 				}
 			}
@@ -107,6 +109,7 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 	 *
 	 * @param array $properties
 	 * @param string $objectType
+	 * @throws Exception\Configuration
 	 * @return ResponseInterface
 	 */
 	public function create(array $properties, $objectType) {
@@ -122,7 +125,9 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 						$filteredValues = array();
 						foreach ($mappings as $key => $mappingConfig) {
 							if (!isset($mappingConfig['name'])) {
-								// @TODO throw error
+								throw new Exception\Configuration(
+									'Rest Repository Configuration error: Missing node-value of response mapping "' . $objectType . '.' . $property . '.' . $key . '"'
+								);
 							}
 							$name = $mappingConfig['name'];
 							$value = isset($filteredValues[$key]) ? $filteredValues[$key] : $properties[$property];
@@ -131,7 +136,9 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 							if (isset($mappingConfig['if'])) {
 								$if = $mappingConfig['if'];
 								if (!isset($if['field']) || !isset($if['value'])) {
-									// @TODO throw error
+									throw new Exception\Configuration(
+										'Rest Repository Configuration error: Invalid if-configuration in response mapping "' . $objectType . '.' . $property . '.' . $key . '"'
+									);
 								}
 								$ifField = $if['field'];
 								$ifValue = $if['value'];

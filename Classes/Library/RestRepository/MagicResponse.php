@@ -23,7 +23,7 @@ namespace Innologi\StreamovationsVp\Library\RestRepository;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
+use TYPO3\CMS\Extbase\Persistence\Generic\Exception\UnsupportedMethodException;
 /**
  * REST Magic Response
  *
@@ -39,7 +39,7 @@ namespace Innologi\StreamovationsVp\Library\RestRepository;
  * purpose, and possibly having to throw them away later on.
  *
  * The reason this is not meant for production-ready extensions,
- * is performance and obvious lack of defining domain models.
+ * is performance and obvious lack of descriptive domain models.
  * It's a hack that goes against the DDD-principle.
  *
  * @package InnologiLibs
@@ -68,6 +68,8 @@ class MagicResponse implements ResponseInterface {
 	 *
 	 * @param string $methodName The name of the magic method
 	 * @param string $arguments The arguments of the magic method
+	 * @throws \Exception
+	 * @throws \TYPO3\CMS\Extbase\Persistence\Generic\Exception\UnsupportedMethodException
 	 * @return mixed
 	 */
 	public function __call($methodName, $arguments) {
@@ -78,14 +80,13 @@ class MagicResponse implements ResponseInterface {
 				: NULL;
 		} elseif (substr($methodName, 0, 3) === 'set' && strlen($methodName) > 4) {
 			if (!isset($arguments[0])) {
-				// @TODO throw exception
+				throw new \Exception('Calling ' . $methodName . ' without an argument');
 			}
 			$propertyName = lcfirst(substr($methodName, 3));
 			$this->$propertyName = $arguments[0];
 			return $this;
 		}
-		// @TODO throw exception
-		//throw new \TYPO3\CMS\Extbase\Persistence\Generic\Exception\UnsupportedMethodException('The method "' . $methodName . '" is not supported by the repository.', 1233180480);
+		throw new UnsupportedMethodException('The method "' . $methodName . '" is not supported');
 	}
 
 	/**

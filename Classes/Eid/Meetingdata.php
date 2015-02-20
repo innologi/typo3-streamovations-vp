@@ -91,12 +91,13 @@ class Meetingdata {
 	/**
 	 * Run eID script and return output
 	 *
+	 * @throws \Exception
 	 * @return string
 	 */
 	public function run() {
 		$hash = GeneralUtility::_GP('hash');
 		if (!$hash) {
-			// @TODO throw error
+			throw new \Exception('A session hash needs to be provided as \'hash\' parameter, to retrieve relevant meetingdata.');
 		}
 		// if set, will force to return meetingdata, regardless of session content
 		$force = (int)GeneralUtility::_GP('force');
