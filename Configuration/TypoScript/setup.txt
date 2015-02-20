@@ -70,19 +70,13 @@ plugin.tx_streamovationsvp {
 					property {
 						timestamps {
 							mappings {
-								10 {
-									name = topicTimeline
-									if {
-										field = metadataType
-										value = topic
-									}
-									else {
-										sendToMapping = 20
-									}
+								10 = topicTimeline
+								10.if {
+									field = metadataType
+									value = topic
 								}
-								20 {
-									name = speakerTimeline
-								}
+								10.else.sendToMapping = 20
+								20 = speakerTimeline
 							}
 							remove = 1
 						}

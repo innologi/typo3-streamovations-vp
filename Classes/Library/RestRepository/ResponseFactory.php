@@ -124,12 +124,16 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 						$mappings = $config['mappings'];
 						$filteredValues = array();
 						foreach ($mappings as $key => $mappingConfig) {
-							if (!isset($mappingConfig['name'])) {
-								throw new Exception\Configuration(
-									'Rest Repository Configuration error: Missing node-value of response mapping "' . $objectType . '.' . $property . '.' . $key . '"'
-								);
+							if (is_array($mappingConfig)) {
+								if (!isset($mappingConfig['_typoScriptNodeValue'])) {
+									throw new Exception\Configuration(
+										'Rest Repository Configuration error: Missing node-value of response mapping "' . $objectType . '.' . $property . '.' . $key . '"'
+									);
+								}
+								$name = $mappingConfig['_typoScriptNodeValue'];
+							} else {
+								$name = $mappingConfig;
 							}
-							$name = $mappingConfig['name'];
 							$value = isset($filteredValues[$key]) ? $filteredValues[$key] : $properties[$property];
 
 							// condition, assumes property is a list
