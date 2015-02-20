@@ -77,8 +77,8 @@ class Repository implements RepositoryInterface,SingletonInterface {
 	 * @return void
 	 */
 	protected function initializeObjectType() {
-		$className = strtoLower(get_class($this));
-		// rempve 'repository'
+		$className = strtolower(get_class($this));
+		// remove 'repository'
 		$this->objectType = str_replace(
 			'repository',
 			'',
