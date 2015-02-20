@@ -53,6 +53,26 @@ var SvpStarter = (function($) {
 	var currentPage = parseInt('###CURRENT_PAGE_ID###');
 
 	/**
+	 * Log messages
+	 *
+	 * @var object
+	 */
+	var logMsg = {
+		svpp_n_a: 'SVPP not loaded, polling inactive',
+		svpp_off: 'Polling disabled',
+		no_player_data: 'The player element or player data is not available',
+		no_json_support: 'No JSON.parse support in user agent',
+		player_data_invalid: 'Player data is invalid or in an unsupported format',
+		invalid_player: 'No supported player configured',
+		no_jwplayer: 'No jwplayer loaded',
+		no_jwplayer_key: 'A jwplayer license key is required',
+		no_smvplayer: 'No smvplayer loaded',
+		events_init: 'initializing event handlers',
+		events_re: 'Reattached event callbacks',
+		no_timestamp: 'Topic has no registered timestamps'
+	}
+
+	/**
 	 * Counter of processed meetingdata elements (live streams)
 	 *
 	 * @var object
@@ -103,10 +123,10 @@ var SvpStarter = (function($) {
 					_this.deactivateElement('topic');
 				});
 			} else {
-				log('SVPP not loaded, polling inactive', true);
+				log(logMsg.svpp_n_a, true);
 			}
 		} else {
-			log('Polling disabled', false);
+			log(logMsg.svpp_off, false);
 		}
 	}
 
@@ -244,16 +264,21 @@ var SvpStarter = (function($) {
 				$data = $('#' + this.select.data).first();
 			if (!$player.exists() || !$data.exists()) {
 				// at least one of necessary elements does not exist
-				log('The player element or player data is not available', true);
+				log(logMsg.no_player_data, true);
 				return false;
 			}
 
-			// @TODO try/catch for every JSON.parse call?
 			// read & parse data
-			var data = JSON.parse($data.html().trim());
+			var data = null;
+			try {
+				data = JSON.parse($data.html().trim());
+			} catch (e) {
+				log(logMsg.no_json_support, true);
+				return false;
+			}
 			$data.html('');
 			if (typeof(data) !== 'object') {
-				log('Player data is invalid or in an unsupported format', true)
+				log(logMsg.player_data_invalid, true)
 				return false;
 			}
 
@@ -270,7 +295,7 @@ var SvpStarter = (function($) {
 					break;
 				default:
 					// no valid player configuration
-					log('No supported player configured', true);
+					log(logMsg.invalid_player, true);
 					return false;
 			}
 
@@ -294,15 +319,15 @@ var SvpStarter = (function($) {
 		// initialize JW Player
 		initJwPlayer: function(requireLicense) {
 			var licenseKey = '###JWPLAYER_KEY###';
-			if (typeof(jwplayer) === 'undefined') {
-				log('No jwplayer loaded', true);
-				return false;
-			}
-
 			if (licenseKey) {
-				jwplayer.key = licenseKey;
+				try {
+					jwplayer.key = licenseKey;
+				} catch (e) {
+					log(logMsg.no_jwplayer, true);
+					return false;
+				}
 			} else if(requireLicense) {
-				log('A jwplayer license key is required', true);
+				log(logMsg.no_jwplayer_key, true);
 				return false;
 			}
 			return true;
@@ -332,7 +357,7 @@ var SvpStarter = (function($) {
 					this.player.onPlay = function(callback) {
 						_this.callbacks.onPlay.push(callback);
 						_this.jw.onPlay(callback);
-					}
+						'No smvplayer loaded'	}
 					this.player.onPause = function(callback) {
 						_this.callbacks.onPause.push(callback);
 						_this.jw.onPause(callback);
@@ -385,7 +410,7 @@ var SvpStarter = (function($) {
 					return true;
 				}
 
-				log('No smvplayer loaded', true);
+				log(logMsg.no_smvplayer, true);
 			}
 			return false;
 		},
@@ -428,7 +453,7 @@ var SvpStarter = (function($) {
 
 		// prepare all eventhandlers
 		initEventHandlers: function() {
-			log('initializing event handlers', false);
+			log(logMsg.events_init, false);
 
 			// set jump event on topic clicks
 			$('.' + this.select.container + ' .topics').on('click', '.topic .topic-link', function(e) {
@@ -443,16 +468,26 @@ var SvpStarter = (function($) {
 			var $speakerTimeline = $('#' + this.select.speakerTimeline).first();
 
 			if ($topicTimeline.exists()) {
-				// @TODO try/catch for every JSON.parse call?
-				var timeline = JSON.parse($topicTimeline.html());
+				var timeline = null;
+				try {
+					timeline = JSON.parse($topicTimeline.html());
+				} catch (e) {
+					log(logMsg.no_json_support, true);
+					return false;
+				}
 				if (timeline.length > 0) {
 					this.createTimelineEventHandlers('topic', timeline, true);
 				}
 				$topicTimeline.html('');
 			}
 			if ($speakerTimeline.exists()) {
-				// @TODO try/catch for every JSON.parse call?
-				var timeline = JSON.parse($speakerTimeline.html());
+				var timeline = null;
+				try {
+					timeline = JSON.parse($speakerTimeline.html());
+				} catch (e) {
+					log(logMsg.no_json_support, true);
+					return false;
+				}
 				if (timeline.length > 0) {
 					this.createTimelineEventHandlers('speaker', timeline, false);
 				}
@@ -592,7 +627,7 @@ var SvpStarter = (function($) {
 			for (var c in this.callbacks.onPause) {
 				this.jw.onPause(this.callbacks.onPause[c]);
 			}
-			log('Reattached event callbacks', false);
+			log(logMsg.events_re, false);
 		},
 
 		// deactivate all topics/speakers
@@ -626,7 +661,7 @@ var SvpStarter = (function($) {
 					this.player.seek(topic.time);
 				}
 			} else {
-				log('Topic has no registered timestamps', true);
+				log(logMsg.no_timestamp, true);
 			}
 		},
 
