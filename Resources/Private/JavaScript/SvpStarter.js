@@ -34,7 +34,7 @@ var SvpStarter = (function($) {
 	 * @var object
 	 */
 	var logMsg = {
-		svpp_n_a: 'SVPP not loaded, polling inactive',
+		no_svpp: 'SVPP not loaded, polling inactive',
 		svpp_off: 'Polling disabled',
 		no_player_data: 'The player element or player data is not available',
 		no_json_support: 'No JSON.parse support in user agent',
@@ -99,7 +99,7 @@ var SvpStarter = (function($) {
 					_this.deactivateElement('topic');
 				});
 			} else {
-				log(logMsg.svpp_n_a, true);
+				log(logMsg.no_svpp, true);
 			}
 		} else {
 			log(logMsg.svpp_off, false);
