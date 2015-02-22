@@ -333,7 +333,7 @@ var SvpStarter = (function($) {
 					this.player.onPlay = function(callback) {
 						_this.callbacks.onPlay.push(callback);
 						_this.jw.onPlay(callback);
-						'No smvplayer loaded'	}
+					}
 					this.player.onPause = function(callback) {
 						_this.callbacks.onPause.push(callback);
 						_this.jw.onPause(callback);
