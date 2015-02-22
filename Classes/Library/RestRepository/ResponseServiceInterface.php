@@ -1,5 +1,5 @@
 <?php
-namespace Innologi\StreamovationsVp\Library\RestRepository\Exception;
+namespace Innologi\StreamovationsVp\Library\RestRepository;
 /***************************************************************
  *  Copyright notice
  *
@@ -25,23 +25,34 @@ namespace Innologi\StreamovationsVp\Library\RestRepository\Exception;
  ***************************************************************/
 
 /**
- * Configuration Exception
+ * REST Response Service Interface
  *
  * @package InnologiLibs
  * @subpackage RestRepository
  * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class Configuration extends RestException {
+interface ResponseServiceInterface {
 
 	/**
-	 * Set message
+	 * Configures response data per response configuration
+	 * and returns an altered $response.
 	 *
-	 * @param string $message
-	 * @return void
+	 * @param array $response
+	 * @param array $responseConfiguration
+	 * @return array
 	 */
-	public function setMessage($message) {
-		$this->message = $message;
-	}
+	public function configureResponse(array $response, array $responseConfiguration);
+
+	/**
+	 * Configures properties per property configuration
+	 * and returns an altered $properties.
+	 *
+	 * @param array $properties
+	 * @param array $propertyConfiguration
+	 * @param string $objectType
+	 * @return array
+	 */
+	public function configureProperties(array $properties, array $propertyConfiguration, $objectType);
 
 }

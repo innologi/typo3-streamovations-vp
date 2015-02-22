@@ -35,6 +35,21 @@ namespace Innologi\StreamovationsVp\Library\RestRepository;
 class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterface {
 
 	/**
+	 * @var ResponseServiceInterface
+	 */
+	protected $responseService;
+
+	/**
+	 * Initializes the configuration
+	 *
+	 * @return void
+	 */
+	protected function initializeConfiguration() {
+		parent::initializeConfiguration();
+		$this->responseService = $this->objectManager->get(__NAMESPACE__ . '\\ResponseServiceInterface');
+	}
+
+	/**
 	 * Create Response objects out of a raw response, and return them in an array
 	 *
 	 * @param string $rawResponse
@@ -44,64 +59,37 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 	 * @return mixed Array or object
 	 */
 	public function createByRawResponse($rawResponse, $responseType, $objectType) {
-		$response = array();
-
-		// @TODO pull this method apart?
-
 		// convert response to array
 		switch ($responseType) {
 			case RequestInterface::RESPONSETYPE_JSON:
-				$output = json_decode($rawResponse, TRUE);
+				$response = json_decode($rawResponse, TRUE);
 				break;
 			default:
 				// @TODO add XML support
 		}
 
-		// @TODO pull apart
+		// response configuration
 		if (isset($this->configuration['repository'][$objectType]['response'])) {
-			$mappingConfiguration = $this->configuration['repository'][$objectType]['response'];
+			$response = $this->responseService->configureResponse(
+				$response,
+				$this->configuration['repository'][$objectType]['response']
+			);
 
-			// if set, will replace root with container element
-			if (isset($mappingConfiguration['container'])) {
-				// note that container may be set as path
-				$containerKeys = explode('.', $mappingConfiguration['container']);
-				foreach ($containerKeys as $key) {
-					if (isset($output[$key])) {
-						$output = $output[$key];
-					} else {
-						// unexpected structure, does not compute
-						throw new Exception\UnexpectedResponseStructure(
-							'Rest Repository Configuration error: container "' . $key . '" not found in REST response'
-						);
-					}
+			// response-factory supports an additional configuration-property: list
+			if (isset($this->configuration['repository'][$objectType]['response']['list'])
+				&& (bool)$this->configuration['repository'][$objectType]['response']['list']
+			) {
+				// if list is set, treat the response root as an array of actual response elements
+				$output = array();
+				foreach ($response as $r) {
+					$output[] = $this->create($r, $objectType);
 				}
+				return $output;
 			}
-
-			// exclude elements from result
-			if (isset($mappingConfiguration['exclude'])) {
-				// exclude is CSV
-				$excludeKeys = explode(',', $mappingConfiguration['exclude']);
-				// @LOW support paths?
-				foreach ($excludeKeys as $key) {
-					if (isset($output[$key])) {
-						unset($output[$key]);
-					}
-					// note that nothing happens if key isn't found, no exception thrown
-				}
-			}
-
-			// is output a list of response-objects?
-			if (isset($mappingConfiguration['list']) && (bool)$mappingConfiguration['list']) {
-				foreach ($output as $o) {
-					$response[] = $this->create($o, $objectType);
-				}
-				return $response;
-			}
-
 		}
 
-		$response = $this->create($output, $objectType);
-		return $response;
+		$output = $this->create($response, $objectType);
+		return $output;
 	}
 
 	/**
@@ -109,91 +97,16 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 	 *
 	 * @param array $properties
 	 * @param string $objectType
-	 * @throws Exception\Configuration
 	 * @return ResponseInterface
 	 */
 	public function create(array $properties, $objectType) {
-		// @LOW support property paths?
-		// @TODO pull apart
 		// property configuration
 		if (isset($this->configuration['repository'][$objectType]['response']['property'])) {
-			foreach ($this->configuration['repository'][$objectType]['response']['property'] as $property => $config) {
-				if (isset($properties[$property])) {
-					// map to new properties
-					if (isset($config['mappings'])) {
-						$mappings = $config['mappings'];
-						$filteredValues = array();
-						foreach ($mappings as $key => $mappingConfig) {
-							if (is_array($mappingConfig)) {
-								if (!isset($mappingConfig['_typoScriptNodeValue'])) {
-									throw new Exception\Configuration(
-										'Rest Repository Configuration error: Missing node-value of response mapping "' . $objectType . '.' . $property . '.' . $key . '"'
-									);
-								}
-								$name = $mappingConfig['_typoScriptNodeValue'];
-							} else {
-								$name = $mappingConfig;
-							}
-							$value = isset($filteredValues[$key]) ? $filteredValues[$key] : $properties[$property];
-
-							// condition, assumes property is a list
-							if (isset($mappingConfig['if'])) {
-								$if = $mappingConfig['if'];
-								if (!isset($if['field']) || !isset($if['value'])) {
-									throw new Exception\Configuration(
-										'Rest Repository Configuration error: Invalid if-configuration in response mapping "' . $objectType . '.' . $property . '.' . $key . '"'
-									);
-								}
-								$ifField = $if['field'];
-								$ifValue = $if['value'];
-
-								$match = array();
-								$remainder = array();
-								foreach ($value as $element) {
-									if (isset($element[$ifField]) && $element[$ifField] === $ifValue) {
-										$match[] = $element;
-									} else {
-										$remainder[] = $element;
-									}
-								}
-								$value = $match;
-
-								if (isset($mappingConfig['else'])) {
-									$else = $mappingConfig['else'];
-									if (isset($else['sendToMapping'])) {
-										$filteredValues[$else['sendToMapping']] = $remainder;
-									}
-								}
-							}
-
-							$properties[$name] = $value;
-						}
-					}
-
-					// remove property
-					if (isset($config['remove']) && (int)$config['remove'] === 1) {
-						unset($properties[$property]);
-						// anything else set in this config no longer matters
-						continue;
-					}
-
-					// filter list property
-					if (isset($config['filterList']) && isset($properties[$property][0]) && is_array($properties[$property])) {
-						switch ($config['filterList']) {
-							// only get the last element
-							case 'last':
-								$properties[$property] = array(
-									end($properties[$property])
-								);
-						}
-					}
-
-					// re-encode property to json
-					if (isset($config['json']) && (int)$config['json'] === 1) {
-						$properties[$property] = json_encode($properties[$property]);
-					}
-				}
-			}
+			$properties = $this->responseService->configureProperties(
+				$properties,
+				$this->configuration['repository'][$objectType]['response']['property'],
+				$objectType
+			);
 		}
 
 		if (isset($this->configuration['features']['disableResponseMapper']) && (int)$this->configuration['features']['disableResponseMapper']) {

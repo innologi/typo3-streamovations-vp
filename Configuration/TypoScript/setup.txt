@@ -5,6 +5,9 @@ config.tx_extbase.objects {
 	Innologi\StreamovationsVp\Library\RestRepository\RepositoryInterface {
 		className = Innologi\StreamovationsVp\Library\RestRepository\Repository
 	}
+	Innologi\StreamovationsVp\Library\RestRepository\ResponseServiceInterface {
+		className = Innologi\StreamovationsVp\Library\RestRepository\ResponseService
+	}
 	Innologi\StreamovationsVp\Library\RestRepository\ResponseFactoryInterface {
 		className = Innologi\StreamovationsVp\Library\RestRepository\ResponseFactory
 	}
@@ -56,7 +59,7 @@ plugin.tx_streamovationsvp {
 			event {
 				request.apiUri = api.php/sessions/date
 				response {
-					container = events
+					rootElement = events
 					list = 1
 				}
 			}
