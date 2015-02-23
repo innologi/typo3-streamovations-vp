@@ -1,18 +1,16 @@
 <f:layout name="FullWidth" />
 
-<!--
-	@TODO make types of meetingdata optional
--->
-
 <f:section name="main">
 
 <f:if condition="{playlist}">
 <f:then>
 
-	<f:render
-		partial="Video/Topics"
-		arguments="{topics:meetingdata.topics, timeline:meetingdata.topicTimeline, isLiveStream:isLiveStream}"
-	/>
+	<f:if condition="{settings.topics.enable}">
+		<f:render
+			partial="Video/Topics"
+			arguments="{topics:meetingdata.topics, timeline:meetingdata.topicTimeline, isLiveStream:isLiveStream}"
+		/>
+	</f:if>
 
 	<div id="tx-streamovations-vp-play" class="video-player"></div>
 	<script type="application/json" id="tx-streamovations-vp-playerdata" data-hash="{hash}">
@@ -23,10 +21,12 @@
 		<f:render partial="General/BackLink" arguments="{pid: backPid}" />
 	</f:if>
 	
-	<f:render
-		partial="Video/Speakers"
-		arguments="{speakers:meetingdata.speakers, timeline:meetingdata.speakerTimeline, isLiveStream:isLiveStream, settings:settings.speakers}"
-	/>
+	<f:if condition="{settings.speakers.enable}">
+		<f:render
+			partial="Video/Speakers"
+			arguments="{speakers:meetingdata.speakers, timeline:meetingdata.speakerTimeline, isLiveStream:isLiveStream, settings:settings.speakers}"
+		/>
+	</f:if>
 	
 </f:then>
 <f:else>

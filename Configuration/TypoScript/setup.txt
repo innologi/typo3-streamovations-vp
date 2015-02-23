@@ -128,6 +128,10 @@ plugin.tx_streamovationsvp {
 							SPEAKER_IMAGE_DIR = USER
 							SPEAKER_IMAGE_DIR.userFunc = Innologi\StreamovationsVp\TypoScript\Utility->resolvePath
 							SPEAKER_IMAGE_DIR.path = {$plugin.tx_streamovationsvp.settings.speakers.imgDir}
+							MEETINGDATA_TOPICS = TEXT
+							MEETINGDATA_TOPICS.value = {$plugin.tx_streamovationsvp.settings.topics.enable}
+							MEETINGDATA_SPEAKERS = TEXT
+							MEETINGDATA_SPEAKERS.value = {$plugin.tx_streamovationsvp.settings.speakers.enable}
 						}
 						# SvpPolling
 						20 = FILE

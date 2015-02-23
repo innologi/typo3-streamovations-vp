@@ -29,6 +29,16 @@ var SvpStarter = (function($) {
 	var currentPage = parseInt('###CURRENT_PAGE_ID###');
 
 	/**
+	 * Determines if meetingdata-type is enabled
+	 *
+	 * @var object
+	 */
+	var meetingdata = {
+		topics: parseInt('###MEETINGDATA_TOPICS###'),
+		speakers: parseInt('###MEETINGDATA_SPEAKERS###')
+	}
+
+	/**
 	 * Log messages
 	 *
 	 * @var object
@@ -43,7 +53,8 @@ var SvpStarter = (function($) {
 		no_jwplayer: 'No jwplayer loaded',
 		no_jwplayer_key: 'A jwplayer license key is required',
 		no_smvplayer: 'No smvplayer loaded',
-		events_init: 'initializing event handlers',
+		events_topic_init: 'initializing topic event handlers',
+		events_speaker_init: 'initializing speaker event handlers',
 		events_re: 'Reattached event callbacks',
 		no_timestamp: 'Topic has no registered timestamps'
 	}
@@ -75,8 +86,12 @@ var SvpStarter = (function($) {
 	 */
 	function initLiveCounters() {
 		var $container = $('.' + _this.select.container);
-		count.topic = $('.topics .topic', $container).not('.template').length;
-		count.speaker = $('.speakers .speaker', $container).not('.template').length;
+		if (meetingdata.topics) {
+			count.topic = $('.topics .topic', $container).not('.template').length;
+		}
+		if (meetingdata.speakers) {
+			count.speaker = $('.speakers .speaker', $container).not('.template').length;
+		}
 		// timeline's are produced via polling, so no need to initialize them here
 	}
 
@@ -97,8 +112,12 @@ var SvpStarter = (function($) {
 				});
 				this.player.onPause(function() {
 					SvpPolling.stop();
-					_this.deactivateElement('speaker');
-					_this.deactivateElement('topic');
+					if (meetingdata.speakers) {
+						_this.deactivateElement('speaker');
+					}
+					if (meetingdaa.topics) {
+						_this.deactivateElement('topic');
+					}
 				});
 			} else {
 				log(logMsg.no_svpp, true);
@@ -294,7 +313,9 @@ var SvpStarter = (function($) {
 
 			if (this.isLiveStream) {
 				initLiveCounters();
-				initPolling();
+				if (meetingdata.topics || meetingdata.speakers) {
+					initPolling();
+				}
 			} else {
 				this.initEventHandlers();
 			}
@@ -438,45 +459,51 @@ var SvpStarter = (function($) {
 
 		// prepare all eventhandlers
 		initEventHandlers: function() {
-			log(logMsg.events_init, false);
+			if (meetingdata.topics) {
+				// set jump event on topic clicks
+				$('.' + this.select.container + ' .topics').on('click', '.topic .topic-link', function(e) {
+					e.preventDefault();
+					_this.jumpToTopic(
+						$(this).parent('.topic').attr('data-topic')
+					);
+				});
 
-			// set jump event on topic clicks
-			$('.' + this.select.container + ' .topics').on('click', '.topic .topic-link', function(e) {
-				e.preventDefault();
-				_this.jumpToTopic(
-					$(this).parent('.topic').attr('data-topic')
-				);
-			});
-
-			// parse meeting data
-			var $topicTimeline = $('#' + this.select.topicTimeline).first();
-			var $speakerTimeline = $('#' + this.select.speakerTimeline).first();
-
-			if ($topicTimeline.exists()) {
-				var timeline = null;
-				try {
-					timeline = JSON.parse($topicTimeline.html());
-				} catch (e) {
-					log(logMsg.no_json_support, true);
-					return false;
+				// parse meeting data
+				var $topicTimeline = $('#' + this.select.topicTimeline).first();
+				if ($topicTimeline.exists()) {
+					var timeline = null;
+					try {
+						timeline = JSON.parse($topicTimeline.html());
+					} catch (e) {
+						log(logMsg.no_json_support, true);
+						return false;
+					}
+					if (timeline.length > 0) {
+						this.createTimelineEventHandlers('topic', timeline, true);
+					}
+					$topicTimeline.html('');
 				}
-				if (timeline.length > 0) {
-					this.createTimelineEventHandlers('topic', timeline, true);
-				}
-				$topicTimeline.html('');
+
+				log(logMsg.events_topic_init, false);
 			}
-			if ($speakerTimeline.exists()) {
-				var timeline = null;
-				try {
-					timeline = JSON.parse($speakerTimeline.html());
-				} catch (e) {
-					log(logMsg.no_json_support, true);
-					return false;
+
+			if (meetingdata.speakers) {
+				var $speakerTimeline = $('#' + this.select.speakerTimeline).first();
+				if ($speakerTimeline.exists()) {
+					var timeline = null;
+					try {
+						timeline = JSON.parse($speakerTimeline.html());
+					} catch (e) {
+						log(logMsg.no_json_support, true);
+						return false;
+					}
+					if (timeline.length > 0) {
+						this.createTimelineEventHandlers('speaker', timeline, false);
+					}
+					$speakerTimeline.html('');
 				}
-				if (timeline.length > 0) {
-					this.createTimelineEventHandlers('speaker', timeline, false);
-				}
-				$speakerTimeline.html('');
+
+				log(logMsg.events_speaker_init, false);
 			}
 		},
 
@@ -550,39 +577,43 @@ var SvpStarter = (function($) {
 			// note that empty/null elements are translated by json-encoding to
 			// value "false" in some cases, hence these extra checks
 
-			// add missing speakers?
-			if (data.hasOwnProperty('speakers')
-				&& data.speakers !== false
-				&& data.speakers.length > count.speaker
-			) {
-				addNewElements(
-					data.speakers.slice(count.speaker),
-					'speaker'
-				);
+			if (meetingdata.topics) {
+				// add missing topics?
+				if (data.hasOwnProperty('topics')
+					&& data.topics !== false
+					&& data.topics.length > count.topic
+				) {
+					addNewElements(
+						data.topics.slice(count.topic),
+						'topic'
+					);
+				}
+				// activate latest topic timestamp?
+				if (data.hasOwnProperty('topicTimeline')
+					&& data.topicTimeline !== false
+					&& data.topicTimeline.length > 0
+				) {
+					activateLatestElement(data.topicTimeline, 'topic');
+				}
 			}
-			// add missing topics?
-			if (data.hasOwnProperty('topics')
-				&& data.topics !== false
-				&& data.topics.length > count.topic
-			) {
-				addNewElements(
-					data.topics.slice(count.topic),
-					'topic'
-				);
-			}
-			// activate latest speaker timestamp?
-			if (data.hasOwnProperty('speakerTimeline')
-				&& data.speakerTimeline !== false
-				&& data.speakerTimeline.length > 0
-			) {
-				activateLatestElement(data.speakerTimeline, 'speaker');
-			}
-			// activate latest topic timestamp?
-			if (data.hasOwnProperty('topicTimeline')
-				&& data.topicTimeline !== false
-				&& data.topicTimeline.length > 0
-			) {
-				activateLatestElement(data.topicTimeline, 'topic');
+			if (meetingdata.speakers) {
+				// add missing speakers?
+				if (data.hasOwnProperty('speakers')
+					&& data.speakers !== false
+					&& data.speakers.length > count.speaker
+				) {
+					addNewElements(
+						data.speakers.slice(count.speaker),
+						'speaker'
+					);
+				}
+				// activate latest speaker timestamp?
+				if (data.hasOwnProperty('speakerTimeline')
+					&& data.speakerTimeline !== false
+					&& data.speakerTimeline.length > 0
+				) {
+					activateLatestElement(data.speakerTimeline, 'speaker');
+				}
 			}
 		},
 
@@ -591,8 +622,12 @@ var SvpStarter = (function($) {
 			this.jw = jwplayer(this.select.player);
 			// if really new, an onReady will be fired
 			this.jw.onReady(function(e) {
-				_this.deactivateElement('speaker');
-				_this.deactivateElement('topic');
+				if (meetingdata.speakers) {
+					_this.deactivateElement('speaker');
+				}
+				if (meetingdata.topics) {
+					_this.deactivateElement('topic');
+				}
 				// all event handler callbacks need to be re-attached
 				_this.reattachEventCallbacks();
 			});
