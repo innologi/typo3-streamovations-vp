@@ -10,27 +10,40 @@
 
 <f:if condition="{playlist}">
 <f:then>
-	<f:if condition="{meetingdata.topics}">
-		<div class="topics">
-			<p class="header"><f:translate key="topic_header" /></p>
+
+	<div class="topics">
+		<p class="header"><f:translate key="topic_header" /></p>
+		<f:if condition="{meetingdata.topics}">
+		<f:then>
 			<ol>
 				<f:for each="{meetingdata.topics}" as="topic">
 					<li class="topic"  data-topic="{topic.id}">
 						<f:if condition="{isLiveStream}">
-							<f:then><span class="topic-title">{topic.title}</span></f:then>
-							<f:else>
-								<a href="#"
-									class="topic-link topic-title"
-									title="{f:translate(key:'topic_link_title')}"
-								>{topic.title}</a>
-							</f:else>
+						<f:then><span class="topic-title">{topic.title}</span></f:then>
+						<f:else>
+							<a href="#"
+								class="topic-link topic-title"
+								title="{f:translate(key:'topic_link_title')}"
+							>{topic.title}</a>
+						</f:else>
 						</f:if>
 						<span class="topic-description">{topic.description -> f:format.raw()}</span>
 					</li>
 				</f:for>
 			</ol>
-		</div>
-	</f:if>
+		</f:then>
+		<f:else>
+			<f:if condition="{isLiveStream}">
+				<ol class="template">
+					<li class="topic template"  data-topic="">
+						<span class="topic-title"></span>
+						<span class="topic-description"></span>
+					</li>
+				</ol>
+			</f:if>
+		</f:else>
+		</f:if>
+	</div>
 
 	<div id="tx-streamovations-vp-play" class="video-player"></div>
 	
@@ -42,8 +55,9 @@
 		><f:translate key="go_back" /></f:link.page>
 	</f:if>
 	
-	<f:if condition="{meetingdata.speakers}">
-		<div class="speakers">
+	<div class="speakers">
+		<f:if condition="{meetingdata.speakers}">
+		<f:then>
 			<ul>
 				<f:for each="{meetingdata.speakers}" as="speaker">
 					<li class="speaker" data-speaker="{speaker.id}">
@@ -61,25 +75,43 @@
 					</li>
 				</f:for>
 			</ul>
-		</div>
-	</f:if>
+		</f:then>
+		<f:else>
+			<f:if condition="{isLiveStream}">
+				<ul class="template">
+					<li class="speaker template" data-speaker="">
+						<p class="header"><f:translate key="speaker_header" /></p>
+						<img
+							class="speaker-avatar"
+							src="{settings.speakers.imgDefault}"
+							height="{settings.speakers.imgHeight}"
+							width="{settings.speakers.imgWidth}"
+							alt="Speaker Profile Image"
+						/>
+						<div class="speaker-data"></div>
+					</li>
+				</ul>
+			</f:if>
+		</f:else>
+		</f:if>
+	</div>
 	
 	<script type="application/json" id="tx-streamovations-vp-playerdata" data-hash="{hash}">
 		{playlist -> f:format.raw()}
 	</script>
 	<f:if condition="{isLiveStream}">
-		<f:else>
-			<f:if condition="{meetingdata.topicTimeline}">
-				<script type="application/json" id="tx-streamovations-vp-topictimeline">
-					{meetingdata.topicTimeline -> f:format.raw()}
-				</script>
-			</f:if>
-			<f:if condition="{meetingdata.speakerTimeline}">
-				<script type="application/json" id="tx-streamovations-vp-speakertimeline">
-					{meetingdata.speakerTimeline -> f:format.raw()}
-				</script>
-			</f:if>
-		</f:else>
+	<f:else>
+		<f:if condition="{meetingdata.topicTimeline}">
+			<script type="application/json" id="tx-streamovations-vp-topictimeline">
+				{meetingdata.topicTimeline -> f:format.raw()}
+			</script>
+		</f:if>
+		<f:if condition="{meetingdata.speakerTimeline}">
+			<script type="application/json" id="tx-streamovations-vp-speakertimeline">
+				{meetingdata.speakerTimeline -> f:format.raw()}
+			</script>
+		</f:if>
+	</f:else>
 	</f:if>
 	
 </f:then>

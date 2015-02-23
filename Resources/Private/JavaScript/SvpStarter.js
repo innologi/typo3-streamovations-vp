@@ -69,12 +69,14 @@ var SvpStarter = (function($) {
 	 * Initialize live counters, keeping track of the number
 	 * of speakers, topics, etc.
 	 *
+	 * Excludes template elements.
+	 *
 	 * @return void
 	 */
 	function initLiveCounters() {
 		var $container = $('.' + _this.select.container);
-		count.topic = $('.topics .topic', $container).length;
-		count.speaker = $('.speakers .speaker', $container).length;
+		count.topic = $('.topics .topic', $container).not('.template').length;
+		count.speaker = $('.speakers .speaker', $container).not('.template').length;
 		// timeline's are produced via polling, so no need to initialize them here
 	}
 
@@ -128,10 +130,17 @@ var SvpStarter = (function($) {
 	 * @return void
 	 */
 	function addNewElements(array, type) {
-		// @TODO what if there is no template?
 		var $template = $('.' + _this.select.container + ' .' + type + 's .' + type).last();
-		// @TODO if we replace insertAfter() with something like add(), can we put the for-order back to normal?
-		for (var i=array.length-1; i >= 0; i--) {
+		var $container = $template.parent();
+
+		// remove 'template' classes and $template element out of DOM
+		if ($template.hasClass('template')) {
+			$template.removeClass('template');
+			$template.remove();
+			$container.removeClass('template');
+		}
+
+		for (var i=0; i < array.length; i++) {
 			var $temp = $template.clone(),
 				elem = array[i];
 			// some changes are too specific to be handled generally
@@ -146,8 +155,8 @@ var SvpStarter = (function($) {
 			}
 			$temp.attr('data-' + type, elem.id)
 				// $template might have been active, so disable just in case
-				.removeClass('active')
-				.insertAfter($template);
+				.removeClass('active');
+			$container.append($temp);
 
 			count[type].length++;
 		}
