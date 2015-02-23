@@ -1,0 +1,12 @@
+{namespace s=Innologi\StreamovationsVp\ViewHelpers}
+<li class="speaker{extraClass}" data-speaker="{speaker.id}">
+	<p class="header"><f:translate key="speaker_header" /></p>
+	<f:image
+		class="speaker-avatar"
+		src="{s:file.exists(file: avatar, then: avatar, else: settings.imgDefault)}"
+		height="{settings.imgHeight}"
+		width="{settings.imgWidth}"
+		alt="Speaker Profile Image"
+	/>
+	<div class="speaker-data">{speaker.firstname} {speaker.lastname}</div>
+</li>

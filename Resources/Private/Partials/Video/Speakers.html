@@ -1,0 +1,34 @@
+<div class="speakers">
+	<f:if condition="{speakers}">
+	<f:then>
+		<ul>
+			<f:for each="{speakers}" as="speaker">
+				<f:render
+					partial="Video/SpeakerListItem"
+					arguments="{speaker:speaker, avatar:'{settings.imgDir}{speaker.photo}', settings:settings}"
+				/>
+			</f:for>
+		</ul>
+	</f:then>
+	<f:else>
+		<f:if condition="{isLiveStream}">
+			<ul class="template">
+				<f:render
+					partial="Video/SpeakerListItem"
+					arguments="{speaker:{id:'', firstname:'', lastname:''}, avatar:settings.imgDefault, settings:settings, extraClass:' template'}"
+				/>
+			</ul>
+		</f:if>
+	</f:else>
+	</f:if>
+	
+	<f:if condition="{timeline}">
+		<f:if condition="{isLiveStream}">
+		<f:else>
+			<script type="application/json" id="tx-streamovations-vp-speakertimeline">
+				{timeline -> f:format.raw()}
+			</script>
+		</f:else>
+		</f:if>
+	</f:if>
+</div>
