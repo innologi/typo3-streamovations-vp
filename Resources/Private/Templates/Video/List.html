@@ -6,25 +6,26 @@
 <f:then>
 	<ul>
 		<s:collection.sort subject="{events}" as="sortedEvents" sortBy="startUnix" order="DESC">
-			<s:collection.groupedForDateTime each="{sortedEvents}" as="groupEvents" groupBy="startUnix" dateTimeFormat="Y" groupKey="year">
-				<li class="events">
-					<p class="events-header">{year}</p>
-					<ul>
-						<f:for each="{groupEvents}" as="event">
-							<li class="event">
-								<f:link.action
-									action="show"
-									arguments="{hash:event.eventId}"
-									title="{f:translate(key:'event_link_title')} {f:format.date(format:'d-m-Y, H:i', date:'@{event.startUnix}')} - {f:format.date(format:'H:i', date:'@{event.endUnix}')}"
-									class="event-link"
-									pageUid="{settings.showPid}"
-								>
-								{event.title}
-								</f:link.action>
-							</li>
-						</f:for>
-					</ul>
-			</s:collection.groupedForDateTime>
+		<s:collection.groupedForDateTime each="{sortedEvents}" as="groupEvents" groupBy="startUnix" dateTimeFormat="Y" groupKey="year">
+			<li class="events">
+				<p class="events-header">{year}</p>
+				<ul>
+					<f:for each="{groupEvents}" as="event">
+						<li class="event">
+							<f:link.action
+								action="show"
+								arguments="{hash:event.eventId}"
+								title="{f:translate(key:'event_link_title')} {f:format.date(format:'d-m-Y, H:i', date:'@{event.startUnix}')} - {f:format.date(format:'H:i', date:'@{event.endUnix}')}"
+								class="event-link"
+								pageUid="{settings.showPid}"
+							>
+							{event.title}
+							</f:link.action>
+						</li>
+					</f:for>
+				</ul>
+			</li>
+		</s:collection.groupedForDateTime>
 		</s:collection.sort>
 	</ul>
 </f:then>
