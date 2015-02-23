@@ -125,8 +125,9 @@ plugin.tx_streamovationsvp {
 							POLLING_INTERVAL.value = {$plugin.tx_streamovationsvp.settings.polling.interval}
 							CURRENT_PAGE_ID = TEXT
 							CURRENT_PAGE_ID.data = TSFE:id
-							SPEAKER_IMAGE_DIR = TEXT
-							SPEAKER_IMAGE_DIR.value = {$plugin.tx_streamovationsvp.settings.speakers.imgDir}
+							SPEAKER_IMAGE_DIR = USER
+							SPEAKER_IMAGE_DIR.userFunc = Innologi\StreamovationsVp\TypoScript\Utility->resolvePath
+							SPEAKER_IMAGE_DIR.path = {$plugin.tx_streamovationsvp.settings.speakers.imgDir}
 						}
 						# SvpPolling
 						20 = FILE
