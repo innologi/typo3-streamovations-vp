@@ -7,6 +7,8 @@
  */
 var SvpPolling = (function($) {
 
+	'use strict';
+
 	/**
 	 * Interval identifier
 	 *
@@ -44,7 +46,7 @@ var SvpPolling = (function($) {
 		poll_start: 'Polling started',
 		poll_stop: 'Polling stopped',
 		fail_limit: 'successive polling failures'
-	}
+	};
 
 	/**
 	 * Logs message to console, and allows to differentiate between errors and info
@@ -79,7 +81,7 @@ var SvpPolling = (function($) {
 			failCount++;
 			if (failCount >= limitFailCount) {
 				log(failCount + ' ' + logMsg.fail_limit, true);
-				_this.stop();
+				SVPP.stop();
 				failCount = 0;
 			}
 		});
@@ -91,7 +93,7 @@ var SvpPolling = (function($) {
 	 *
 	 * @var object
 	 */
-	var _this = {
+	var SVPP = {
 
 		/**
 		 * Initializes polling
@@ -126,7 +128,7 @@ var SvpPolling = (function($) {
 				log(logMsg.poll_stop, false);
 			}
 		}
-	}
+	};
 
-	return _this;
+	return SVPP;
 })(jQuery);

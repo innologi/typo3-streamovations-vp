@@ -6,6 +6,9 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
 var SvpStarter = (function($) {
+	// @LOW refactor SVPS & SVPP into a single object divided in modules with prototyping
+
+	'use strict';
 
 	/**
 	 * Speaker-avatar image directory, configured via TS
@@ -19,21 +22,21 @@ var SvpStarter = (function($) {
 	 *
 	 * @var int
 	 */
-	var pollingInterval = parseInt('###POLLING_INTERVAL###');
+	var pollingInterval = parseInt('###POLLING_INTERVAL###', 10);
 
 	/**
 	 * Current TYPO3 page ID, provided via TS
 	 *
 	 * @var int
 	 */
-	var currentPage = parseInt('###CURRENT_PAGE_ID###');
+	var currentPage = parseInt('###CURRENT_PAGE_ID###', 10);
 
 	/**
 	 * Player type, configured via TS
 	 *
 	 * @var int
 	 */
-	var playerType = parseInt('###PLAYER_TYPE###');
+	var playerType = parseInt('###PLAYER_TYPE###', 10);
 
 	/**
 	 * Determines if meetingdata-type is enabled, configured via TS
@@ -41,9 +44,9 @@ var SvpStarter = (function($) {
 	 * @var object
 	 */
 	var meetingdata = {
-		topic: parseInt('###MEETINGDATA_TOPICS###'),
-		speaker: parseInt('###MEETINGDATA_SPEAKERS###')
-	}
+		topic: parseInt('###MEETINGDATA_TOPICS###', 10),
+		speaker: parseInt('###MEETINGDATA_SPEAKERS###', 10)
+	};
 
 	/**
 	 * Maps id's of objects to value or object
@@ -55,7 +58,7 @@ var SvpStarter = (function($) {
 		playlist: {},
 		// topic id: topic obj
 		topic: {}
-	}
+	};
 
 	/**
 	 * Counter of processed meetingdata elements (live streams)
@@ -67,7 +70,7 @@ var SvpStarter = (function($) {
 		speaker: 0
 		//topicTime: 0,
 		//speakerTime: 0
-	}
+	};
 
 	/**
 	 * Currently active data types
@@ -77,7 +80,7 @@ var SvpStarter = (function($) {
 	var active = {
 		topic: 0,
 		speaker: 0
-	}
+	};
 
 	/**
 	 * Original object property references, for those we need to overrule
@@ -88,14 +91,14 @@ var SvpStarter = (function($) {
 	 * @var object
 	 */
 	var orig = {
-		// _this.player
+		// SVPS.player
 		player: {
 			next: null,
 			previous: null,
 			setQualityLevel: null,
 			setAudioLanguage: null
 		}
-	}
+	};
 
 	/**
 	 * Callback arrays for each event handler
@@ -110,7 +113,7 @@ var SvpStarter = (function($) {
 		onSeek: [],
 		onPlay: [],
 		onPause: []
-	}
+	};
 
 	/**
 	 * Used to limit seekOnPlays to 1
@@ -119,7 +122,7 @@ var SvpStarter = (function($) {
 	 *
 	 * @var object
 	 */
-	var seekOnPlay = {}
+	var seekOnPlay = {};
 
 	/**
 	 * Registers a hit of onSeek events, to determine if topics/speakers
@@ -130,7 +133,78 @@ var SvpStarter = (function($) {
 	var onSeekHit = {
 		topic: false,
 		speaker: false
-	}
+	};
+
+	/**
+	 * Contains all eventhandler closures for use by the player that
+	 * are called multiple times in a single request.
+	 *
+	 * @var object
+	 */
+	var eventHandler = {
+
+		/**
+		 * For use of general detection of current type element
+		 *
+		 * SVPS.player.onTime()
+		 *
+		 * @param t object Timestamp
+		 * @param type string topic/speaker
+		 * @return {Function}
+		 */
+		onTime: function(t, type) {
+			return function(e) {
+				if (e.position >= t.start && e.position < (t.start+0.4)
+					&& t.id !== active[type]
+					&& timeIsOnPlaylist(t)
+				) {
+					activateElement(t.id, type);
+				}
+			};
+		},
+
+		/**
+		 * For use of general detection of type element of seeked time
+		 *
+		 * SVPS.player.onSeek()
+		 *
+		 * @param t object Timestamp
+		 * @param type string topic/speaker
+		 * @return {Function}
+		 */
+		onSeek: function(t, type) {
+			return function(e) {
+				if (e.offset >= t.start && e.offset < t.end
+					&& timeIsOnPlaylist(t)
+				) {
+					if (t.id !== active[type]) {
+						activateElement(t.id, type);
+					}
+					// even if t.id === active.type, onSeekHit needs to be marked to prevent deactivation
+					onSeekHit[type] = true;
+				}
+			};
+		},
+
+		/**
+		 * For use of finalizing the onSeek() handler callbacks as a means to
+		 * deactivate the given type when no matches occurred in previous callbacks
+		 *
+		 * SVPS.player.onSeek()
+		 *
+		 * @param type string topic/speaker
+		 * @return {Function}
+		 */
+		onSeekFinal: function(type) {
+			return function(e) {
+				if (!onSeekHit[type] && active[type] !== 0) {
+					deactivateElement(type);
+				}
+				onSeekHit[type] = false;
+			};
+		}
+
+	};
 
 	// #@LOW make these ids/class configurable?
 	/**
@@ -149,7 +223,7 @@ var SvpStarter = (function($) {
 		speakerTimeline: 'tx-streamovations-vp-speakertimeline',
 		// container class of module
 		container: 'tx-streamovations-vp'
-	}
+	};
 
 	/**
 	 * Log messages
@@ -171,7 +245,7 @@ var SvpStarter = (function($) {
 		events_re: 'Reattached event callbacks',
 		no_timestamp: 'Topic has no registered timestamps',
 		activate: 'Activated'
-	}
+	};
 
 	/**
 	 * Extend jQuery with .exists(), returns true if length <> 0
@@ -180,7 +254,7 @@ var SvpStarter = (function($) {
 	 */
 	$.fn.exists = function() {
 		return this.length !== 0;
-	}
+	};
 
 	/**
 	 * Logs message to console, and allows to differentiate between errors and info
@@ -306,8 +380,10 @@ var SvpStarter = (function($) {
 	 */
 	function pushPlaylistToIdMap(data) {
 		for(var id in data) {
-			var p = data[id];
-			idMap.playlist[p.streamfileId] = parseInt(id);
+			if (data.hasOwnProperty(id)) {
+				var p = data[id];
+				idMap.playlist[p.streamfileId] = parseInt(id, 10);
+			}
 		}
 	}
 
@@ -317,11 +393,12 @@ var SvpStarter = (function($) {
 	 * @return void
 	 */
 	function initEventHandlers() {
+		var timeline = null;
 		if (meetingdata.topic) {
 			// set jump event on topic clicks
 			$('.' + select.container + ' .topics').on('click', '.topic .topic-link', function(e) {
 				e.preventDefault();
-				_this.jumpToTopic(
+				SVPS.jumpToTopic(
 					$(this).parent('.topic').attr('data-topic')
 				);
 			});
@@ -329,10 +406,9 @@ var SvpStarter = (function($) {
 			// parse meeting data
 			var $topicTimeline = $('#' + select.topicTimeline).first();
 			if ($topicTimeline.exists()) {
-				var timeline = null;
 				try {
 					timeline = JSON.parse($topicTimeline.html());
-				} catch (e) {
+				} catch (e1) {
 					log(logMsg.no_json_support, true);
 					return false;
 				}
@@ -348,10 +424,10 @@ var SvpStarter = (function($) {
 		if (meetingdata.speaker) {
 			var $speakerTimeline = $('#' + select.speakerTimeline).first();
 			if ($speakerTimeline.exists()) {
-				var timeline = null;
+				timeline = null;
 				try {
 					timeline = JSON.parse($speakerTimeline.html());
-				} catch (e) {
+				} catch (e2) {
 					log(logMsg.no_json_support, true);
 					return false;
 				}
@@ -392,59 +468,31 @@ var SvpStarter = (function($) {
 				idMap[elemType][time.id] = {
 					playlist: idMap.playlist[time.streamfileId],
 					time: time.start
-				}
+				};
 			}
 
 			// set events on times
-			_this.player.onTime((function(t, type) {
-				return function(e) {
-					if (e.position >= t.start && e.position < (t.start+0.4)
-						&& t.id !== active[type]
-						&& timeIsOnPlaylist(t)
-					) {
-						activateElement(t.id, type);
-					}
-				};
-			})(time, elemType));
+			SVPS.player.onTime(eventHandler.onTime(time, elemType));
 
 			// set events on seeks
-			_this.player.onSeek((function(t, type) {
-				return function(e) {
-					if (e.offset >= t.start && e.offset < t.end
-						&& timeIsOnPlaylist(t)
-					) {
-						if (t.id !== active[type]) {
-							activateElement(t.id, type);
-						}
-						// even if t.id === active.type, onSeekHit needs to be marked to prevent deactivation
-						onSeekHit[type] = true;
-					}
-				}
-			})(time, elemType));
+			SVPS.player.onSeek(eventHandler.onSeek(time, elemType));
 		}
 
 		// final onseek deactivates actives if no previous onseek had a hit
-		_this.player.onSeek((function(type) {
-			return function(e) {
-				if (!onSeekHit[type] && active[type] !== 0) {
-					deactivateElement(type);
-				}
-				onSeekHit[type] = false;
-			}
-		})(elemType));
+		SVPS.player.onSeek(eventHandler.onSeekFinal(elemType));
 	}
 
 	/**
-	 * Resets _this.jw (jwplayer object) to the current instance.
+	 * Resets SVPS.jw (jwplayer object) to the current instance.
 	 * Needs to be called when the jwplayer instance was removed
 	 * and a new instance created, as smvplayer does.
 	 *
 	 * @return void
 	 */
 	function reset() {
-		_this.jw = jwplayer(select.player);
+		SVPS.jw = jwplayer(select.player);
 		// if really new, an onReady will be fired
-		_this.jw.onReady(function(e) {
+		SVPS.jw.onReady(function(e) {
 			deactivateElement('speaker');
 			deactivateElement('topic');
 			// all event handler callbacks need to be re-attached
@@ -458,17 +506,26 @@ var SvpStarter = (function($) {
 	 * @return void
 	 */
 	function reattachEventCallbacks() {
-		for (var c in callbacks.onTime) {
-			this.jw.onTime(callbacks.onTime[c]);
+		var c = null;
+		for (c in callbacks.onTime) {
+			if (callbacks.onTime.hasOwnProperty(c)) {
+				this.jw.onTime(callbacks.onTime[c]);
+			}
 		}
-		for (var c in callbacks.onSeek) {
-			this.jw.onSeek(callbacks.onSeek[c]);
+		for (c in callbacks.onSeek) {
+			if (callbacks.onSeek.hasOwnProperty(c)) {
+				this.jw.onSeek(callbacks.onSeek[c]);
+			}
 		}
-		for (var c in callbacks.onPlay) {
-			this.jw.onPlay(callbacks.onPlay[c]);
+		for (c in callbacks.onPlay) {
+			if (callbacks.onPlay.hasOwnProperty(c)) {
+				this.jw.onPlay(callbacks.onPlay[c]);
+			}
 		}
-		for (var c in callbacks.onPause) {
-			this.jw.onPause(callbacks.onPause[c]);
+		for (c in callbacks.onPause) {
+			if (callbacks.onPause.hasOwnProperty(c)) {
+				this.jw.onPause(callbacks.onPause[c]);
+			}
 		}
 		log(logMsg.events_re, false);
 	}
@@ -512,10 +569,10 @@ var SvpStarter = (function($) {
 	 * @return void
 	 */
 	function recursiveMoveNext(current, limit) {
-		_this.player.playlistNext();
+		SVPS.player.playlistNext();
 		current++;
 		if (current < limit) {
-			_this.jw.onReady(function (e) {
+			SVPS.jw.onReady(function (e) {
 				// timeout prevents flash from crashing :')
 				setTimeout(function() {
 					recursiveMoveNext(current, limit);
@@ -534,10 +591,10 @@ var SvpStarter = (function($) {
 	 * @return void
 	 */
 	function recursiveMovePrevious(current, limit) {
-		_this.player.playlistPrev();
+		SVPS.player.playlistPrev();
 		current--;
 		if (current > limit) {
-			_this.jw.onReady(function (e) {
+			SVPS.jw.onReady(function (e) {
 				// timeout prevents flash from crashing
 				setTimeout(function() {
 					recursiveMovePrevious(current, limit);
@@ -563,10 +620,10 @@ var SvpStarter = (function($) {
 		seekOnPlay[o.playlist][o.time] = true;
 
 		// note that this onPlay isn't added to callbacks with smvPlayer, that would be incredibly useless
-		_this.jw.onPlay(function (e) {
+		SVPS.jw.onPlay(function (e) {
 			// there's no way to delete onPlay event callbacks.. so we need these conditions :(
 			if (seekOnPlay[o.playlist][o.time]) {
-				_this.player.seek(o.time);
+				SVPS.player.seek(o.time);
 				seekOnPlay[o.playlist][o.time] = false;
 			}
 		});
@@ -579,7 +636,7 @@ var SvpStarter = (function($) {
 	 * @return boolean
 	 */
 	function timeIsOnPlaylist(t) {
-		return idMap.playlist[t.streamfileId] === _this.player.getPlaylistIndex();
+		return idMap.playlist[t.streamfileId] === SVPS.player.getPlaylistIndex();
 	}
 
 	/**
@@ -615,74 +672,74 @@ var SvpStarter = (function($) {
 		if (initJwPlayer(true)) {
 			// smvplayer object needs to exist
 			if (typeof(smvplayer) !== 'undefined') {
-				_this.player = smvplayer(select.player);
-				_this.player.init(data);
+				SVPS.player = smvplayer(select.player);
+				SVPS.player.init(data);
 				// smvplayer does not provide full jwplayer api, so we need a reference to preserve consistency in all of SVPS
-				_this.jw = jwplayer(select.player);
+				SVPS.jw = jwplayer(select.player);
 
 				// Smvplayer calls jwplayer.remove() on moving in the playlist, which clears the entire jwplayer
 				// instance, including event handlers, so we need a construct that reassigns this.jw and
 				// all of the event handler callbacks. This is what reset() is for.
-				_this.player.onTime = function(callback) {
+				SVPS.player.onTime = function(callback) {
 					callbacks.onTime.push(callback);
-					_this.jw.onTime(callback);
-				}
-				_this.player.onSeek = function(callback) {
+					SVPS.jw.onTime(callback);
+				};
+				SVPS.player.onSeek = function(callback) {
 					callbacks.onSeek.push(callback);
-					_this.jw.onSeek(callback);
-				}
-				_this.player.onPlay = function(callback) {
+					SVPS.jw.onSeek(callback);
+				};
+				SVPS.player.onPlay = function(callback) {
 					callbacks.onPlay.push(callback);
-					_this.jw.onPlay(callback);
-				}
-				_this.player.onPause = function(callback) {
+					SVPS.jw.onPlay(callback);
+				};
+				SVPS.player.onPause = function(callback) {
 					callbacks.onPause.push(callback);
-					_this.jw.onPause(callback);
-				}
+					SVPS.jw.onPause(callback);
+				};
 				// overrule player.next()
-				orig.player.next = _this.player.next;
-				_this.player.next = function() {
+				orig.player.next = SVPS.player.next;
+				SVPS.player.next = function() {
 					orig.player.next();
 					reset();
-				}
+				};
 				// overrule player.previous()
-				orig.player.previous = _this.player.previous;
-				_this.player.previous = function() {
+				orig.player.previous = SVPS.player.previous;
+				SVPS.player.previous = function() {
 					orig.player.previous();
 					reset();
-				}
+				};
 				// overrule player.setQualityLevel()
-				orig.player.setQualityLevel = _this.player.setQualityLevel;
-				_this.player.setQualityLevel = function(q) {
+				orig.player.setQualityLevel = SVPS.player.setQualityLevel;
+				SVPS.player.setQualityLevel = function(q) {
 					orig.player.setQualityLevel(q);
 					reset();
-				}
+				};
 				// overrule player.setAudioLanguage()
-				orig.player.setAudioLanguage = _this.player.setAudioLanguage;
-				_this.player.setAudioLanguage = function(l) {
+				orig.player.setAudioLanguage = SVPS.player.setAudioLanguage;
+				SVPS.player.setAudioLanguage = function(l) {
 					orig.player.setAudioLanguage(l);
 					reset();
-				}
+				};
 				// because smvplayer doesnt use the playlist as jwplayer does, we emulate
 				// some specific playlist methods on this.player to create a shared api
 				// where this is covenient for SVPS
-				_this.player.getPlaylistIndex = function() {
-					return _this.player.getTimeline().currentItem;
-				}
-				_this.player.playlistNext = function() {
-					_this.player.next();
-				}
-				_this.player.playlistPrev = function() {
-					_this.player.previous();
-				}
-				_this.player.playlistItem = function(index) {
-					moveAction = index - _this.player.getPlaylistIndex();
+				SVPS.player.getPlaylistIndex = function() {
+					return SVPS.player.getTimeline().currentItem;
+				};
+				SVPS.player.playlistNext = function() {
+					SVPS.player.next();
+				};
+				SVPS.player.playlistPrev = function() {
+					SVPS.player.previous();
+				};
+				SVPS.player.playlistItem = function(index) {
+					moveAction = index - SVPS.player.getPlaylistIndex();
 					if (moveAction > 0) {
 						recursiveMoveNext(0, moveAction);
 					} else if(moveAction < 0) {
 						recursiveMovePrevious(0, moveAction);
 					}
-				}
+				};
 
 				return true;
 			}
@@ -702,11 +759,11 @@ var SvpStarter = (function($) {
 		if (initJwPlayer(false)) {
 			jwplayer(select.player).setup(data);
 			// apparently setup() creates a new object, so assign these AFTER setup()
-			_this.player = jwplayer(select.player);
-			_this.jw = _this.player;
+			SVPS.player = jwplayer(select.player);
+			SVPS.jw = SVPS.player;
 
 			// on changing playlist item, deactivate elements
-			_this.player.onPlaylistItem(function(e) {
+			SVPS.player.onPlaylistItem(function(e) {
 				deactivateElement('speaker');
 				deactivateElement('topic');
 			});
@@ -736,7 +793,7 @@ var SvpStarter = (function($) {
 	 *
 	 * @var object
 	 */
-	var _this = {
+	var SVPS = {
 
 		/**
 		 * Wrapper to substitute the actual player object
@@ -789,7 +846,7 @@ var SvpStarter = (function($) {
 			}
 			$data.html('');
 			if (typeof(data) !== 'object') {
-				log(logMsg.player_data_invalid, true)
+				log(logMsg.player_data_invalid, true);
 				return false;
 			}
 
@@ -802,7 +859,7 @@ var SvpStarter = (function($) {
 					break;
 				case 1:
 					if (!createJwPlayer(data)) {
-						return false
+						return false;
 					}
 					break;
 				default:
@@ -911,7 +968,7 @@ var SvpStarter = (function($) {
 				log(logMsg.no_timestamp, true);
 			}
 		}
-	}
+	};
 
-	return _this;
+	return SVPS;
 })(jQuery);
