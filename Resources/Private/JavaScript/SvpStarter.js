@@ -299,10 +299,10 @@ var SvpStarter = (function($) {
 				var interval = pollingInterval * 1000,
 					hash = $('#' + select.data).attr('data-hash');
 
-				this.player.onPlay(function() {
+				SVPS.player.onPlay(function() {
 					SvpPolling.init(hash, currentPage, interval);
 				});
-				this.player.onPause(function() {
+				SVPS.player.onPause(function() {
 					SvpPolling.stop();
 					deactivateElement('speaker');
 					deactivateElement('topic');
@@ -507,22 +507,22 @@ var SvpStarter = (function($) {
 		var c = null;
 		for (c in callbacks.onTime) {
 			if (callbacks.onTime.hasOwnProperty(c)) {
-				this.jw.onTime(callbacks.onTime[c]);
+				SVPS.jw.onTime(callbacks.onTime[c]);
 			}
 		}
 		for (c in callbacks.onSeek) {
 			if (callbacks.onSeek.hasOwnProperty(c)) {
-				this.jw.onSeek(callbacks.onSeek[c]);
+				SVPS.jw.onSeek(callbacks.onSeek[c]);
 			}
 		}
 		for (c in callbacks.onPlay) {
 			if (callbacks.onPlay.hasOwnProperty(c)) {
-				this.jw.onPlay(callbacks.onPlay[c]);
+				SVPS.jw.onPlay(callbacks.onPlay[c]);
 			}
 		}
 		for (c in callbacks.onPause) {
 			if (callbacks.onPause.hasOwnProperty(c)) {
-				this.jw.onPause(callbacks.onPause[c]);
+				SVPS.jw.onPause(callbacks.onPause[c]);
 			}
 		}
 		log(logMsg.events_re, false);
@@ -676,7 +676,7 @@ var SvpStarter = (function($) {
 				SVPS.jw = jwplayer(select.player);
 
 				// Smvplayer calls jwplayer.remove() on moving in the playlist, which clears the entire jwplayer
-				// instance, including event handlers, so we need a construct that reassigns this.jw and
+				// instance, including event handlers, so we need a construct that reassigns SVPS.jw and
 				// all of the event handler callbacks. This is what reset() is for.
 				SVPS.player.onTime = function(callback) {
 					callbacks.onTime.push(callback);
@@ -719,7 +719,7 @@ var SvpStarter = (function($) {
 					reset();
 				};
 				// because smvplayer doesnt use the playlist as jwplayer does, we emulate
-				// some specific playlist methods on this.player to create a shared api
+				// some specific playlist methods on SVPS.player to create a shared api
 				// where this is covenient for SVPS
 				SVPS.player.getPlaylistIndex = function() {
 					return SVPS.player.getTimeline().currentItem;
@@ -731,7 +731,7 @@ var SvpStarter = (function($) {
 					SVPS.player.previous();
 				};
 				SVPS.player.playlistItem = function(index) {
-					moveAction = index - SVPS.player.getPlaylistIndex();
+					var moveAction = index - SVPS.player.getPlaylistIndex();
 					if (moveAction > 0) {
 						recursiveMoveNext(0, moveAction);
 					} else if(moveAction < 0) {
