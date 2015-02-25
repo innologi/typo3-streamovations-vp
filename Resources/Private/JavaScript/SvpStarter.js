@@ -204,7 +204,7 @@ var SvpStarter = (function($) {
 
 	};
 
-	// #@LOW make these ids/class configurable?
+	// @LOW make these ids/class configurable?
 	/**
 	 * id/class selector strings
 	 *
@@ -564,18 +564,21 @@ var SvpStarter = (function($) {
 	 *
 	 * @param current int Current recursion in moving next
 	 * @param limit int Endpoint of recursion
+	 * @param topic object
 	 * @return void
 	 */
-	function recursiveMoveNext(current, limit) {
+	function recursiveMoveNext(current, limit, topic) {
 		SVPS.player.playlistNext();
 		current++;
 		if (current < limit) {
 			SVPS.jw.onReady(function (e) {
 				// timeout prevents flash from crashing :')
 				setTimeout(function() {
-					recursiveMoveNext(current, limit);
+					recursiveMoveNext(current, limit, topic);
 				}, 50);
 			});
+		} else {
+			seek(topic);
 		}
 	}
 
@@ -586,18 +589,40 @@ var SvpStarter = (function($) {
 	 *
 	 * @param current int Current recursion in moving back
 	 * @param limit int Endpoint of recursion
+	 * @param topic object
 	 * @return void
 	 */
-	function recursiveMovePrevious(current, limit) {
+	function recursiveMovePrevious(current, limit, topic) {
 		SVPS.player.playlistPrev();
 		current--;
 		if (current > limit) {
 			SVPS.jw.onReady(function (e) {
 				// timeout prevents flash from crashing
 				setTimeout(function() {
-					recursiveMovePrevious(current, limit);
+					recursiveMovePrevious(current, limit, topic);
 				}, 50);
 			});
+		} else {
+			seek(topic);
+		}
+	}
+
+	/**
+	 * Performs a seek while keeping in mind some of the limits of
+	 * jwplayer, smvplayer and flash
+	 *
+	 * @param topic object
+	 * @return void
+	 */
+	function seek(topic) {
+		// e.g. when IDLE or BUFFERING
+		var state = SVPS.jw.getState();
+		if (state !== 'PLAYING') {
+			// not all relevant onSeek events will trigger if player hasn't started
+			applySeekOnPlay(topic);
+			SVPS.jw.play(true);
+		} else {
+			SVPS.player.seek(topic.time);
 		}
 	}
 
@@ -608,21 +633,20 @@ var SvpStarter = (function($) {
 	 * Justifies the seekOnPlay var, which is a shame but there's no way
 	 * around it for now.
 	 *
-	 * @param o object Topic object
+	 * @param topic object
 	 * @return void
 	 */
-	function applySeekOnPlay(o) {
-		if (!seekOnPlay.hasOwnProperty(o.playlist)) {
-			seekOnPlay[o.playlist] = {};
+	function applySeekOnPlay(topic) {
+		if (!seekOnPlay.hasOwnProperty(topic.playlist)) {
+			seekOnPlay[topic.playlist] = {};
 		}
-		seekOnPlay[o.playlist][o.time] = true;
-
+		seekOnPlay[topic.playlist][topic.time] = true;
 		// note that this onPlay isn't added to callbacks with smvPlayer, that would be incredibly useless
 		SVPS.jw.onPlay(function (e) {
 			// there's no way to delete onPlay event callbacks.. so we need these conditions :(
-			if (seekOnPlay[o.playlist][o.time]) {
-				SVPS.player.seek(o.time);
-				seekOnPlay[o.playlist][o.time] = false;
+			if (seekOnPlay[topic.playlist][topic.time]) {
+				SVPS.player.seek(topic.time);
+				seekOnPlay[topic.playlist][topic.time] = false;
 			}
 		});
 	}
@@ -730,13 +754,15 @@ var SvpStarter = (function($) {
 				SVPS.player.playlistPrev = function() {
 					SVPS.player.previous();
 				};
-				SVPS.player.playlistItem = function(index) {
+				SVPS.player.playlistItem = function(index, topic) {
 					var moveAction = index - SVPS.player.getPlaylistIndex();
 					if (moveAction > 0) {
-						recursiveMoveNext(0, moveAction);
+						recursiveMoveNext(0, moveAction, topic);
 					} else if(moveAction < 0) {
-						recursiveMovePrevious(0, moveAction);
+						recursiveMovePrevious(0, moveAction, topic);
 					}
+					// to differentiate from the returnvalue of SVPS.jw.playlistItem()
+					return 2;
 				};
 
 				return true;
@@ -951,17 +977,15 @@ var SvpStarter = (function($) {
 			var topic = idMap.topic[id];
 			if (topic !== undefined) {
 				if (topic.playlist !== this.player.getPlaylistIndex()) {
-					this.player.playlistItem(topic.playlist);
+					if (this.player.playlistItem(topic.playlist, topic) === 2) {
+						// a returnvalue of 2 indicates smvplayer, meaning seek() is being taken care of elsewhere.
+						// this is necessary because smvplayer requires us to use an unknown number of setTimeouts
+						// and continuing with a seek() here before those have finished can lead to events being
+						// set for SVPS.jw before smvplayer is done iteratively destroying and reinitializing it.
+						return;
+					}
 				}
-				// e.g. when IDLE (smv) or BUFFERING (jw)
-				var state = this.jw.getState();
-				if (state !== 'PLAYING') {
-					// not all relevant onSeek events will trigger if player hasn't started
-					applySeekOnPlay(topic);
-					this.jw.play(true);
-				} else {
-					this.player.seek(topic.time);
-				}
+				seek(topic);
 			} else {
 				log(logMsg.no_timestamp, true);
 			}
