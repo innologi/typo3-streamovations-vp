@@ -54,12 +54,12 @@ plugin.tx_streamovationsvp {
 		# cat=plugin.tx_streamovationsvp//g; type=string; label=Streamovations Player Library Location: This library file is not included. If you wish to use the Streamovations Player, inquire at your contact at Streamovations BVBA.
 		smvPlayerLib =
 		
-		starterFile = EXT:streamovations_vp/Resources/Private/JavaScript/SvpStarter.js
-		pollingFile = EXT:streamovations_vp/Resources/Private/JavaScript/SvpPolling.js
+		starterFile = EXT:streamovations_vp/Resources/Private/JavaScript/SvpStarter.closure.js
+		pollingFile = EXT:streamovations_vp/Resources/Private/JavaScript/SvpPolling.closure.js
 		initFile = EXT:streamovations_vp/Resources/Private/JavaScript/init.js
 	}
 	css {
 		# cat=plugin.tx_streamovationsvp//h; type=string; label=Frontend CSS file location: Provides frontend styling for plugin
-		frontendFile = EXT:streamovations_vp/Resources/Public/Css/frontend.css
+		frontendFile = EXT:streamovations_vp/Resources/Public/Css/frontend.min.css
 	}
 }

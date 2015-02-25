@@ -6,8 +6,6 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
 var SvpStarter = (function($) {
-	// @LOW refactor SVPS & SVPP into a single object divided in modules with prototyping
-
 	'use strict';
 
 	/**
