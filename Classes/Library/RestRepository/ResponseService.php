@@ -48,6 +48,7 @@ class ResponseService implements ResponseServiceInterface, SingletonInterface {
 			$response = $this->changeRootElement($response, $responseConfiguration['rootElement']);
 		}
 
+		// @LOW exclude becomes unnecessary once property.remove supports property-paths
 		if (isset($responseConfiguration['exclude'])) {
 			// exclude elements from result
 			$response = $this->removeProperties($response, $responseConfiguration['exclude']);
@@ -86,19 +87,35 @@ class ResponseService implements ResponseServiceInterface, SingletonInterface {
 	/**
 	 * Remove any matching element found in response.
 	 *
+	 * properties may be given as property paths,
+	 * e.g. event.attendee.address
+	 *
 	 * @param array $response
 	 * @param string $remove CSV
 	 * @return array
 	 */
 	protected function removeProperties(array $response, $remove) {
 		$removeProperties = explode(',', $remove);
+		foreach ($removeProperties as $propertyPath) {
+			$reference = &$response;
+			$lastReference = NULL;
+			$property = NULL;
 
-		// @LOW support paths?
-		foreach ($removeProperties as $property) {
-			if (isset($response[$property])) {
-				unset($response[$property]);
+			$properties = explode('.', $propertyPath);
+			foreach ($properties as $property) {
+				if (isset($reference[$property])) {
+					// note that the $reference becomes the property value hence becomes useless.
+					// we need $lastReference so we can still unset $property from it
+					$lastReference = &$reference;
+					$reference = &$reference[$property];
+				} else {
+					// note that no exception is thrown, we just move to the next
+					continue 2;
+				}
 			}
-			// note that nothing happens if property isn't found, no exception thrown
+			// coming here means the entire property path was found, while $reference contains
+			// the property value. our business is with $lastReference instead.
+			unset($lastReference[$property]);
 		}
 
 		return $response;
