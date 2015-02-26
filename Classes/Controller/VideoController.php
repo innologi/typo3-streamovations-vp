@@ -182,6 +182,7 @@ class VideoController extends Controller {
 							// when livestreaming, $source is an array containing a stream for each available language
 							if ($application === 'rtplive' && is_array($source)) {
 								// livestream does not produce available languages, hence we use a configured csv list
+								// @LOW are we sure the response does not produce a 'language' root-property during livestream?
 								$languageFound = FALSE;
 								$languages = GeneralUtility::trimExplode(',', $this->settings['live']['languages']);
 								foreach ($languages as $lang) {
@@ -232,8 +233,14 @@ class VideoController extends Controller {
 					: json_encode($playlistData, JSON_UNESCAPED_SLASHES);
 
 			}
-			// @TODO make meetingdata optional
-			$meetingdata = $this->meetingdataRepository->findByHash($hash);
+
+			// at least one of meetingdata types must be enabled before getting anything
+			$meetingdata = NULL;
+			if ((isset($this->settings['topics']['enable']) && (bool)$this->settings['topics']['enable'])
+				|| (isset($this->settings['speakers']['enable']) && (bool)$this->settings['speakers']['enable'])
+			) {
+				$meetingdata = $this->meetingdataRepository->findByHash($hash);
+			}
 			$this->view->assign('meetingdata', $meetingdata);
 		}
 		$this->view->assign('playlist', $playlist);
@@ -292,7 +299,6 @@ class VideoController extends Controller {
 
 			if (isset($events[0])) {
 				$arguments = array(
-					// @TODO try/catch would be better
 					'hash' => $events[0]->getEventId(),
 					'isLiveStream' => TRUE,
 					'__noRedirectOnException' => TRUE,
