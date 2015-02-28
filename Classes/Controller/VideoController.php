@@ -153,9 +153,14 @@ class VideoController extends Controller {
 						'application' => $application
 					);
 
-					$playlistItems = $playlist->getPlaylist();
+					$playlistItems = $playlist->getPlaylistItems();
 					foreach ($playlistItems as $playlistItem) {
-						if (!isset($playlistItem['source']['qualities'])) {
+						/* @var $playlistItem \Innologi\StreamovationsVp\Domain\Model\Playlist\PlaylistItem */
+						/* @var $sourceObj \Innologi\StreamovationsVp\Domain\Model\Playlist\Source */
+						$sourceObj = $playlistItem->getSource();
+						$qualities = $sourceObj->getQualities();
+						if ($qualities === NULL) {
+							// @TODO this feels out of place
 							throw new UnexpectedResponseStructure(
 								LocalizationUtility::translate('unexpected_response_structure', $this->extensionName)
 							);
@@ -163,24 +168,26 @@ class VideoController extends Controller {
 
 						$uP = $urlParts;
 						// best case scenario: smil is available, provides quality selection
-						if ($useSmil && isset($playlistItem['source']['smil'])) {
+						$smil = $sourceObj->getSmil();
+						if ($useSmil && $smil !== NULL) {
 							$uP[0] = 'http';
 							$uP[2] = $ports['http'];
 							$source = isset($this->settings['jwPlayer']['smilTemplate'][0])
 								? str_replace(
 									'###SOURCE###',
-									$playlistItem['source']['smil'],
+									$smil,
 									$this->settings['jwPlayer']['smilTemplate']
 								)
-								: $playlistItem['source']['smil'];
+								: $smil;
 
 						// worst case scenario: no smil and I'm not bothering with creating quality selection
 						} else {
-							$source = isset($playlistItem['source']['defaultQuality']) && isset($playlistItem['source']['qualities'][$playlistItem['source']['defaultQuality']])
-								? $playlistItem['source']['qualities'][$playlistItem['source']['defaultQuality']]
-								: array_shift($playlistItem['source']['qualities']);
+							$defaultQuality = $sourceObj->getDefaultQuality();
+							$source = $defaultQuality !== NULL && isset($qualities[$defaultQuality])
+								? $qualities[$defaultQuality]
+								: current($qualities);
 							// when livestreaming, $source is an array containing a stream for each available language
-							if ($application === 'rtplive' && is_array($source)) {
+							if ($application === 'rtplive' && !is_string($source)) {
 								// livestream does not produce available languages, hence we use a configured csv list
 								// @LOW are we sure the response does not produce a 'language' root-property during livestream?
 								$languageFound = FALSE;
@@ -194,7 +201,6 @@ class VideoController extends Controller {
 								}
 								// if configured language is not found, log the issue and just get the first element
 								if (!$languageFound) {
-									reset($source);
 									GeneralUtility::devLog(
 										sprintf(
 											LocalizationUtility::translate('language_not_found', $this->extensionName),
@@ -207,7 +213,7 @@ class VideoController extends Controller {
 										2
 									);
 									// use first language
-									$source = array_shift($source);
+									$source = current($source);
 								}
 							}
 						}
@@ -221,7 +227,7 @@ class VideoController extends Controller {
 								)
 							),
 							// used by SVPS, not by jwplayer
-							'streamfileId' => $playlistItem['streamfileId']
+							'streamfileId' => $playlistItem->getStreamfileId()
 						);
 					}
 				}
