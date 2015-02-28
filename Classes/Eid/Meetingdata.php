@@ -73,8 +73,16 @@ class Meetingdata {
 			// overrule property json encoding
 			array(
 				'rest' => array(
+					'features' => array(
+						// If we don't disable it, the changed configurations of
+						// the timelines conflicts with the domain models and thus
+						// reflection would cause errors in the response mapper.
+						//
+						// Also: this gives us better performance in this use-case.
+						'disableResponseMapper' => 1
+					),
 					'repository' => array(
-						'meetingdata' => array(
+						'Meetingdata' => array(
 							'response' => array(
 								'property' => array(
 									'topicTimeline' => $timelineConfig,
@@ -104,7 +112,6 @@ class Meetingdata {
 
 		/* @var $meetingdataRepository \Innologi\StreamovationsVp\Domain\Repository\MeetingdataRepository */
 		$meetingdataRepository = $this->objectManager->get('Innologi\\StreamovationsVp\\Domain\\Repository\\MeetingdataRepository');
-		//$meetingdataRepository->setForceRawResponse(TRUE);
 		$meetingdata = $meetingdataRepository->findByHash($hash);
 
 		// why even bother with TYPO3 session in eID context..
@@ -118,6 +125,7 @@ class Meetingdata {
 			$meetingdata = new \stdClass();
 		}
 
+		// json_encode automatically won't include MagicResponse->$__properties
 		return json_encode($meetingdata);
 	}
 }
