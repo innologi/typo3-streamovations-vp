@@ -95,10 +95,11 @@ class ResponseService implements ResponseServiceInterface, SingletonInterface {
 	 * @return array
 	 */
 	protected function removeProperties(array $response, $remove) {
+		$lastReference = NULL;
+
 		$removeProperties = explode(',', $remove);
 		foreach ($removeProperties as $propertyPath) {
 			$reference = &$response;
-			$lastReference = NULL;
 			$property = NULL;
 
 			$properties = explode('.', $propertyPath);
