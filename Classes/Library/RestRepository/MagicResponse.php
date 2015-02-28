@@ -56,7 +56,7 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class MagicResponse implements ResponseInterface, \ArrayAccess, \Iterator, \Countable {
+class MagicResponse extends ResponseAbstract implements \ArrayAccess, \Iterator, \Countable {
 
 	/**
 	 * An array representation of all the properties, necessary
@@ -114,12 +114,14 @@ class MagicResponse implements ResponseInterface, \ArrayAccess, \Iterator, \Coun
 	}
 
 	/**
-	 * Provides string representation of class through serialization.
+	 * Returns a hash map of property names and property values. Only for internal use.
 	 *
-	 * @return string
+	 * @return array The properties
 	 */
-	public function __toString() {
-		return serialize($this);
+	public function _getProperties() {
+		$properties = parent::_getProperties();
+		unset($properties['__properties']);
+		return $properties;
 	}
 
 	/**

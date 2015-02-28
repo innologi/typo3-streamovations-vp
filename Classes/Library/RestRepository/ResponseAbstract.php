@@ -40,8 +40,7 @@ abstract class ResponseAbstract implements ResponseInterface {
 	 * @return array The properties
 	 */
 	public function _getProperties() {
-		$properties = get_object_vars($this);
-		return $properties;
+		return get_object_vars($this);
 	}
 
 	/**
