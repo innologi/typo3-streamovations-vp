@@ -96,9 +96,9 @@ class ResponseMapper implements ResponseMapperInterface, SingletonInterface {
 			if (isset($responseData[$propertyName]) && $responseData[$propertyName] !== NULL) {
 				$propertyValue = $this->determinePropertyValue(
 					$responseData[$propertyName],
-					$propertyName,
 					$propertyData['type'],
 					$propertyData['elementType'],
+					$propertyName,
 					$className
 				);
 
