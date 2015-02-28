@@ -1,35 +1,10 @@
 config.tx_extbase.objects {
-	Innologi\StreamovationsVp\Domain\Service\EventServiceInterface {
-		className = Innologi\StreamovationsVp\Domain\Service\EventService
-	}
-	Innologi\StreamovationsVp\Library\RestRepository\RepositoryInterface {
-		className = Innologi\StreamovationsVp\Library\RestRepository\Repository
-	}
-	Innologi\StreamovationsVp\Library\RestRepository\ResponseServiceInterface {
-		className = Innologi\StreamovationsVp\Library\RestRepository\ResponseService
-	}
-	Innologi\StreamovationsVp\Library\RestRepository\ResponseFactoryInterface {
-		className = Innologi\StreamovationsVp\Library\RestRepository\ResponseFactory
-	}
 	Innologi\StreamovationsVp\Library\RestRepository\ResponseInterface {
 		className = Innologi\StreamovationsVp\Library\RestRepository\MagicResponse
-	}
-	Innologi\StreamovationsVp\Library\RestRepository\RequestFactoryInterface {
-		className = Innologi\StreamovationsVp\Library\RestRepository\RequestFactory
 	}
 	Innologi\StreamovationsVp\Library\RestRepository\RequestInterface {
 		className = Innologi\StreamovationsVp\Library\RestRepository\Typo3Request
 	}
-	Innologi\StreamovationsVp\Library\RestRepository\RequestUriInterface {
-		className = Innologi\StreamovationsVp\Library\RestRepository\RequestUri
-	}
-	Innologi\StreamovationsVp\Library\AssetProvider\ProviderServiceInterface {
-		className = Innologi\StreamovationsVp\Library\AssetProvider\ProviderService
-	}
-	# Allow overruling of assetproviders like so
-	#Innologi\StreamovationsVp\Library\AssetProvider\Provider\JavascriptProvider {
-	#	className = Innologi\StreamovationsVp\Library\AssetProvider\Provider\JavascriptProvider
-	#}
 }
 
 plugin.tx_streamovationsvp {
