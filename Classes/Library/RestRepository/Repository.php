@@ -41,6 +41,8 @@ class Repository implements RepositoryInterface,SingletonInterface {
 	protected $objectManager;
 
 	/**
+	 * Domain Object class name
+	 *
 	 * @var string
 	 */
 	protected $objectType;
@@ -77,13 +79,9 @@ class Repository implements RepositoryInterface,SingletonInterface {
 	 * @return void
 	 */
 	protected function initializeObjectType() {
-		$className = strtolower(get_class($this));
-		// remove 'repository'
-		$this->objectType = str_replace(
-			'repository',
-			'',
-			// remove namespace
-			substr($className, (strrpos($className, '\\') + 1))
+		$this->objectType = preg_replace(
+			array('/\\\\Repository\\\\(?!.*\\\\Repository\\\\)/', '/Repository$/'),
+			array('\\\\Model\\\\', ''), get_class($this)
 		);
 	}
 

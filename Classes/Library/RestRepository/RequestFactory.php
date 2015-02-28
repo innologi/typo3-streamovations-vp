@@ -70,6 +70,7 @@ class RequestFactory extends FactoryAbstract implements RequestFactoryInterface{
 		$settings = array();
 		$config = $this->configuration['repository'];
 
+		$type = $this->getRepositoryNameFromObjectType($type);
 		if (isset($config[$type])) {
 			$settings = $config[$type]['request'];
 		}

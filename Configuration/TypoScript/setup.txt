@@ -47,8 +47,8 @@ plugin.tx_streamovationsvp {
 		features {
 			# only works for request types that support it
 			ignoreHttpConfiguration = 0
-			# model-less fallback, for development purposes only
-			disableResponseMapper = 1
+			# model-less fallback, i.e. for development purposes or eid scripts 
+			disableResponseMapper = 0
 		}
 		repository {
 			default.request {
@@ -56,17 +56,24 @@ plugin.tx_streamovationsvp {
 				baseUri = {$plugin.tx_streamovationsvp.rest.baseUri}
 				apiUri = api.php
 			}
-			event {
+			Event {
 				request.apiUri = api.php/sessions/date
 				response {
 					rootElement = events
 					list = 1
 				}
 			}
-			playlist.request {
-				apiUri = api.php/playlists/pub
+			Playlist {
+				request.apiUri = api.php/playlists/pub
+				response {
+					exclude = result,errorType,servertime,clientIp,uiLabels
+					property.playlist {
+						mappings.10 = playlistItems
+						remove = 1
+					}
+				}
 			}
-			meetingdata {
+			Meetingdata {
 				request.apiUri = api.php/meetingdata
 				response {
 					exclude = result

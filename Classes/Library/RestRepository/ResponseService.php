@@ -128,15 +128,15 @@ class ResponseService implements ResponseServiceInterface, SingletonInterface {
 	 *
 	 * @param array $properties
 	 * @param array $propertyConfiguration
-	 * @param string $objectType
+	 * @param string $repositoryName
 	 * @return array
 	 */
-	public function configureProperties(array $properties, array $propertyConfiguration, $objectType) {
+	public function configureProperties(array $properties, array $propertyConfiguration, $repositoryName) {
 		foreach ($propertyConfiguration as $property => $config) {
 			if (isset($properties[$property])) {
 				// map to new properties
 				if (isset($config['mappings'])) {
-					$properties = $this->mapProperties($properties, $config['mappings'], $property, $objectType);
+					$properties = $this->mapProperties($properties, $config['mappings'], $property, $repositoryName);
 				}
 
 				// remove property
@@ -174,11 +174,11 @@ class ResponseService implements ResponseServiceInterface, SingletonInterface {
 	 * @param array $properties
 	 * @param array $mappings
 	 * @param string $property
-	 * @param string $objectType
+	 * @param string $repositoryName
 	 * @throws Exception\Configuration
 	 * @return array
 	 */
-	protected function mapProperties(array $properties, array $mappings, $property, $objectType) {
+	protected function mapProperties(array $properties, array $mappings, $property, $repositoryName) {
 		// will contain sendToMapping-results from mapping conditions
 		$filteredValues = array();
 
@@ -186,7 +186,7 @@ class ResponseService implements ResponseServiceInterface, SingletonInterface {
 			if (is_array($mappingConfig)) {
 				if (!isset($mappingConfig['_typoScriptNodeValue'])) {
 					throw new Exception\Configuration(
-						'Rest Repository Configuration error: Missing node-value of response property mapping "' . $objectType . '.' . $property . '.' . $key . '"'
+						'Rest Repository Configuration error: Missing node-value of response property mapping "' . $repositoryName . '.' . $property . '.' . $key . '"'
 					);
 				}
 				$name = $mappingConfig['_typoScriptNodeValue'];
@@ -207,7 +207,7 @@ class ResponseService implements ResponseServiceInterface, SingletonInterface {
 					);
 				} catch (Exception\Configuration $e) {
 					$e->setMessage(
-						'Rest Repository Configuration error: ' . $e->getMessage() . ' "' . $objectType . '.' . $property . '.' . $key . '"'
+						'Rest Repository Configuration error: ' . $e->getMessage() . ' "' . $repositoryName . '.' . $property . '.' . $key . '"'
 					);
 					throw $e;
 				}

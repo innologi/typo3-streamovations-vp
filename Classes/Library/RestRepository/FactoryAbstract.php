@@ -73,4 +73,19 @@ abstract class FactoryAbstract implements SingletonInterface {
 		$this->configuration = $frameworkConfiguration['rest'];
 	}
 
+	/**
+	 * Returns the repository name from object type
+	 *
+	 * @param string $objectType
+	 * @return string
+	 */
+	protected function getRepositoryNameFromObjectType($objectType) {
+		$repositoryName = $objectType;
+		// remove namespace
+		if ( ($pos = strrpos($objectType, '\\')) !== FALSE ) {
+			$repositoryName = substr($objectType, ($pos + 1));
+		}
+		return $repositoryName;
+	}
+
 }

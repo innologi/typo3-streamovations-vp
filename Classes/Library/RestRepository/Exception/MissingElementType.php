@@ -1,5 +1,5 @@
 <?php
-namespace Innologi\StreamovationsVp\Library\RestRepository;
+namespace Innologi\StreamovationsVp\Library\RestRepository\Exception;
 /***************************************************************
  *  Copyright notice
  *
@@ -25,34 +25,11 @@ namespace Innologi\StreamovationsVp\Library\RestRepository;
  ***************************************************************/
 
 /**
- * REST Response Service Interface
+ * Missing Element Type Exception
  *
- * @package InnologiLibs
- * @subpackage RestRepository
- * @author Frenck Lutke
+ * @package streamovations_vp
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-interface ResponseServiceInterface {
-
-	/**
-	 * Configures response data per response configuration
-	 * and returns an altered $response.
-	 *
-	 * @param array $response
-	 * @param array $responseConfiguration
-	 * @return array
-	 */
-	public function configureResponse(array $response, array $responseConfiguration);
-
-	/**
-	 * Configures properties per property configuration
-	 * and returns an altered $properties.
-	 *
-	 * @param array $properties
-	 * @param array $propertyConfiguration
-	 * @param string $repositoryName
-	 * @return array
-	 */
-	public function configureProperties(array $properties, array $propertyConfiguration, $repositoryName);
+class MissingElementType extends RestException {
 
 }

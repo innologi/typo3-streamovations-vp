@@ -40,6 +40,11 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 	protected $responseService;
 
 	/**
+	 * @var ResponseMapperInterface
+	 */
+	protected $responseMapper;
+
+	/**
 	 * Initializes the configuration
 	 *
 	 * @return void
@@ -47,6 +52,7 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 	protected function initializeConfiguration() {
 		parent::initializeConfiguration();
 		$this->responseService = $this->objectManager->get(__NAMESPACE__ . '\\ResponseServiceInterface');
+		$this->responseMapper = $this->objectManager->get(__NAMESPACE__ . '\\ResponseMapperInterface');
 	}
 
 	/**
@@ -59,6 +65,8 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 	 * @return mixed Array or object
 	 */
 	public function createByRawResponse($rawResponse, $responseType, $objectType) {
+		$type = $this->getRepositoryNameFromObjectType($objectType);
+
 		// convert response to array
 		switch ($responseType) {
 			case RequestInterface::RESPONSETYPE_JSON:
@@ -69,15 +77,15 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 		}
 
 		// response configuration
-		if (isset($this->configuration['repository'][$objectType]['response'])) {
+		if (isset($this->configuration['repository'][$type]['response'])) {
 			$response = $this->responseService->configureResponse(
 				$response,
-				$this->configuration['repository'][$objectType]['response']
+				$this->configuration['repository'][$type]['response']
 			);
 
 			// response-factory supports an additional configuration-property: list
-			if (isset($this->configuration['repository'][$objectType]['response']['list'])
-				&& (bool)$this->configuration['repository'][$objectType]['response']['list']
+			if (isset($this->configuration['repository'][$type]['response']['list'])
+				&& (bool)$this->configuration['repository'][$type]['response']['list']
 			) {
 				// if list is set, treat the response root as an array of actual response elements
 				$output = array();
@@ -95,26 +103,30 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 	/**
 	 * Create Response
 	 *
-	 * @param array $properties
+	 * @param array $response
 	 * @param string $objectType
 	 * @return ResponseInterface
 	 */
-	public function create(array $properties, $objectType) {
+	public function create(array $response, $objectType) {
+		$type = $this->getRepositoryNameFromObjectType($objectType);
+
 		// property configuration
-		if (isset($this->configuration['repository'][$objectType]['response']['property'])) {
-			$properties = $this->responseService->configureProperties(
-				$properties,
-				$this->configuration['repository'][$objectType]['response']['property'],
-				$objectType
+		if (isset($this->configuration['repository'][$type]['response']['property'])) {
+			$response = $this->responseService->configureProperties(
+				$response,
+				$this->configuration['repository'][$type]['response']['property'],
+				$type
 			);
 		}
 
 		if (isset($this->configuration['features']['disableResponseMapper']) && (int)$this->configuration['features']['disableResponseMapper']) {
-			// response mapper disabled: don't use this for production-ready extensions!
+			// response mapper disabled: can be great for performance in specific
+			// use-cases, but don't rely on this for production-ready extensions!
 			/* @var $response ResponseInterface */
-			$responseObject = $this->objectManager->get(__NAMESPACE__ . '\\ResponseInterface', $properties);
+			$responseObject = $this->objectManager->get(__NAMESPACE__ . '\\ResponseInterface', $response);
 		} else {
-			// @TODO finish this once we move on to actual model classes
+			// use response mapper to create domain object
+			$responseObject = $this->responseMapper->map($response, $objectType);
 		}
 
 		return $responseObject;

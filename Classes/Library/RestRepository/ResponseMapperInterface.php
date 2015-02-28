@@ -25,34 +25,25 @@ namespace Innologi\StreamovationsVp\Library\RestRepository;
  ***************************************************************/
 
 /**
- * REST Response Service Interface
+ * REST Response Mapper Interface
  *
  * @package InnologiLibs
  * @subpackage RestRepository
  * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-interface ResponseServiceInterface {
+interface ResponseMapperInterface {
 
 	/**
-	 * Configures response data per response configuration
-	 * and returns an altered $response.
+	 * Maps a response (as array) to an object of $objectType
 	 *
+	 * The objectType MUST implement ResponseInterface or an exception is thrown!
+	 *
+	 * @param string $objectType
 	 * @param array $response
-	 * @param array $responseConfiguration
-	 * @return array
+	 * @throws \TYPO3\CMS\Extbase\Object\Exception\CannotReconstituteObjectException
+	 * @return ResponseInterface
 	 */
-	public function configureResponse(array $response, array $responseConfiguration);
-
-	/**
-	 * Configures properties per property configuration
-	 * and returns an altered $properties.
-	 *
-	 * @param array $properties
-	 * @param array $propertyConfiguration
-	 * @param string $repositoryName
-	 * @return array
-	 */
-	public function configureProperties(array $properties, array $propertyConfiguration, $repositoryName);
+	public function map(array $response, $objectType);
 
 }
