@@ -34,4 +34,18 @@ namespace Innologi\StreamovationsVp\Library\RestRepository;
  */
 interface ResponseInterface {
 
+	/**
+	 * Returns a hash map of property names and property values. Only for internal use.
+	 *
+	 * @return array The properties
+	 */
+	public function _getProperties();
+
+	/**
+	 * Provides string representation of class through serialization.
+	 *
+	 * @return string
+	 */
+	public function __toString();
+
 }
