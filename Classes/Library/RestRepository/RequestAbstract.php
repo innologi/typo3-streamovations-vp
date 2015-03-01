@@ -41,6 +41,21 @@ abstract class RequestAbstract implements RequestInterface {
 	protected $objectManager;
 
 	/**
+	 * @var \TYPO3\CMS\Core\Cache\Frontend\FrontendInterface
+	 */
+	protected $cache;
+
+	/**
+	 * @var boolean
+	 */
+	protected $cacheDisabled = FALSE;
+
+	/**
+	 * @var integer
+	 */
+	protected $cacheLifetime = NULL;
+
+	/**
 	 * @var integer
 	 */
 	protected $responseType = RequestInterface::RESPONSETYPE_JSON;
@@ -72,15 +87,17 @@ abstract class RequestAbstract implements RequestInterface {
 	 *
 	 * @param RequestUriInterface $requestUri
 	 * @param string $responseObjectType
+	 * @param array $cacheSettings
 	 * @param boolean $forceRawResponse
 	 * @param array $httpConfiguration
 	 * @return void
 	 */
-	public function __construct($requestUri, $responseObjectType, $forceRawResponse = FALSE, array $httpConfiguration = array()) {
+	public function __construct($requestUri, $responseObjectType, array $cacheSettings = array(), $forceRawResponse = FALSE, array $httpConfiguration = array()) {
 		$this->requestUri = $requestUri;
 		$this->responseObjectType = $responseObjectType;
 		$this->forceRawResponse = $forceRawResponse;
 
+		$this->initCaching($cacheSettings);
 		$this->initRequestHeaders();
 	}
 
@@ -110,19 +127,53 @@ abstract class RequestAbstract implements RequestInterface {
 	}
 
 	/**
-	 * Sends Request, returns response
+	 * Sends Request, returns (cached) response.
 	 *
 	 * @param boolean $returnRawResponse
-	 * @return void
+	 * @return mixed
 	 */
 	public function send($returnRawResponse = FALSE) {
-		$rawResponse = 'Dummy Response';
+		if ($this->cacheDisabled) {
+			return $this->sendNoCache($returnRawResponse);
+		}
 
-		// implementation logic
+		$response = $this->getResponseFromCache($returnRawResponse);
+		if ($response === NULL) {
+			$response = $this->sendNoCache($returnRawResponse);
+			$this->storeResponseInCache($response, $returnRawResponse);
+		}
+		return $response;
+	}
 
-		return $this->forceRawResponse || $returnRawResponse
-			? $rawResponse
-			: $this->mapResponseToObjects($rawResponse);
+	/**
+	 * Returns a response from the cache, or NULL if none found
+	 *
+	 * @param boolean $findRawResponse
+	 * @return mixed
+	 */
+	protected function getResponseFromCache($findRawResponse = FALSE) {
+		$response = NULL;
+		$entryIdentifier = md5(
+			$this->requestUri->getRequestUri() . '---' . (int) ($findRawResponse || $this->forceRawResponse)
+		);
+		if ($this->cache->has($entryIdentifier)) {
+			$response = $this->cache->get($entryIdentifier);
+		}
+		return $response;
+	}
+
+	/**
+	 * Stores a response in cache
+	 *
+	 * @param mixed $response
+	 * @param boolean $isRawResponse
+	 * @return void
+	 */
+	protected function storeResponseInCache($response, $isRawResponse = FALSE) {
+		$entryIdentifier = md5(
+			$this->requestUri->getRequestUri() . '---' . (int) ($isRawResponse || $this->forceRawResponse)
+		);
+		$this->cache->set($entryIdentifier, $response, array(), $this->cacheLifetime);
 	}
 
 	/**
@@ -164,6 +215,26 @@ abstract class RequestAbstract implements RequestInterface {
 			? 'application/json'
 			: 'text/xml'
 		);
+	}
+
+	/**
+	 * Initializes rest request cache
+	 *
+	 * Settings supported:
+	 * - disable
+	 * - lifetime
+	 *
+	 * @param array $cacheSettings
+	 * @return void
+	 */
+	protected function initCaching(array $cacheSettings) {
+		$this->cacheDisabled = isset($cacheSettings['disable']) && (bool) $cacheSettings['disable'];
+		if (!$this->cacheDisabled) {
+			$this->cacheLifetime = isset($cacheSettings['lifetime'])
+				? (int) $cacheSettings['lifetime']
+				: NULL;
+			$this->cache = $GLOBALS['typo3CacheManager']->getCache('streamovations_vp_rest');
+		}
 	}
 
 	/**

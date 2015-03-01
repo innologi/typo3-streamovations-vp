@@ -51,6 +51,7 @@ class RequestFactory extends FactoryAbstract implements RequestFactoryInterface{
 			__NAMESPACE__ . '\\RequestInterface',
 			$this->createRequestUriObject($objectType),
 			$objectType,
+			$this->getCacheSettings($objectType),
 			$forceRawResponse,
 			(isset($this->configuration['features'][$this->httpConfKey])
 				&& $this->configuration['features'][$this->httpConfKey]
@@ -67,10 +68,10 @@ class RequestFactory extends FactoryAbstract implements RequestFactoryInterface{
 	 * @return RequestUriInterface
 	 */
 	protected function createRequestUriObject($type = 'default') {
+		$type = $this->getRepositoryNameFromObjectType($type);
 		$settings = array();
 		$config = $this->configuration['repository'];
 
-		$type = $this->getRepositoryNameFromObjectType($type);
 		if (isset($config[$type])) {
 			$settings = $config[$type]['request'];
 		}
@@ -90,6 +91,20 @@ class RequestFactory extends FactoryAbstract implements RequestFactoryInterface{
 			->setApiUri($settings['apiUri']);
 
 		return $requestUri;
+	}
+
+	/**
+	 * Retrieves cache settings specific to the objectType
+	 *
+	 * @param string $objectType
+	 * @return array
+	 */
+	protected function getCacheSettings($objectType) {
+		$type = $this->getRepositoryNameFromObjectType($objectType);
+		return isset($this->configuration['repository'][$type]['cache'])
+			&& is_array($this->configuration['repository'][$type]['cache'])
+			? $this->configuration['repository'][$type]['cache']
+			: array();
 	}
 
 }

@@ -75,7 +75,7 @@ class Meetingdata {
 				'rest' => array(
 					'features' => array(
 						// If we don't disable it, the changed configurations of
-						// the timelines conflicts with the domain models and thus
+						// the timelines conflict with the domain models and thus
 						// reflection would cause errors in the response mapper.
 						//
 						// Also: this gives us better performance in this use-case.
@@ -88,6 +88,10 @@ class Meetingdata {
 									'topicTimeline' => $timelineConfig,
 									'speakerTimeline' => $timelineConfig
 								)
+							),
+							// disables caching
+							'cache' => array(
+								'disable' => 1
 							)
 						)
 					)

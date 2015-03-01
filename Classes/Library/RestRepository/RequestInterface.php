@@ -42,11 +42,12 @@ interface RequestInterface {
 	 *
 	 * @param RequestUriInterface $requestUri
 	 * @param string $responseObjectType
+	 * @param array $cacheSettings
 	 * @param boolean $forceRawResponse
 	 * @param array $httpConfiguration
 	 * @return void
 	 */
-	public function __construct($requestUri, $responseObjectType, $forceRawResponse = FALSE, array $httpConfiguration = array());
+	public function __construct($requestUri, $responseObjectType, array $cacheSettings = array(), $forceRawResponse = FALSE, array $httpConfiguration = array());
 
 	/**
 	 * Adds URL argument
@@ -68,11 +69,19 @@ interface RequestInterface {
 	public function setResponseType($responseType);
 
 	/**
-	 * Sends Request, returns response
+	 * Sends Request, returns (cached) response
 	 *
 	 * @param boolean $returnRawResponse
 	 * @return mixed
 	 */
 	public function send($returnRawResponse = FALSE);
+
+	/**
+	 * Sends Request without use of cache, returns response
+	 *
+	 * @param boolean $returnRawResponse
+	 * @return mixed
+	 */
+	public function sendNoCache($returnRawResponse = FALSE);
 
 }

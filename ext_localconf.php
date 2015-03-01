@@ -11,11 +11,26 @@ if (!defined('TYPO3_MODE')) {
 	),
 	// non-cacheable actions
 	array(
-		// @TODO need to decide which ones get cached and which ones not
+		// because all actions draw their data from a rest-service,
+		// we're not caching any of them. instead, we rely on a
+		// caching table with configurable caching lifetime per
+		// rest-repository
 		'Video' => 'list, presetShow, show, liveStream',
 	)
 );
 
+// create a cache specifically for rest requests
+if (!isset($TYPO3_CONF_VARS['SYS']['caching']['cacheConfigurations']['streamovations_vp_rest'])
+	|| !is_array($TYPO3_CONF_VARS['SYS']['caching']['cacheConfigurations']['streamovations_vp_rest'])
+) {
+	$TYPO3_CONF_VARS['SYS']['caching']['cacheConfigurations']['streamovations_vp_rest'] = array(
+		'options' => array(
+			'defaultLifetime' => 3600,
+			'compression' => extension_loaded('zlib')
+		)
+	);
+}
+
 // register eID script for metadata processing
 $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'][$_EXTKEY . '_meetingdata'] =
-	'EXT:' . $_EXTKEY . '/Classes/Eid/Meetingdata.php';
+'EXT:' . $_EXTKEY . '/Classes/Eid/Meetingdata.php';

@@ -44,11 +44,12 @@ class CurlRequest extends RequestAbstract {
 	 *
 	 * @param RequestUriInterface $requestUri
 	 * @param string $responseObjectType
+	 * @param array $cacheSettings
 	 * @param boolean $forceRawResponse
 	 * @param array $httpConfiguration
 	 * @return void
 	 */
-	public function __construct($requestUri, $responseObjectType, $forceRawResponse = FALSE, array $httpConfiguration = array()) {
+	public function __construct($requestUri, $responseObjectType, array $cacheSettings = array(), $forceRawResponse = FALSE, array $httpConfiguration = array()) {
 		$this->resource = curl_init();
 
 		if (!empty($httpConfiguration)) {
@@ -74,12 +75,12 @@ class CurlRequest extends RequestAbstract {
 	}
 
 	/**
-	 * Sends Request, returns response
+	 * Sends Request without use of cache, returns response
 	 *
 	 * @param boolean $returnRawResponse
 	 * @return mixed
 	 */
-	public function send($returnRawResponse = FALSE) {
+	public function sendNoCache($returnRawResponse = FALSE) {
 		// @TODO catch errors?
 		$rawResponse = curl_exec($this->resource);
 		return $rawResponse;

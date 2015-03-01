@@ -37,12 +37,12 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class Typo3Request extends RequestAbstract {
 
 	/**
-	 * Sends Request, returns response
+	 * Sends Request without use of cache, returns response
 	 *
 	 * @param boolean $returnRawResponse
 	 * @return mixed
 	 */
-	public function send($returnRawResponse = FALSE) {
+	public function sendNoCache($returnRawResponse = FALSE) {
 		$data = array();
 		$rawResponse = GeneralUtility::getUrl(
 			$this->requestUri->getRequestUri(),
@@ -53,7 +53,7 @@ class Typo3Request extends RequestAbstract {
 
 		// unfortunately, Typo3Request doesn't always allow us to read the actual
 		// response. instead, we get a status- and lib-based error message, e.g. 404
-		// this is because of e.g. the forced CURLOPT_FAILONERROR = 1
+		// this is due to the forced CURLOPT_FAILONERROR = 1
 		if ($rawResponse === FALSE || $data['error'] > 0) {
 			$this->haltRequest($data, $rawResponse);
 		}
