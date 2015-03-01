@@ -48,7 +48,7 @@ abstract class RequestAbstract implements RequestInterface {
 	/**
 	 * @var boolean
 	 */
-	protected $cacheDisabled = FALSE;
+	protected $cacheEnabled = FALSE;
 
 	/**
 	 * @var integer
@@ -133,7 +133,7 @@ abstract class RequestAbstract implements RequestInterface {
 	 * @return mixed
 	 */
 	public function send($returnRawResponse = FALSE) {
-		if ($this->cacheDisabled) {
+		if (!$this->cacheEnabled) {
 			return $this->sendNoCache($returnRawResponse);
 		}
 
@@ -221,15 +221,15 @@ abstract class RequestAbstract implements RequestInterface {
 	 * Initializes rest request cache
 	 *
 	 * Settings supported:
-	 * - disable
+	 * - enable
 	 * - lifetime
 	 *
 	 * @param array $cacheSettings
 	 * @return void
 	 */
 	protected function initCaching(array $cacheSettings) {
-		$this->cacheDisabled = isset($cacheSettings['disable']) && (bool) $cacheSettings['disable'];
-		if (!$this->cacheDisabled) {
+		$this->cacheEnabled = isset($cacheSettings['enable']) && (bool) $cacheSettings['enable'];
+		if ($this->cacheEnabled) {
 			$this->cacheLifetime = isset($cacheSettings['lifetime'])
 				? (int) $cacheSettings['lifetime']
 				: NULL;

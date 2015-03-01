@@ -91,7 +91,7 @@ class Meetingdata {
 							),
 							// disables caching
 							'cache' => array(
-								'disable' => 1
+								'enable' => 0
 							)
 						)
 					)
