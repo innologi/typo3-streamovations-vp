@@ -7,6 +7,7 @@
    <ROOT>
     <TCEforms>
     	<sheetTitle>LLL:EXT:appointments/Resources/Private/Language/locallang_be.xml:tx_appointments_flexform_sheet_sDEF</sheetTitle>
+    	<cshFile>LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_csh_flexform_video.xlf</cshFile>
     </TCEforms>
     <type>array</type>
     <el>

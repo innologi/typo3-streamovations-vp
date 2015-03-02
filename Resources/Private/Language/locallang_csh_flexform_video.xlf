@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2015-01-12T11:02:10Z" product-name="streamovations_vp">
+		<header/>
+		<body>
+			<trans-unit id="switchableControllerActions.alttitle">
+				<source>Kies type plugin</source>
+			</trans-unit>
+			<trans-unit id="switchableControllerActions.description">
+				<source>Het type plugin bepaalt de weergave van het content-element op de frontend. Een "Lijst" produceert bijvoorbeeld een lijst van opnames waarop de gebruiker kan doorklikken, terwijl een "Livestream" direct een livestream op de pagina toont indien beschikbaar.</source>
+			</trans-unit>
+			
+			<trans-unit id="settings.event.dateAt.alttitle">
+				<source>Toon specifieke dag</source>
+			</trans-unit>
+			<trans-unit id="settings.event.dateAt.description">
+				<source>Toon uitsluitend videostreams die plaats vonden op de gekozen dag. Let op dat het gebruik van dit veld de andere datum/tijd velden doet vervallen!</source>
+			</trans-unit>
+			<trans-unit id="settings.event.dateFrom.alttitle">
+				<source>Toon vanaf</source>
+			</trans-unit>
+			<trans-unit id="settings.event.dateFrom.description">
+				<source>Toon videostreams die hebben plaatsgevonden vanaf het gekozen tijdstip. Dit veld kan gecombineerd worden met "Toon t/m". Let op dat het gebruik van dit veld wordt genegeerd als "Toon specifieke dag" gebruikt wordt!</source>
+			</trans-unit>
+			<trans-unit id="settings.event.dateTo.alttitle">
+				<source>Toon t/m</source>
+			</trans-unit>
+			<trans-unit id="settings.event.dateTo.description">
+				<source>Toon videostreams die hebben plaatsgevonden tot en met het gekozen tijdstip. Dit veld kan gecombineerd worden met "Toon vanaf". Let op dat het gebruik van dit veld wordt genegeerd als "Toon specifieke dag" gebruikt wordt!</source>
+			</trans-unit>
+			
+			<trans-unit id="settings.event.category.alttitle">
+				<source>Categorie</source>
+			</trans-unit>
+			<trans-unit id="settings.event.category.description">
+				<source>Toon videostreams met de gekozen categorie.</source>
+			</trans-unit>
+			<trans-unit id="settings.event.subCategory.alttitle">
+				<source>Subcategorie</source>
+			</trans-unit>
+			<trans-unit id="settings.event.subCategory.description">
+				<source>Toon videostreams met de gekozen subcategorie.</source>
+			</trans-unit>
+			<trans-unit id="settings.event.tags.alttitle">
+				<source>Tags</source>
+			</trans-unit>
+			<trans-unit id="settings.event.tags.description">
+				<source>Toon videostreams met de gekozen tags. In geval van meerdere tags, dien je ze te scheiden met een dubbele punt.</source>
+			</trans-unit>
+			
+			<trans-unit id="settings.playlist.hash.alttitle">
+				<source>Hash</source>
+			</trans-unit>
+			<trans-unit id="settings.playlist.hash.description">
+				<source>Geef hier de unieke hash op van de videostream die getoond moet worden.</source>
+			</trans-unit>
+			
+			<trans-unit id="settings.showPid.alttitle">
+				<source>Toon Pagina ID</source>
+			</trans-unit>
+			<trans-unit id="settings.showPid.description">
+				<source>Door hier een andere pagina met een plugin met Lijst-weergave in te stellen, verwijzen videostreams die in dit content-element gelinkt worden, afgespeeld op de gekozen pagina.</source>
+			</trans-unit>
+			<trans-unit id="settings.backPid.alttitle">
+				<source>Terug Pagina ID</source>
+			</trans-unit>
+			<trans-unit id="settings.backPid.description">
+				<source>Door hier een andere pagina met een plugin met Lijst-weergave in te stellen, verwijst de "Terug" link in dit content-element naar de gekozen pagina.</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
