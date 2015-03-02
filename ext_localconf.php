@@ -27,7 +27,8 @@ if (!isset($TYPO3_CONF_VARS['SYS']['caching']['cacheConfigurations']['streamovat
 		'options' => array(
 			'defaultLifetime' => 3600,
 			'compression' => extension_loaded('zlib')
-		)
+		),
+		'groups' => array('pages', 'all')
 	);
 }
 
