@@ -35,9 +35,9 @@ namespace Innologi\StreamovationsVp\Library\RestRepository;
 class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterface {
 
 	/**
-	 * @var ResponseServiceInterface
+	 * @var ResponseConfiguratorInterface
 	 */
-	protected $responseService;
+	protected $responseConfigurator;
 
 	/**
 	 * @var ResponseMapperInterface
@@ -51,7 +51,7 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 	 */
 	protected function initializeConfiguration() {
 		parent::initializeConfiguration();
-		$this->responseService = $this->objectManager->get(__NAMESPACE__ . '\\ResponseServiceInterface');
+		$this->responseConfigurator = $this->objectManager->get(__NAMESPACE__ . '\\ResponseConfiguratorInterface');
 		$this->responseMapper = $this->objectManager->get(__NAMESPACE__ . '\\ResponseMapperInterface');
 	}
 
@@ -65,7 +65,7 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 	 * @return mixed Array or object
 	 */
 	public function createByRawResponse($rawResponse, $responseType, $objectType) {
-		$type = $this->getRepositoryNameFromObjectType($objectType);
+		$settings = $this->getRepositorySettings($objectType);
 
 		// convert response to array
 		switch ($responseType) {
@@ -77,15 +77,15 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 		}
 
 		// response configuration
-		if (isset($this->configuration['repository'][$type]['response'])) {
-			$response = $this->responseService->configureResponse(
+		if (isset($settings['response'])) {
+			$response = $this->responseConfigurator->configureResponse(
 				$response,
-				$this->configuration['repository'][$type]['response']
+				$settings['response']
 			);
 
 			// response-factory supports an additional configuration-property: list
-			if (isset($this->configuration['repository'][$type]['response']['list'])
-				&& (bool)$this->configuration['repository'][$type]['response']['list']
+			if (isset($settings['response']['list'])
+				&& (bool) $settings['response']['list']
 			) {
 				// if list is set, treat the response root as an array of actual response elements
 				$output = array();
@@ -108,18 +108,18 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 	 * @return ResponseInterface
 	 */
 	public function create(array $response, $objectType) {
-		$type = $this->getRepositoryNameFromObjectType($objectType);
+		$settings = $this->getRepositorySettings($objectType);
 
 		// property configuration
-		if (isset($this->configuration['repository'][$type]['response']['property'])) {
-			$response = $this->responseService->configureProperties(
+		if (isset($settings['response']['property'])) {
+			$response = $this->responseConfigurator->configureProperties(
 				$response,
-				$this->configuration['repository'][$type]['response']['property'],
-				$type
+				$settings['response']['property'],
+				$this->getRepositoryNameFromObjectType($objectType)
 			);
 		}
 
-		if (isset($this->configuration['features']['disableResponseMapper']) && (int)$this->configuration['features']['disableResponseMapper']) {
+		if (isset($this->configuration['features']['disableResponseMapper']) && (bool) $this->configuration['features']['disableResponseMapper']) {
 			// response mapper disabled: can be great for performance in specific
 			// use-cases, but don't rely on this for production-ready extensions!
 			/* @var $response ResponseInterface */

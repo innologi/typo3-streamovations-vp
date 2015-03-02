@@ -26,10 +26,16 @@ plugin.tx_streamovationsvp {
 			disableResponseMapper = 0
 		}
 		repository {
-			default.request {
-				scheme = {$plugin.tx_streamovationsvp.rest.scheme}
-				baseUri = {$plugin.tx_streamovationsvp.rest.baseUri}
-				apiUri = api.php
+			default {
+				request {
+					scheme = {$plugin.tx_streamovationsvp.rest.scheme}
+					baseUri = {$plugin.tx_streamovationsvp.rest.baseUri}
+					apiUri = api.php
+				}
+				cache {
+					enable = 1
+					#lifetime = 3600
+				}
 			}
 			Event {
 				request.apiUri = api.php/sessions/date

@@ -41,11 +41,18 @@ abstract class FactoryAbstract implements SingletonInterface {
 	protected $objectManager;
 
 	/**
-	 * General REST request configuration
+	 * General REST configuration
 	 *
 	 * @var array
 	 */
 	protected $configuration;
+
+	/**
+	 * Merged REST configuration of default and objectType
+	 *
+	 * @var array
+	 */
+	protected $settings = array();
 
 	/**
 	 * Class constructor
@@ -86,6 +93,40 @@ abstract class FactoryAbstract implements SingletonInterface {
 			$repositoryName = substr($objectType, ($pos + 1));
 		}
 		return $repositoryName;
+	}
+
+	/**
+	 * Returns repository settings
+	 *
+	 * @param string $objectType
+	 * @return array
+	 */
+	protected function getRepositorySettings($objectType) {
+		$type = $this->getRepositoryNameFromObjectType($objectType);
+		if (!isset($this->settings[$type])) {
+			$this->settings[$type] = $this->mergeRepositorySettings($type);
+		}
+		return $this->settings[$type];
+	}
+
+	/**
+	 * Merges default and type-specific settings
+	 *
+	 * @param string $type
+	 * @return array
+	 */
+	protected function mergeRepositorySettings($type) {
+		$config = $this->configuration['repository'];
+
+		$settings = array();
+		if (isset($config[$type])) {
+			$settings = $config[$type];
+		}
+		if (isset($config['default'])) {
+			// merging of default settings with type-specific
+			$settings = array_merge($config['default'], $settings);
+		}
+		return $settings;
 	}
 
 }

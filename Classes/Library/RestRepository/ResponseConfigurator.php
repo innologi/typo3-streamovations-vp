@@ -25,14 +25,14 @@ namespace Innologi\StreamovationsVp\Library\RestRepository;
  ***************************************************************/
 use TYPO3\CMS\Core\SingletonInterface;
 /**
- * REST Response Service
+ * REST Response Configurator
  *
  * @package InnologiLibs
  * @subpackage RestRepository
  * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class ResponseService implements ResponseServiceInterface, SingletonInterface {
+class ResponseConfigurator implements ResponseConfiguratorInterface, SingletonInterface {
 
 	/**
 	 * Configures response data per response configuration

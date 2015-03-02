@@ -47,14 +47,18 @@ class RequestFactory extends FactoryAbstract implements RequestFactoryInterface{
 	 * @return RequestInterface
 	 */
 	public function create($objectType, $forceRawResponse = FALSE) {
+		$settings = $this->getRepositorySettings($objectType);
 		return $this->objectManager->get(
 			__NAMESPACE__ . '\\RequestInterface',
-			$this->createRequestUriObject($objectType),
+			$this->createRequestUriObject($settings['request']),
 			$objectType,
-			$this->getCacheSettings($objectType),
+			(isset($settings['cache'])
+				? $settings['cache']
+				: array()
+			),
 			$forceRawResponse,
 			(isset($this->configuration['features'][$this->httpConfKey])
-				&& $this->configuration['features'][$this->httpConfKey]
+				&& (bool) $this->configuration['features'][$this->httpConfKey]
 					? array()
 					: $GLOBALS['TYPO3_CONF_VARS']['HTTP']
 			)
@@ -62,24 +66,15 @@ class RequestFactory extends FactoryAbstract implements RequestFactoryInterface{
 	}
 
 	/**
-	 * Creates RequestUri object for type
+	 * Creates RequestUri object via $settings:
+	 * - scheme
+	 * - baseUri
+	 * - apiUri
 	 *
-	 * @param string $type
+	 * @param array $settings
 	 * @return RequestUriInterface
 	 */
-	protected function createRequestUriObject($type = 'default') {
-		$type = $this->getRepositoryNameFromObjectType($type);
-		$settings = array();
-		$config = $this->configuration['repository'];
-
-		if (isset($config[$type])) {
-			$settings = $config[$type]['request'];
-		}
-		if ($type !== 'default' && isset($config['default']['request'])) {
-			// merging of default settings with type-specific
-			$settings = array_merge($config['default']['request'], $settings);
-		}
-
+	protected function createRequestUriObject(array $settings) {
 		/* @var $requestUri RequestUriInterface */
 		$requestUri = $this->objectManager->get(
 			__NAMESPACE__ . '\\RequestUriInterface'
@@ -91,20 +86,6 @@ class RequestFactory extends FactoryAbstract implements RequestFactoryInterface{
 			->setApiUri($settings['apiUri']);
 
 		return $requestUri;
-	}
-
-	/**
-	 * Retrieves cache settings specific to the objectType
-	 *
-	 * @param string $objectType
-	 * @return array
-	 */
-	protected function getCacheSettings($objectType) {
-		$type = $this->getRepositoryNameFromObjectType($objectType);
-		return isset($this->configuration['repository'][$type]['cache'])
-			&& is_array($this->configuration['repository'][$type]['cache'])
-			? $this->configuration['repository'][$type]['cache']
-			: array();
 	}
 
 }

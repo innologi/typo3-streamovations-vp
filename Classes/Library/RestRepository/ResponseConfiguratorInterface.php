@@ -25,14 +25,14 @@ namespace Innologi\StreamovationsVp\Library\RestRepository;
  ***************************************************************/
 
 /**
- * REST Response Service Interface
+ * REST Response Configurator Interface
  *
  * @package InnologiLibs
  * @subpackage RestRepository
  * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-interface ResponseServiceInterface {
+interface ResponseConfiguratorInterface {
 
 	/**
 	 * Configures response data per response configuration
