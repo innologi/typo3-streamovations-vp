@@ -204,7 +204,6 @@ var SvpStarter = (function($) {
 
 	};
 
-	// @LOW make these ids/class configurable?
 	/**
 	 * id/class selector strings
 	 *

@@ -172,7 +172,6 @@ class RequestUri implements RequestUriInterface {
 			$this->baseUri . '/' .
 			$this->apiUri . '/';
 		foreach ($this->arguments as $parameter => $value) {
-			// @LOW can't we speed this up with some kind of join? note the need for array keys
 			$this->requestUri .= $parameter . '/' . $value . '/';
 		}
 	}

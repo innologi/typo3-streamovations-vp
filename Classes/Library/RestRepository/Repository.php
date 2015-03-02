@@ -91,7 +91,6 @@ class Repository implements RepositoryInterface,SingletonInterface {
 	 * @return RequestInterface
 	 */
 	protected function createRequest() {
-		// @LOW if multiple REST requests in a single web request, this is not efficient
 		/* @var $requestFactory RequestFactoryInterface */
 		$requestFactory = $this->objectManager->get(__NAMESPACE__ . '\\RequestFactoryInterface');
 
