@@ -27,7 +27,9 @@ namespace Innologi\StreamovationsVp\Library\RestRepository\Exception;
 /**
  * Unexptected Response Structure Exception
  *
- * @package streamovations_vp
+ * @package InnologiLibs
+ * @subpackage RestRepository
+ * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
 class UnexpectedResponseStructure extends RestException {

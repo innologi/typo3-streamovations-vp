@@ -27,7 +27,9 @@ namespace Innologi\StreamovationsVp\Library\RestRepository\Exception;
 /**
  * Missing Element Type Exception
  *
- * @package streamovations_vp
+ * @package InnologiLibs
+ * @subpackage RestRepository
+ * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
 class MissingElementType extends RestException {
