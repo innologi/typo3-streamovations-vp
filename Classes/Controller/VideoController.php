@@ -23,13 +23,11 @@ namespace Innologi\StreamovationsVp\Controller;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use Innologi\StreamovationsVp\Mvc\Controller\Controller;
 use Innologi\StreamovationsVp\Library\RestRepository\ResponseInterface;
 use Innologi\StreamovationsVp\Library\RestRepository\Exception\HttpReturnedError;
-use Innologi\StreamovationsVp\Library\RestRepository\Exception\UnexpectedResponseStructure;
 /**
  * Video Controller
  *
@@ -89,8 +87,8 @@ class VideoController extends Controller {
 				$events = $this->eventRepository->findBetweenDateTimeRange($dateStart, $dateEnd);
 			}
 
-			/* @var $eventService \Innologi\StreamovationsVp\Domain\Service\EventServiceInterface */
-			$eventService = $this->objectManager->get('Innologi\\StreamovationsVp\\Domain\\Service\\EventServiceInterface');
+			/* @var $eventService \Innologi\StreamovationsVp\Domain\Service\EventService */
+			$eventService = $this->objectManager->get('Innologi\\StreamovationsVp\\Domain\\Service\\EventService');
 			$events = $eventService->filterOutLiveStreams($events);
 
 			$this->view->assign('events', $events);
@@ -118,7 +116,6 @@ class VideoController extends Controller {
 	 *
 	 * @param string $hash Playlist Hash
 	 * @param boolean $isLiveStream
-	 * @throws \Innologi\StreamovationsVp\Exception\UnexpectedResponseStructure
 	 * @return void
 	 */
 	public function showAction($hash, $isLiveStream = FALSE) {
@@ -132,104 +129,18 @@ class VideoController extends Controller {
 		$playlist = $this->playlistRepository->findByHash($hash);
 		if ($playlist) {
 			if ($playlist instanceof ResponseInterface) {
-				// for jwPlayer we need to construct a valid configuration from the response
-				// @see http://support.jwplayer.com/customer/portal/articles/1413113-configuration-options-reference
+				$playlistData = NULL;
+
+				/* @var $playlistService \Innologi\StreamovationsVp\Domain\Service\PlaylistService */
+				$playlistService = $this->objectManager->get(
+					'Innologi\\StreamovationsVp\\Domain\\Service\\PlaylistService',
+					$this->settings,
+					$this->extensionName
+				);
+
 				if ($playerType === 1) {
-					$useSmil = (int)$this->settings['jwPlayer']['smilSupport'] > 0;
-					$ports = $playlist->getPorts();
-					$application = $playlist->getApplication();
-					$urlParts = array(
-						0 => 'rtmp',
-						1 => '://' . $playlist->getServer() . ':',
-						2 => $ports['rtmp'],
-						3 => '/' . $application . '/'
-					);
-
-					$playlistData = array(
-						'playlist' => array(),
-						'width' => $this->settings['jwPlayer']['width'],
-						'height' => $this->settings['jwPlayer']['height'],
-						// used by SVPS, not by jwplayer
-						'application' => $application
-					);
-
-					$playlistItems = $playlist->getPlaylistItems();
-					foreach ($playlistItems as $playlistItem) {
-						/* @var $playlistItem \Innologi\StreamovationsVp\Domain\Model\Playlist\PlaylistItem */
-						/* @var $sourceObj \Innologi\StreamovationsVp\Domain\Model\Playlist\Source */
-						$sourceObj = $playlistItem->getSource();
-						$qualities = $sourceObj->getQualities();
-						if ($qualities === NULL) {
-							// @TODO this feels out of place
-							throw new UnexpectedResponseStructure(
-								LocalizationUtility::translate('unexpected_response_structure', $this->extensionName)
-							);
-						}
-
-						$uP = $urlParts;
-						// best case scenario: smil is available, provides quality selection
-						$smil = $sourceObj->getSmil();
-						if ($useSmil && $smil !== NULL) {
-							$uP[0] = 'http';
-							$uP[2] = $ports['http'];
-							$source = isset($this->settings['jwPlayer']['smilTemplate'][0])
-								? str_replace(
-									'###SOURCE###',
-									$smil,
-									$this->settings['jwPlayer']['smilTemplate']
-								)
-								: $smil;
-
-						// worst case scenario: no smil and I'm not bothering with creating quality selection
-						} else {
-							$defaultQuality = $sourceObj->getDefaultQuality();
-							$source = $defaultQuality !== NULL && isset($qualities[$defaultQuality])
-								? $qualities[$defaultQuality]
-								: current($qualities);
-							// when livestreaming, $source is an array containing a stream for each available language
-							if ($application === 'rtplive' && !is_string($source)) {
-								// livestream does not produce available languages, hence we use a configured csv list
-								// @LOW are we sure the response does not produce a 'language' root-property during livestream?
-								$languageFound = FALSE;
-								$languages = GeneralUtility::trimExplode(',', $this->settings['live']['languages']);
-								foreach ($languages as $lang) {
-									if (isset($source[$lang])) {
-										$source = $source[$lang];
-										$languageFound = TRUE;
-										break;
-									}
-								}
-								// if configured language is not found, log the issue and just get the first element
-								if (!$languageFound) {
-									GeneralUtility::devLog(
-										sprintf(
-											LocalizationUtility::translate('language_not_found', $this->extensionName),
-											// tried languages
-											$this->settings['live']['languages'],
-											// used language (first one)
-											key($source)
-										),
-										$this->extensionName,
-										2
-									);
-									// use first language
-									$source = current($source);
-								}
-							}
-						}
-
-						$url = join('', $uP);
-						$playlistData['playlist'][] = array(
-							// @LOW 'image' => ''
-							'sources' => array(
-								0 => array(
-									'file' => $url . $source
-								)
-							),
-							// used by SVPS, not by jwplayer
-							'streamfileId' => $playlistItem->getStreamfileId()
-						);
-					}
+					// for jwPlayer we need to construct a valid configuration from the playlist-response
+					$playlistData = $playlistService->createJwplayerSetup($playlist);
 				}
 
 				// javascript JSON.parse already deals with escaped slashes, but
@@ -237,7 +148,6 @@ class VideoController extends Controller {
 				$playlist = version_compare(PHP_VERSION, '5.4', '<')
 					? str_replace('\\/', '/', json_encode($playlistData))
 					: json_encode($playlistData, JSON_UNESCAPED_SLASHES);
-
 			}
 
 			// at least one of meetingdata types must be enabled before getting anything

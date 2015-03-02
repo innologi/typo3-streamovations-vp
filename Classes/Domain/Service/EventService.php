@@ -23,7 +23,7 @@ namespace Innologi\StreamovationsVp\Domain\Service;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
+use TYPO3\CMS\Core\SingletonInterface;
 /**
  * Event Domain Service class
  *
@@ -31,7 +31,13 @@ namespace Innologi\StreamovationsVp\Domain\Service;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class EventService implements EventServiceInterface {
+class EventService implements SingletonInterface {
+
+	/**
+	 * Constant for event->streamingType when event is a live-stream
+	 * @var string
+	 */
+	const STREAMINGTYPE_LIVE = 'live';
 
 	/**
 	 * Filters out specified streamingType from $events.
@@ -41,7 +47,7 @@ class EventService implements EventServiceInterface {
 	 */
 	public function filterOutLiveStreams(array $events) {
 		foreach ($events as $index => $event) {
-			if ($event->getStreamingType() === EventServiceInterface::STREAMINGTYPE_LIVE) {
+			if ($event->getStreamingType() === self::STREAMINGTYPE_LIVE) {
 				unset($events[$index]);
 			}
 		}
