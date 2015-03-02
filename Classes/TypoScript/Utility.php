@@ -40,10 +40,11 @@ class Utility {
 	 * @return string
 	 */
 	public function resolvePath($content, $conf) {
+		$path = '';
 		if (isset($conf['path'][0])) {
-			return $GLOBALS['TSFE']->tmpl->getFileName($conf['path']);
+			$path = $GLOBALS['TSFE']->tmpl->getFileName($conf['path']);
 		}
-		// @LOW throw exception?
+		return $path;
 	}
 
 }
