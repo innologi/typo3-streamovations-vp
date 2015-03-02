@@ -36,6 +36,7 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
 class ResponseMapper implements ResponseMapperInterface, SingletonInterface {
+	// @TODO add Extbase/FLOW validator-support
 
 	/**
 	 * @var \TYPO3\CMS\Extbase\Object\ObjectManagerInterface

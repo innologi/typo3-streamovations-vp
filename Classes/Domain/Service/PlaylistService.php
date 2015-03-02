@@ -25,7 +25,6 @@ namespace Innologi\StreamovationsVp\Domain\Service;
  ***************************************************************/
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
-use Innologi\StreamovationsVp\Library\RestRepository\Exception\UnexpectedResponseStructure;
 /**
  * Playlist Domain Service class
  *
@@ -170,19 +169,12 @@ class PlaylistService {
 	 * hence ResponseInterface: the interface they both implement
 	 *
 	 * @param \Innologi\StreamovationsVp\Library\RestRepository\ResponseInterface $source
-	 * @throws \Innologi\StreamovationsVp\Library\RestRepository\Exception\UnexpectedResponseStructure
 	 * @return mixed
 	 */
 	protected function getSourceFromQualities(\Innologi\StreamovationsVp\Library\RestRepository\ResponseInterface $source) {
 		/* @var $source \Innologi\StreamovationsVp\Domain\Model\Playlist\Source */
 		$qualities = $source->getQualities();
-		if ($qualities === NULL) {
-			// @TODO this feels out of place
-			throw new UnexpectedResponseStructure(
-				LocalizationUtility::translate('unexpected_response_structure', $this->extensionName)
-			);
-		}
-
+		// there is no validator support right now, but we assume $qualities !== NULL
 		$defaultQuality = $source->getDefaultQuality();
 		return $defaultQuality !== NULL && isset($qualities[$defaultQuality])
 			? $qualities[$defaultQuality]
