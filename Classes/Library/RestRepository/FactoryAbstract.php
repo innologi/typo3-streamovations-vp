@@ -124,7 +124,7 @@ abstract class FactoryAbstract implements SingletonInterface {
 		}
 		if (isset($config['default'])) {
 			// merging of default settings with type-specific
-			$settings = array_merge($config['default'], $settings);
+			$settings = array_replace_recursive($config['default'], $settings);
 		}
 		return $settings;
 	}
