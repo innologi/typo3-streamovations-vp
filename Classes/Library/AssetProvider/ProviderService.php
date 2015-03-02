@@ -33,10 +33,9 @@ namespace Innologi\StreamovationsVp\Library\AssetProvider;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
 class ProviderService extends ProviderServiceAbstract {
-	# @LOW find a way to make this a singleton, without impacting multiple plugins of different exts, as this could benefit any forward() call
 
 	/**
-	 * @LOW can we get it dynamically on construct time?
+	 * @LOW why not dynamically? Controller->Request can provide it
 	 * @var string
 	 */
 	protected $extensionTsKey = 'tx_streamovationsvp.';
