@@ -38,13 +38,6 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 class PlaylistService {
 
 	/**
-	 * Plugin settings as provided to controller
-	 *
-	 * @var array
-	 */
-	protected $settings;
-
-	/**
 	 * @var string
 	 */
 	protected $extensionName;
@@ -56,8 +49,7 @@ class PlaylistService {
 	 * @param string $extensionName
 	 * @return void
 	 */
-	public function __construct(array $settings, $extensionName) {
-		$this->settings = $settings;
+	public function __construct($extensionName) {
 		$this->extensionName = $extensionName;
 	}
 
@@ -68,10 +60,11 @@ class PlaylistService {
 	 * hence ResponseInterface: the interface they both implement
 	 *
 	 * @param \Innologi\StreamovationsVp\Library\RestRepository\ResponseInterface $playlist
+	 * @param array $settings
 	 * @return array
 	 * @see http://support.jwplayer.com/customer/portal/articles/1413113-configuration-options-reference
 	 */
-	public function createJwplayerSetup(\Innologi\StreamovationsVp\Library\RestRepository\ResponseInterface $playlist) {
+	public function createJwplayerSetup(\Innologi\StreamovationsVp\Library\RestRepository\ResponseInterface $playlist, array $settings) {
 		/* @var $playlist \Innologi\StreamovationsVp\Domain\Model\Playlist */
 		$ports = $playlist->getPorts();
 		$application = $playlist->getApplication();
@@ -84,8 +77,8 @@ class PlaylistService {
 
 		$playlistData = array(
 			'playlist' => array(),
-			'width' => $this->settings['jwPlayer']['width'],
-			'height' => $this->settings['jwPlayer']['height'],
+			'width' => $settings['width'],
+			'height' => $settings['height'],
 			// used by SVPS, not by jwplayer
 			'application' => $application
 		);
@@ -93,7 +86,7 @@ class PlaylistService {
 		$playlistItems = $playlist->getPlaylistItems();
 		foreach ($playlistItems as $playlistItem) {
 			/* @var $playlistItem \Innologi\StreamovationsVp\Domain\Model\Playlist\PlaylistItem */
-			$sourceFile = $this->getSourceFile($urlParts, $ports, $playlistItem->getSource());
+			$sourceFile = $this->getSourceFile($urlParts, $ports, $playlistItem->getSource(), $settings);
 
 			$playlistData['playlist'][] = array(
 				// @LOW 'image' => ''
@@ -119,19 +112,20 @@ class PlaylistService {
 	 * @param array $urlParts
 	 * @param array $ports
 	 * @param \Innologi\StreamovationsVp\Library\RestRepository\ResponseInterface $source
+	 * @param array $settings
 	 * @return string
 	 */
-	protected function getSourceFile(array $urlParts, array $ports, \Innologi\StreamovationsVp\Library\RestRepository\ResponseInterface $source) {
+	protected function getSourceFile(array $urlParts, array $ports, \Innologi\StreamovationsVp\Library\RestRepository\ResponseInterface $source, array $settings) {
 		/* @var $source \Innologi\StreamovationsVp\Domain\Model\Playlist\Source */
 
-		$useSmil = (bool) $this->settings['jwPlayer']['smilSupport'];
+		$useSmil = (bool) $settings['smilSupport'];
 		$smil = $source->getSmil();
 
 		// best case scenario: smil is available, provides quality selection
 		if ($useSmil && $smil !== NULL) {
 			$urlParts[0] = 'http';
 			$urlParts[2] = $ports['http'];
-			$sourceFile = $this->getSourceFromSmil($smil);
+			$sourceFile = $this->getSourceFromSmil($smil, $settings['smilWrap']);
 
 			// worst case scenario: no smil and I'm not bothering with creating quality selection
 		} else {
@@ -139,7 +133,7 @@ class PlaylistService {
 
 			// when livestreaming, $source is an array/object containing a stream for each available language
 			if ($application === 'rtplive' && !is_string($sourceFile)) {
-				$sourceFile = $this->getSourceFromLiveLanguage($sourceFile);
+				$sourceFile = $this->getSourceFromLiveLanguage($sourceFile, $settings['liveLanguage']);
 			}
 		}
 
@@ -150,15 +144,12 @@ class PlaylistService {
 	 * Returns the source filename from the given smil file.
 	 *
 	 * @param string $smil
+	 * @param string $wrap
 	 * @return string
 	 */
-	protected function getSourceFromSmil($smil) {
-		return isset($this->settings['jwPlayer']['smilWrap'][0])
-			? str_replace(
-				'|',
-				$smil,
-				$this->settings['jwPlayer']['smilWrap']
-			)
+	protected function getSourceFromSmil($smil, $wrap) {
+		return isset($wrap[0])
+			? str_replace('|', $smil, $wrap)
 			: $smil;
 	}
 
@@ -185,14 +176,15 @@ class PlaylistService {
 	 * Returns the source filename from an array-structure containing live-languages.
 	 *
 	 * @param mixed $source Could be an array or an object implementing array-interfaces
+	 * @param string $liveLanguage
 	 * @return string
 	 */
-	protected function getSourceFromLiveLanguage($source) {
+	protected function getSourceFromLiveLanguage($source, $liveLanguage) {
 		$languageFound = FALSE;
 
 		// @LOW are we sure the response does not produce a 'language' root-property during livestream?
 		// livestream does not produce available languages, hence we use a configured csv list
-		$languages = GeneralUtility::trimExplode(',', $this->settings['jwPlayer']['liveLanguage']);
+		$languages = GeneralUtility::trimExplode(',', $liveLanguage);
 		foreach ($languages as $lang) {
 			if (isset($source[$lang])) {
 				$source = $source[$lang];
@@ -206,7 +198,7 @@ class PlaylistService {
 				sprintf(
 					LocalizationUtility::translate('language_not_found', $this->extensionName),
 					// tried languages
-					$this->settings['jwPlayer']['liveLanguage'],
+					$liveLanguage,
 					// used language (first one)
 					key($source)
 				),

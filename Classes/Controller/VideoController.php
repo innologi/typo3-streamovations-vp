@@ -134,13 +134,12 @@ class VideoController extends Controller {
 				/* @var $playlistService \Innologi\StreamovationsVp\Domain\Service\PlaylistService */
 				$playlistService = $this->objectManager->get(
 					'Innologi\\StreamovationsVp\\Domain\\Service\\PlaylistService',
-					$this->settings,
 					$this->extensionName
 				);
 
 				if ($playerType === 1) {
 					// for jwPlayer we need to construct a valid configuration from the playlist-response
-					$playlistData = $playlistService->createJwplayerSetup($playlist);
+					$playlistData = $playlistService->createJwplayerSetup($playlist, $this->settings['jwPlayer']);
 				}
 
 				// javascript JSON.parse already deals with escaped slashes, but
