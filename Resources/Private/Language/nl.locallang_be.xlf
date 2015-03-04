@@ -1,0 +1,289 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages"
+		date="2015-01-12T14:05:13Z" product-name="streamovations_vp"
+		target-language="nl">
+		<header />
+		<body>
+			<trans-unit id="ff_video_sheet_sDEF" approved="yes">
+				<source>Settings</source>
+				<target state="translated">Instellingen</target>
+			</trans-unit>
+
+			<trans-unit id="ff_video_pluginType" approved="yes">
+				<source>Plugin type</source>
+				<target state="translated">Plugin type</target>
+			</trans-unit>
+			<trans-unit id="ff_video_pluginType.list" approved="yes">
+				<source>List/Show-view</source>
+				<target state="translated">Lijst/Enkele weergave</target>
+			</trans-unit>
+			<trans-unit id="ff_video_pluginType.single" approved="yes">
+				<source>Preset Single Video</source>
+				<target state="translated">Specifieke Video</target>
+			</trans-unit>
+			<trans-unit id="ff_video_pluginType.live" approved="yes">
+				<source>Livestream</source>
+				<target state="translated">Livestream</target>
+			</trans-unit>
+			<trans-unit id="ff_video_dateAt" approved="yes">
+				<source>Video Date</source>
+				<target state="translated">Video Datum</target>
+			</trans-unit>
+			<trans-unit id="ff_video_dateFrom" approved="yes">
+				<source>Video Date/Time Start</source>
+				<target state="translated">Video Datum/Tijd: Vanaf</target>
+			</trans-unit>
+			<trans-unit id="ff_video_dateTo" approved="yes">
+				<source>Video Date/Time End</source>
+				<target state="translated">Video Datum/Tijd: Tot en met</target>
+			</trans-unit>
+			<trans-unit id="ff_video_category" approved="yes">
+				<source>Category</source>
+				<target state="translated">Categorie</target>
+			</trans-unit>
+			<trans-unit id="ff_video_subCategory" approved="yes">
+				<source>Sub Category</source>
+				<target state="translated">Sub Categorie</target>
+			</trans-unit>
+			<trans-unit id="ff_video_tags" approved="yes">
+				<source>Tags</source>
+				<target state="translated">Tags</target>
+			</trans-unit>
+			<trans-unit id="ff_video_hash" approved="yes">
+				<source>Videostream Session Hash</source>
+				<target state="translated">Videostream Sessie Hash</target>
+			</trans-unit>
+			<trans-unit id="ff_video_showPid" approved="yes">
+				<source>Target Show Page</source>
+				<target state="translated">Doelpagina Enkele weergave</target>
+			</trans-unit>
+			<trans-unit id="ff_video_backPid" approved="yes">
+				<source>Target Back Page</source>
+				<target state="translated">Doelpagina Terug-link</target>
+			</trans-unit>
+
+			<trans-unit id="ts_category_restapi" approved="yes">
+				<source>REST API</source>
+				<target state="translated">REST API</target>
+			</trans-unit>
+			<trans-unit id="ts_category_player" approved="yes">
+				<source>Video Player</source>
+				<target state="translated">Video Speler</target>
+			</trans-unit>
+			<trans-unit id="ts_category_jw" approved="yes">
+				<source>JW Player-specific</source>
+				<target state="translated">JW Player-specifiek</target>
+			</trans-unit>
+			<trans-unit id="ts_category_topics" approved="yes">
+				<source>Topics</source>
+				<target state="translated">Agendapunten</target>
+			</trans-unit>
+			<trans-unit id="ts_category_speakers" approved="yes">
+				<source>Speakers</source>
+				<target state="translated">Sprekers</target>
+			</trans-unit>
+			<trans-unit id="ts_category_polling" approved="yes">
+				<source>Polling</source>
+				<target state="translated">Polling</target>
+			</trans-unit>
+
+			<trans-unit id="ts_view_templateRootPath" approved="yes">
+				<source>Template path</source>
+				<target state="translated">Template pad</target>
+			</trans-unit>
+			<trans-unit id="ts_view_partialRootPath" approved="yes">
+				<source>Template partial path</source>
+				<target state="translated">Template partial pad</target>
+			</trans-unit>
+			<trans-unit id="ts_view_layoutRootPath" approved="yes">
+				<source>Template layout path</source>
+				<target state="translated">Template layout pad</target>
+			</trans-unit>
+			<trans-unit id="ts_javascript_includeJquery" approved="yes">
+				<source>Include jQuery Library: You can disable this if a compatible
+					jQuery-version is already included on your site.
+				</source>
+				<target state="translated">jQuery Bibliotheek toevoegen: U kunt deze optie
+					uitschakelen als er al een compatibele jQuery-versie aanwezig is op
+					de site.
+				</target>
+			</trans-unit>
+			<trans-unit id="ts_javascript_jqueryLib" approved="yes">
+				<source>jQuery Library path</source>
+				<target state="translated">jQuery Bibliotheek pad</target>
+			</trans-unit>
+			<trans-unit id="ts_javascript_jwPlayerLib" approved="yes">
+				<source>JW Player path: If you're using a license key, make sure
+					this points to a compatible version.
+				</source>
+				<target state="translated">JW Player pad: Als u een licentiesleutel
+					gebruikt, verwijs dan naar een compatibele versie als dat niet al
+					het geval is.
+				</target>
+			</trans-unit>
+			<trans-unit id="ts_javascript_smvPlayerLib" approved="yes">
+				<source>Streamovations Player path: This player is not included. If
+					you wish to use the Streamovations player, inquire at your contact
+					at Streamovations BVBA.
+				</source>
+				<target state="translated">Streamovations Player pad: Deze speler is niet
+					inbegrepen. Indien u gebruik wilt maken van de speler, neem dan
+					contact op met uw contactpersoon bij Streamovations BVBA.
+				</target>
+			</trans-unit>
+			<trans-unit id="ts_css_frontendFile" approved="yes">
+				<source>Frontend CSS path: Provides frontend styling to plugin
+				</source>
+				<target state="translated">Frontend CSS pad: Verzorgt de frontend styling
+					van de plugin.
+				</target>
+			</trans-unit>
+			<trans-unit id="ts_rest_scheme" approved="yes">
+				<source>REST API scheme: Scheme for REST requests, usually 'http' or
+					'https'.
+				</source>
+				<target state="translated">REST API schema: Schema for REST requests.
+					Doorgaans is dit 'http' of 'https'.
+				</target>
+			</trans-unit>
+			<trans-unit id="ts_rest_baseUri" approved="yes">
+				<source>REST API Base URI: Base URI for REST requests, starting from
+					the (sub) domain and up to '/api.php'. e.g. 'stream.mysite.com'
+				</source>
+				<target state="translated">REST API Basis URI: Basis URI voor REST
+					requests, vanaf het (sub) domein tot aan '/api.php'. Bijv.
+					'stream.mijnsite.nl'
+				</target>
+			</trans-unit>
+			<trans-unit id="ts_settings_player" approved="yes">
+				<source>Pick Video Player: Choose which video player to use. If you
+					wish to use the Streamovations player, inquire at your contact at
+					Streamovations BVBA about this, as it will require additional
+					player files, as well as your own JW Player license key.
+				</source>
+				<target state="translated">Kies Video Speler: Kies welke video speler
+					gebruikt dient te worden. Indien u gebruik wilt maken van de
+					Streamovations player, neem dan contact op met uw contactpersoon
+					bij Streamovations BVBA i.v.m. de benodigde bestanden. Ook is er in
+					dat geval een JW Player licentiesleutel nodig.
+				</target>
+			</trans-unit>
+			<trans-unit id="ts_settings_jwPlayer_key" approved="yes">
+				<source>JW Player license key: Unlocks JW Player and removes its
+					logo. Please note that your license key will be exposed to
+					knowledgeable viewers of the plugin, as is always the case with JW
+					Player. You need a valid license key for use of the Streamovations
+					player.
+				</source>
+				<target state="translated">JW Player licentiesleutel: Ontgrendel JW Player
+					en verberg het logo. Let op dat uw licentiesleutel zichtbaar is
+					voor bezoekers met verregaande expertise, zoals altijd het geval is
+					met JW Player. U heeft een geldige licentiesleutel nodig voor het
+					gebruik van de Streamovations player.
+				</target>
+			</trans-unit>
+			<trans-unit id="ts_settings_jwPlayer_width" approved="yes">
+				<source>Player width (pixels): Must correspond with styling. The
+					default styling assumes a value of 600px.
+				</source>
+				<target state="translated">Breedte speler (pixels): Moet overeenkomen met
+					de styling. De standaard styling gaat uit van 600 pixels breed.
+				</target>
+			</trans-unit>
+			<trans-unit id="ts_settings_jwPlayer_height" approved="yes">
+				<source>Player height (pixels)</source>
+				<target state="translated">Hoogte speler (pixels)</target>
+			</trans-unit>
+			<trans-unit id="ts_settings_jwPlayer_liveLanguage"
+				approved="yes">
+				<source>Livestream language: Sets the order of preferred languages
+					to find in livestreams. (comma separated values)
+				</source>
+				<target state="translated">Livestream taal: De volgorde en voorkeur van
+					talen waarin de livestreams gezocht moeten worden.
+					(komma-gescheiden waarden)
+				</target>
+			</trans-unit>
+			<trans-unit id="ts_settings_jwPlayer_smilSupport"
+				approved="yes">
+				<source>Smil support: Allows the use of smil files if detected in
+					the REST response.
+				</source>
+				<target state="translated">Smil ondersteuning: Staat het gebruik van
+					smil-bestanden toe indien gevonden in de REST response.
+				</target>
+			</trans-unit>
+			<trans-unit id="ts_settings_jwPlayer_smilWrap" approved="yes">
+				<source>Smil wrap</source>
+				<target state="translated">Smil wrap</target>
+			</trans-unit>
+			<trans-unit id="ts_settings_topics_enable" approved="yes">
+				<source>Enable topics: Shows topics beside the video player, which
+					when clicked, jumps to the appropriate time. This requires the
+					video to have correctly assigned topics and associated timestamps
+					in the Streamovations Video CMS.
+				</source>
+				<target state="translated">Agendapunten inschakelen: Toont agendapunten
+					naast de video speler, waarop geklikt kan worden om naar het juiste
+					tijdstip te springen. Dit vereist dat de video agendapunten en
+					geassocieerde tijdstippen toegewezen heeft gekregen in het
+					Streamovations Video CMS.
+				</target>
+			</trans-unit>
+			<trans-unit id="ts_settings_speakers_enable" approved="yes">
+				<source>Enable speakers: Shows current speaker beside the video
+					player. This requires the video to have correctly assigned speakers
+					and associated timestamps in the Streamovations Video CMS.
+				</source>
+				<target state="translated">Sprekers inschakelen: Toont de huidige spreker
+					naast de video speler. Dit vereist dat de video sprekers en
+					geassocieerde tijdstippen toegewezen heeft gekregen in het
+					Streamovations Video CMS.
+				</target>
+			</trans-unit>
+			<trans-unit id="ts_settings_speakers_imgDir" approved="yes">
+				<source>Avatar path: Serverpath to speaker avatar directory. e.g.
+					"fileadmin/images/streamovations/" The Streamovations Video CMS
+					allows for avatars to be assigned to speakers. By keeping the same
+					images with the same filenames(!) in the configured path, these
+					will be displayed if speaker data is enabled.
+				</source>
+				<target state="translated">Profielfoto pad: Serverpad naar spreker
+					profielfoto directory. Bijv. "fileadmin/images/streamovations/" Het
+					Streamovations Video CMS staat toe om profielfoto's toe te kennen
+					aan sprekers. Door foto's met dezelfde bestandsnamen in het
+					ingestelde pad te plaatsen, worden deze getoond bij de spreker.
+				</target>
+			</trans-unit>
+			<trans-unit id="ts_settings_speakers_imgDefault" approved="yes">
+				<source>Default avatar: If a speaker has no matching avatar,
+					this is the image that is displayed.
+				</source>
+				<target state="translated">Standaard profielfoto: Wanneer een spreker geen
+					profielfoto heeft, wordt dit plaatje getoond.
+				</target>
+			</trans-unit>
+			<trans-unit id="ts_settings_speakers_imgWidth" approved="yes">
+				<source>Avatar width (pixels)</source>
+				<target state="translated">Breedte profielfoto (pixels)</target>
+			</trans-unit>
+			<trans-unit id="ts_settings_speakers_imgHeight" approved="yes">
+				<source>Avatar height (pixels)</source>
+				<target state="translated">Hoogte profielfoto (pixels)</target>
+			</trans-unit>
+			<trans-unit id="ts_settings_polling_interval" approved="yes">
+				<source>Polling interval (seconds): Polling interval for
+					topic/speaker data during a livestream, as long one of these is
+					enabled. Setting the interval to anything lower than 1 disables
+					polling.
+				</source>
+				<target state="translated">Polling interval (seconden): De interval tussen
+					het ophalen van agendapunt/spreker data gedurende een livestream,
+					mits minstens één van de twee ingeschakeld is. Bij een interval
+					kleiner dan 1 wordt polling uitgeschakeld.
+				</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

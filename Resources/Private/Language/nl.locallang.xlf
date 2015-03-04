@@ -1,0 +1,100 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages"
+		date="2014-10-22T16:06:17Z" product-name="streamovations_vp"
+		target-language="nl">
+		<header />
+		<body>
+			<trans-unit id="topic_header" approved="yes">
+				<source>Topics</source>
+				<target state="translated">Agendapunten</target>
+			</trans-unit>
+			<trans-unit id="speaker_header" approved="yes">
+				<source>Speakers</source>
+				<target state="translated">Sprekers</target>
+			</trans-unit>
+			<trans-unit id="go_back" approved="yes">
+				<source>Go back</source>
+				<target state="translated">Terug</target>
+			</trans-unit>
+			<trans-unit id="go_back_title" approved="yes">
+				<source>Go back to previous page</source>
+				<target state="translated">Terug naar vorige pagina</target>
+			</trans-unit>
+			<trans-unit id="topic_link_title" approved="yes">
+				<source>Jump to this topic in the video</source>
+				<target state="translated">Spring naar dit agendapunt in de video</target>
+			</trans-unit>
+			<trans-unit id="event_link_title" approved="yes">
+				<source>Videostream</source>
+				<target state="translated">Videostream</target>
+			</trans-unit>
+
+			<trans-unit id="host_n_a" approved="yes">
+				<source>Source videostreaming is unreachable.</source>
+				<target state="translated">Bron videostreaming is niet bereikbaar.
+				</target>
+			</trans-unit>
+			<trans-unit id="stream_n_a" approved="yes">
+				<source>Chosen videostream is unavailable.</source>
+				<target state="translated">De gekozen videostream is niet beschikbaar.
+				</target>
+			</trans-unit>
+			<trans-unit id="no_stream" approved="yes">
+				<source>No videostream found.</source>
+				<target state="translated">Geen videostream gevonden.</target>
+			</trans-unit>
+			<trans-unit id="no_livestream" approved="yes">
+				<source>No livestream available.</source>
+				<target state="translated">Geen livestream beschikbaar.</target>
+			</trans-unit>
+			<trans-unit id="no_list" approved="yes">
+				<source>No videostream found or available.</source>
+				<target state="translated">Geen videostream gevonden of beschikbaar.
+				</target>
+			</trans-unit>
+			<trans-unit id="unexpected_response_structure" approved="yes">
+				<source>The videostream could not be read.</source>
+				<target state="translated">De videostream kan niet worden uitgelezen.
+				</target>
+			</trans-unit>
+			<trans-unit id="config_missing_hash" approved="yes">
+				<source>No videostream configured.</source>
+				<target state="translated">Er is geen videostream geconfigureerd.</target>
+			</trans-unit>
+			<trans-unit id="config_language_n_a" approved="yes">
+				<source>None of the configured live-languages "%1$s" found, first
+					found language "%2$s" taken instead.</source>
+				<target state="translated">De geconfigureerde livestream talen "%1$s" niet
+					gevonden, de eerst gevonden taal "%2$s" toegepast.</target>
+			</trans-unit>
+
+			<trans-unit id="error_header" approved="yes">
+				<source>Error message</source>
+				<target state="translated">Foutmelding</target>
+			</trans-unit>
+			<trans-unit id="config_error_header" approved="yes">
+				<source>Configuration error</source>
+				<target state="translated">Configuratiefout</target>
+			</trans-unit>
+			<trans-unit id="no_livestream_header" approved="yes">
+				<source>No activity</source>
+				<target state="translated">Geen activiteit</target>
+			</trans-unit>
+			<trans-unit id="no_list_header" approved="yes">
+				<source>No videostream</source>
+				<target state="translated">Geen videostreams</target>
+			</trans-unit>
+
+
+			<trans-unit id="noscript" approved="yes">
+				<source>The application on this page requires JavaScript-support,
+					but this is disabled or not available in your browser.</source>
+				<target state="translated">De applicatie op deze pagina vereist
+					JavaScript-ondersteuning, maar dit is uitgeschakeld of niet
+					beschikbaar in uw browser.</target>
+			</trans-unit>
+
+		</body>
+	</file>
+</xliff>

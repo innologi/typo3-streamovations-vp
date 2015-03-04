@@ -1,0 +1,164 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages"
+		date="2015-01-12T11:02:10Z" product-name="streamovations_vp"
+		target-language="nl">
+		<header />
+		<body>
+			<trans-unit id="switchableControllerActions.alttitle"
+				approved="yes">
+				<source>Pick plugin type</source>
+				<target state="translated">Kies plugin type</target>
+			</trans-unit>
+			<trans-unit id="switchableControllerActions.description"
+				approved="yes">
+				<source>The plugin type determines what view is shown on the
+					frontend. List/Show is the default view, showing a configurable
+					list on which the user can click to individual videostreams. Preset
+					single video shows a single configured videostream directly, and
+					nothing else. Livestream does the same, but looks specifically for
+					a livestream that is currently active.
+				</source>
+				<target state="translated">Het plugin type bepaalt de weergave op de
+					frontend. Lijst/Enkel is de standaard weergave, waarin een
+					instelbare lijst wordt getoond waarbij de gebruiker kan doorklikken
+					naar individuele videostreams. Specifieke video toont een enkele
+					video die hier ingesteld wordt, en niets meer. Livestream doet
+					hetzelfde, maar zoekt specifiek naar een actieve livestream.
+				</target>
+			</trans-unit>
+
+			<trans-unit id="settings.event.dateAt.alttitle" approved="yes">
+				<source>Show videos specific date</source>
+				<target state="translated">Toon videos van specifieke datum</target>
+			</trans-unit>
+			<trans-unit id="settings.event.dateAt.description"
+				approved="yes">
+				<source>Shows videostreams specifically of the chosen date. Note
+					that the use of this field will disable the other date/time fields!
+				</source>
+				<target state="translated">Toont uitsluitend videostreams die tot de
+					gekozen datum behoren. Let op dat het gebruik van dit veld de
+					andere datum/tijd velden uitschakelt!
+				</target>
+			</trans-unit>
+			<trans-unit id="settings.event.dateFrom.alttitle"
+				approved="yes">
+				<source>Show videos starting on date/time</source>
+				<target state="translated">Toon videos vanaf datum/tijd</target>
+			</trans-unit>
+			<trans-unit id="settings.event.dateFrom.description"
+				approved="yes">
+				<source>Shows videostreams that started on or after the chosen
+					date/time. This field can be combined with the "End" field to set a
+					limited range. Note that this field is disabled if the "Date" field
+					is used!
+				</source>
+				<target state="translated">Toont videostreams die plaatsvonden vanaf de
+					gekozen datum/tijd. Dit veld kan gecombineerd worden met het "tot
+					en met" veld om een beperkte reeks te tonen. Let op dat dit veld
+					buiten werking is als het datum veld gebruikt wordt!
+				</target>
+			</trans-unit>
+			<trans-unit id="settings.event.dateTo.alttitle" approved="yes">
+				<source>Show videos up until date/time</source>
+				<target state="translated">Toont videos tot en met datum/tijd</target>
+			</trans-unit>
+			<trans-unit id="settings.event.dateTo.description"
+				approved="yes">
+				<source>Shows videostreams that started and ended up until the
+					chosen date/time. This field can be combined with the "Start" field
+					to set a limited range. Note that this field is disabled if the
+					"Date" field is used!
+				</source>
+				<target state="translated">Toont videostreams die plaatsvonden tot en met
+					de gekozen datum/tijd. Dit veld kan gecombineerd worden met het
+					"vanaf" veld om een beperkte reeks te tonen. Let op dat dit veld
+					buiten werking is als het datum veld gebruikt wordt!
+				</target>
+			</trans-unit>
+
+			<trans-unit id="settings.event.category.alttitle"
+				approved="yes">
+				<source>Category</source>
+				<target state="translated">Categorie</target>
+			</trans-unit>
+			<trans-unit id="settings.event.category.description"
+				approved="yes">
+				<source>Show videostreams of the chosen category.</source>
+				<target state="translated">Toon videostreams van de gekozen categorie.
+				</target>
+			</trans-unit>
+			<trans-unit id="settings.event.subCategory.alttitle"
+				approved="yes">
+				<source>Sub Category</source>
+				<target state="translated">Sub Categorie</target>
+			</trans-unit>
+			<trans-unit id="settings.event.subCategory.description"
+				approved="yes">
+				<source>Show videostreams of the chosen subcategory.</source>
+				<target state="translated">Toon videostreams van de gekozen subcategorie.
+				</target>
+			</trans-unit>
+			<trans-unit id="settings.event.tags.alttitle" approved="yes">
+				<source>Tags</source>
+				<target state="translated">Tags</target>
+			</trans-unit>
+			<trans-unit id="settings.event.tags.description" approved="yes">
+				<source>Show videostreams with the chosen tags. In case of multiple
+					tags, separate them with a colon.
+				</source>
+				<target state="translated">Toon videostreams met de gekozen tags. In geval
+					van meerdere tags, scheidt deze dan met een dubbele punt.
+				</target>
+			</trans-unit>
+
+			<trans-unit id="settings.playlist.hash.alttitle" approved="yes">
+				<source>Videostream Session Hash</source>
+				<target state="translated">Videostream Sessie Hash</target>
+			</trans-unit>
+			<trans-unit id="settings.playlist.hash.description"
+				approved="yes">
+				<source>Set the unique session hash of the videostream that is to be
+					played by this plugin. The hash can be found within the
+					Streamovations Video CMS.
+				</source>
+				<target state="translated">De unieke sessie hash van de videostream die
+					afgespeeld dient te worden door deze plugin. De hash kan gevonden
+					worden in het Streamovations Video CMS.
+				</target>
+			</trans-unit>
+
+			<trans-unit id="settings.showPid.alttitle" approved="yes">
+				<source>Target Page for Show-view</source>
+				<target state="translated">Doelpagina voor Enkele weergave</target>
+			</trans-unit>
+			<trans-unit id="settings.showPid.description" approved="yes">
+				<source>If you want videostream links to point to another page with
+					the List/Show plugin type, you can set the page id here. This can
+					be used to simulate a list/show separation of pages.
+				</source>
+				<target state="translated">Als u videostream-links wilt verwijzen naar een
+					andere pagina met de Lijst/Enkele weergave, dan stelt u hier het
+					pagina id in. Dit kan gebruikt worden om een scheiding van
+					lijst/enkel pagina's te simuleren.
+				</target>
+			</trans-unit>
+			<trans-unit id="settings.backPid.alttitle" approved="yes">
+				<source>Back Page on Show-view</source>
+				<target state="translated">Terug-pagina voor Enkele weergave</target>
+			</trans-unit>
+			<trans-unit id="settings.backPid.description" approved="yes">
+				<source>If you want videostream back-links to point to another page
+					with List/Show plugin type, you can set the page id here. This can
+					be used to simulate a list/show separation of pages.
+				</source>
+				<target state="translated">Als u terug-links wilt verwijzen naar een
+					andere pagina met de Lijst/Enkele weergave, dan stelt u hier het
+					pagina id in. Dit kan gebruikt worden om een scheiding van
+					lijst/enkel pagina's te simuleren.
+				</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
