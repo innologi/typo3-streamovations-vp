@@ -153,11 +153,11 @@ class PlaylistService {
 	 * @return string
 	 */
 	protected function getSourceFromSmil($smil) {
-		return isset($this->settings['jwPlayer']['smilTemplate'][0])
+		return isset($this->settings['jwPlayer']['smilWrap'][0])
 			? str_replace(
-				'###SOURCE###',
+				'|',
 				$smil,
-				$this->settings['jwPlayer']['smilTemplate']
+				$this->settings['jwPlayer']['smilWrap']
 			)
 			: $smil;
 	}
@@ -192,7 +192,7 @@ class PlaylistService {
 
 		// @LOW are we sure the response does not produce a 'language' root-property during livestream?
 		// livestream does not produce available languages, hence we use a configured csv list
-		$languages = GeneralUtility::trimExplode(',', $this->settings['live']['languages']);
+		$languages = GeneralUtility::trimExplode(',', $this->settings['jwPlayer']['liveLanguage']);
 		foreach ($languages as $lang) {
 			if (isset($source[$lang])) {
 				$source = $source[$lang];
@@ -206,7 +206,7 @@ class PlaylistService {
 				sprintf(
 					LocalizationUtility::translate('language_not_found', $this->extensionName),
 					// tried languages
-					$this->settings['live']['languages'],
+					$this->settings['jwPlayer']['liveLanguage'],
 					// used language (first one)
 					key($source)
 				),

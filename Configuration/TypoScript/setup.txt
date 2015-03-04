@@ -13,9 +13,6 @@ plugin.tx_streamovationsvp {
 		partialRootPaths.10 = {$plugin.tx_streamovationsvp.view.partialRootPath}
 		layoutRootPaths.10 = {$plugin.tx_streamovationsvp.view.layoutRootPath}
 	}
-	persistence {
-		storagePid = {$plugin.tx_streamovationsvp.persistence.storagePid}
-	}
 	
 	# rest repository configuration
 	rest {
@@ -136,14 +133,12 @@ plugin.tx_streamovationsvp {
 	
 	settings {
 		player = {$plugin.tx_streamovationsvp.settings.player}
-		live {
-			languages = {$plugin.tx_streamovationsvp.settings.live.language}
-		}
 		jwPlayer {
 			width = {$plugin.tx_streamovationsvp.settings.jwPlayer.width}
 			height = {$plugin.tx_streamovationsvp.settings.jwPlayer.height}
+			liveLanguage = {$plugin.tx_streamovationsvp.settings.jwPlayer.liveLanguage}
 			smilSupport = {$plugin.tx_streamovationsvp.settings.jwPlayer.smilSupport}
-			smilTemplate = {$plugin.tx_streamovationsvp.settings.jwPlayer.smilTemplate}
+			smilWrap = {$plugin.tx_streamovationsvp.settings.jwPlayer.smilWrap}
 		}
 		topics {
 			enable = {$plugin.tx_streamovationsvp.settings.topics.enable}
