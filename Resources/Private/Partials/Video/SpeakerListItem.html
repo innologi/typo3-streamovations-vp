@@ -6,7 +6,7 @@
 		src="{s:file.exists(file: avatar, then: avatar, else: settings.imgDefault)}"
 		height="{settings.imgHeight}"
 		width="{settings.imgWidth}"
-		alt="Speaker Profile Image"
+		alt="{speaker.firstname} {speaker.lastname}"
 	/>
 	<div class="speaker-data">{speaker.firstname} {speaker.lastname}</div>
 </li>
