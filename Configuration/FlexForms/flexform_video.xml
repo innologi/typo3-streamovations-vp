@@ -6,28 +6,28 @@
   <sDEF>
    <ROOT>
     <TCEforms>
-    	<sheetTitle>LLL:EXT:appointments/Resources/Private/Language/locallang_be.xml:tx_appointments_flexform_sheet_sDEF</sheetTitle>
+    	<sheetTitle>LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ff_video_sheet_sDEF</sheetTitle>
     	<cshFile>LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_csh_flexform_video.xlf</cshFile>
     </TCEforms>
     <type>array</type>
     <el>
 		<switchableControllerActions>
 			<TCEforms>
-				<label>Type</label>
+				<label>LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ff_video_pluginType</label>
 				<onChange>reload</onChange>
 				<config>
 					<type>select</type>
 					<items type="array">
 						<numIndex index="0" type="array">
-							<numIndex index="0">List</numIndex>
+							<numIndex index="0">LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ff_video_pluginType.list</numIndex>
 							<numIndex index="1">Video->list;Video->show</numIndex>
 						</numIndex>
 						<numIndex index="1" type="array">
-							<numIndex index="0">Single</numIndex>
+							<numIndex index="0">LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ff_video_pluginType.single</numIndex>
 							<numIndex index="1">Video->presetShow</numIndex>
 						</numIndex>
 						<numIndex index="2" type="array">
-							<numIndex index="0">LIVE-stream</numIndex>
+							<numIndex index="0">LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ff_video_pluginType.live</numIndex>
 							<numIndex index="1">Video->liveStream</numIndex>
 						</numIndex>
 					</items>
@@ -38,7 +38,7 @@
 		</switchableControllerActions>
 		<settings.event.dateAt>
 			<TCEforms>
-				<label>Date At</label>
+				<label>LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ff_video_dateAt</label>
 				<displayCond>FIELD:switchableControllerActions:=:Video->list;Video->show</displayCond>
 				<config>
 					<type>input</type>
@@ -50,7 +50,7 @@
 		</settings.event.dateAt>
 		<settings.event.dateFrom>
 			<TCEforms>
-				<label>Date From</label>
+				<label>LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ff_video_dateFrom</label>
 				<displayCond>FIELD:switchableControllerActions:=:Video->list;Video->show</displayCond>
 				<config>
 					<type>input</type>
@@ -62,7 +62,7 @@
 		</settings.event.dateFrom>
 		<settings.event.dateTo>
 			<TCEforms>
-				<label>Date To</label>
+				<label>LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ff_video_dateTo</label>
 				<displayCond>FIELD:switchableControllerActions:=:Video->list;Video->show</displayCond>
 				<config>
 					<type>input</type>
@@ -74,7 +74,7 @@
 		</settings.event.dateTo>
 		<settings.event.category>
 			<TCEforms>
-				<label>Category</label>
+				<label>LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ff_video_category</label>
 				<displayCond>FIELD:switchableControllerActions:!=:Video->presetShow</displayCond>
 				<config>
 					<type>input</type>
@@ -87,7 +87,7 @@
 		</settings.event.category>
 		<settings.event.subCategory>
 			<TCEforms>
-				<label>Sub Category</label>
+				<label>LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ff_video_subCategory</label>
 				<displayCond>FIELD:switchableControllerActions:!=:Video->presetShow</displayCond>
 				<config>
 					<type>input</type>
@@ -100,7 +100,7 @@
 		</settings.event.subCategory>
 		<settings.event.tags>
 			<TCEforms>
-				<label>Tags</label>
+				<label>LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ff_video_tags</label>
 				<displayCond>FIELD:switchableControllerActions:!=:Video->presetShow</displayCond>
 				<config>
 					<type>input</type>
@@ -114,7 +114,7 @@
 		</settings.event.tags>
 		<settings.playlist.hash>
 			<TCEforms>
-				<label>Session Hash</label>
+				<label>LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ff_video_hash</label>
 				<displayCond>FIELD:switchableControllerActions:=:Video->presetShow</displayCond>
 				<config>
 					<type>input</type>
@@ -127,7 +127,7 @@
 		</settings.playlist.hash>
 		<settings.showPid>
 			<TCEforms>
-				<label>Show PID</label>
+				<label>LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ff_video_showPid</label>
 				<displayCond>FIELD:switchableControllerActions:=:Video->list;Video->show</displayCond>
 				<config>
 					<type>group</type>
@@ -147,7 +147,7 @@
 		</settings.showPid>
 		<settings.backPid>
 			<TCEforms>
-				<label>Back PID</label>
+				<label>LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ff_video_backPid</label>
 				<displayCond>FIELD:switchableControllerActions:=:Video->list;Video->show</displayCond>
 				<config>
 					<type>group</type>

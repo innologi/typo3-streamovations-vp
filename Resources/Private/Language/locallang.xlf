@@ -1,70 +1,73 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version='1.0' encoding='utf-8'?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2014-10-22T16:06:17Z" product-name="streamovations_vp">
-		<header/>
+	<file source-language="en" datatype="plaintext" original="messages"
+		date="2014-10-22T16:06:17Z" product-name="streamovations_vp">
+		<header />
 		<body>
 			<trans-unit id="topic_header">
-				<source>Agendapunten</source>
+				<source>Topics</source>
 			</trans-unit>
 			<trans-unit id="speaker_header">
-				<source>Sprekers</source>
+				<source>Speakers</source>
 			</trans-unit>
 			<trans-unit id="go_back">
-				<source>Terug</source>
+				<source>Go back</source>
 			</trans-unit>
 			<trans-unit id="go_back_title">
-				<source>Terug naar vorige pagina</source>
+				<source>Go back to previous page</source>
 			</trans-unit>
 			<trans-unit id="topic_link_title">
-				<source>Spring naar dit agendapunt in de video</source>
+				<source>Jump to this topic in the video</source>
 			</trans-unit>
 			<trans-unit id="event_link_title">
 				<source>Videostream</source>
 			</trans-unit>
-			
+
 			<trans-unit id="host_n_a">
-				<source>Bron videostreaming is niet bereikbaar.</source>
+				<source>Source videostreaming is unreachable.</source>
 			</trans-unit>
 			<trans-unit id="stream_n_a">
-				<source>De gekozen videostream is niet beschikbaar.</source>
+				<source>Chosen videostream is unavailable.</source>
 			</trans-unit>
 			<trans-unit id="no_stream">
-				<source>Geen videostream om af te spelen.</source>
+				<source>No videostream found.</source>
 			</trans-unit>
 			<trans-unit id="no_livestream">
-				<source>Geen livestream beschikbaar.</source>
+				<source>No livestream available.</source>
 			</trans-unit>
 			<trans-unit id="no_list">
-				<source>Geen videostreams beschikbaar of gevonden.</source>
+				<source>No videostream found or available.</source>
 			</trans-unit>
 			<trans-unit id="unexpected_response_structure">
-				<source>De videostream kan niet worden uitgelezen.</source>
+				<source>The videostream could not be read.</source>
 			</trans-unit>
 			<trans-unit id="config_missing_hash">
-				<source>Er is geen videostream geconfigureerd.</source>
+				<source>No videostream configured.</source>
 			</trans-unit>
 			<trans-unit id="config_language_n_a">
-				<source>De geconfigureerde livestream talen "%1$s" niet gevonden, de eerst gevonden taal "%2$s" toegepast.</source>
+				<source>None of the configured live-languages "%1$s" found, first
+					found language "%2$s" taken instead.</source>
 			</trans-unit>
-			
+
 			<trans-unit id="error_header">
-				<source>Foutmelding</source>
+				<source>Error message</source>
 			</trans-unit>
 			<trans-unit id="config_error_header">
-				<source>Configuratiefout</source>
+				<source>Configuration error</source>
 			</trans-unit>
 			<trans-unit id="no_livestream_header">
-				<source>Geen activiteit</source>
+				<source>No activity</source>
 			</trans-unit>
 			<trans-unit id="no_list_header">
-				<source>Geen videostreams</source>
+				<source>No videostream</source>
 			</trans-unit>
-			
-			
+
+
 			<trans-unit id="noscript">
-				<source>De applicatie op deze pagina vereist JavaScript-ondersteuning, maar dit is niet beschikbaar in uw browser.</source>
+				<source>The application on this page requires JavaScript-support,
+					but this is disabled or not available in your browser.</source>
 			</trans-unit>
-			
+
 		</body>
 	</file>
 </xliff>

@@ -1,28 +1,28 @@
 ## custom subcategories
-# customsubcategory=a_restapi=REST API
-# customsubcategory=b_player=Video Player
-# customsubcategory=c_jw=JW Player-specific
-# customsubcategory=d_topics=Topics
-# customsubcategory=e_speakers=Speakers
-# customsubcategory=f_polling=Polling
+# customsubcategory=a_restapi=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_category_restapi
+# customsubcategory=b_player=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_category_player
+# customsubcategory=c_jw=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_category_jw
+# customsubcategory=d_topics=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_category_topics
+# customsubcategory=e_speakers=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_category_speakers
+# customsubcategory=f_polling=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_category_polling
 
 plugin.tx_streamovationsvp {
 	view {
-		# cat=plugin.tx_streamovationsvp/file/060; type=string; label=Template root path
+		# cat=plugin.tx_streamovationsvp/file/060; type=string; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_view_templateRootPath
 		templateRootPath = EXT:streamovations_vp/Resources/Private/Templates/
-		# cat=plugin.tx_streamovationsvp/file/070; type=string; label=Template partials path
+		# cat=plugin.tx_streamovationsvp/file/070; type=string; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_view_partialRootPath
 		partialRootPath = EXT:streamovations_vp/Resources/Private/Partials/
-		# cat=plugin.tx_streamovationsvp/file/080; type=string; label=Template layouts path
+		# cat=plugin.tx_streamovationsvp/file/080; type=string; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_view_layoutRootPath
 		layoutRootPath = EXT:streamovations_vp/Resources/Private/Layouts/
 	}
 	javascript {
-		# cat=plugin.tx_streamovationsvp/file/010; type=boolean; label=Include jQuery Library: You can disable this if a compatible jQuery-version is already included on your site
+		# cat=plugin.tx_streamovationsvp/file/010; type=boolean; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_javascript_includeJquery
 		includeJquery = 1
-		# cat=plugin.tx_streamovationsvp/file/020; type=string; label=jQuery Library path
+		# cat=plugin.tx_streamovationsvp/file/020; type=string; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_javascript_jqueryLib
 		jqueryLib = EXT:streamovations_vp/Resources/Public/JavaScript/jQuery/jquery-1.11.1.min.js
-		# cat=plugin.tx_streamovationsvp/file/030; type=string; label=JW Player path: If you're using a license key, make sure this points to a compatible version.
+		# cat=plugin.tx_streamovationsvp/file/030; type=string; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_javascript_jwPlayerLib
 		jwPlayerLib = EXT:streamovations_vp/Resources/Public/JavaScript/jwPlayer/jwplayer.js
-		# cat=plugin.tx_streamovationsvp/file/040; type=string; label=Streamovations Player path: This player is not included. If you wish to use the Streamovations player, inquire at your contact at Streamovations BVBA.
+		# cat=plugin.tx_streamovationsvp/file/040; type=string; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_javascript_smvPlayerLib
 		smvPlayerLib =
 		
 		starterFile = EXT:streamovations_vp/Resources/Private/JavaScript/SvpStarter.closure.js
@@ -30,51 +30,51 @@ plugin.tx_streamovationsvp {
 		initFile = EXT:streamovations_vp/Resources/Private/JavaScript/init.js
 	}
 	css {
-		# cat=plugin.tx_streamovationsvp/file/050; type=string; label=Frontend CSS path: Provides frontend styling to plugin
+		# cat=plugin.tx_streamovationsvp/file/050; type=string; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_css_frontendFile
 		frontendFile = EXT:streamovations_vp/Resources/Public/Css/frontend.min.css
 	}
 	rest {
-		# cat=plugin.tx_streamovationsvp/a_restapi/010; type=small; label=REST API scheme: Scheme for REST requests, usually http or https
+		# cat=plugin.tx_streamovationsvp/a_restapi/010; type=small; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_rest_scheme
 		scheme = http
-		# cat=plugin.tx_streamovationsvp/a_restapi/020; type=string; label=REST API Base URI: Base URI for REST requests, starting from the (sub) domain and up to '/api.php'. e.g. 'stream.yoursite.com' 
+		# cat=plugin.tx_streamovationsvp/a_restapi/020; type=string; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_rest_baseUri
 		baseUri =
 	}
 	settings {
-		# cat=plugin.tx_streamovationsvp/b_player/010; type=options[JW Player=1, Streamovations Player=2]; label=Preferred Video Player: Choose which videoplayer to use. If you wish to use the Streamovations player, inquire at your contact at Streamovations BVBA about this, as it will require additional player files, as well as your own JW Player license key.
+		# cat=plugin.tx_streamovationsvp/b_player/010; type=options[JW Player=1, Streamovations Player=2]; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_player
 		player = 1
 		
 		jwPlayer {
-			# cat=plugin.tx_streamovationsvp/b_player/020; type=string; label=JW Player license key: Unlocks JW Player and removes its logo. Please note that your license key will be exposed to knowledgable viewers of the plugin, as is always the case with JW Player. You need a valid license key for use of the Streamovations player.
+			# cat=plugin.tx_streamovationsvp/b_player/020; type=string; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_jwPlayer_key
 			key =
-			# cat=plugin.tx_streamovationsvp/c_jw/010; type=int+; label=JW Player width (pixels): Must correspond with styling. The default styling assumes the value 600
+			# cat=plugin.tx_streamovationsvp/c_jw/010; type=int+; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_jwPlayer_width
 			width = 600
-			# cat=plugin.tx_streamovationsvp/c_jw/020; type=int+; label=JW Player height (pixels)
+			# cat=plugin.tx_streamovationsvp/c_jw/020; type=int+; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_jwPlayer_height
 			height = 355
-			# cat=plugin.tx_streamovationsvp/c_jw/030; type=small; label=JW Player livestream language: Sets the order of preferred languages to find in livestreams (comma separated values)
+			# cat=plugin.tx_streamovationsvp/c_jw/030; type=small; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_jwPlayer_liveLanguage
 			liveLanguage = or,nl,en
-			# cat=plugin.tx_streamovationsvp/c_jw/040; type=boolean; label=JW Player smil support: Allows the use of smil files if detected in the REST response.
+			# cat=plugin.tx_streamovationsvp/c_jw/040; type=boolean; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_jwPlayer_smilSupport
 			smilSupport = 1
-			# cat=plugin.tx_streamovationsvp/c_jw/050; type=wrap; label=JW Player smil wrap
+			# cat=plugin.tx_streamovationsvp/c_jw/050; type=wrap; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_jwPlayer_smilWrap
 			smilWrap = smil:|/jwplayer.smil
 			# see http://support.jwplayer.com/customer/portal/articles/1430398-dynamic-rtmp-streaming
 		}
 		
-		# cat=plugin.tx_streamovationsvp/d_topics/010; type=boolean; label=Enable topics: Shows topics beside the videoplayer, which when clicked, jumps to the appropriate time. This requires the video to have correctly assigned topics and associated timestamps in the Streamovations Video CMS.
+		# cat=plugin.tx_streamovationsvp/d_topics/010; type=boolean; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_topics_enable
 		topics.enable = 1
 		speakers {
-			# cat=plugin.tx_streamovationsvp/e_speakers/010; type=boolean; label=Enable speakers: Shows current speaker beside the videoplayer. This requires the video to have correctly assigned speakers and associated timestamps in the Streamovations Video CMS.
+			# cat=plugin.tx_streamovationsvp/e_speakers/010; type=boolean; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_speakers_enable
 			enable = 1
-			# cat=plugin.tx_streamovationsvp/e_speakers/020; type=string; label=Speaker avatar path: Serverpath to speaker avatar directory. e.g. "fileadmin/images/streamovations/" The Streamovations Video CMS allows for avatars to be assigned to speakers. By keeping the same images with the same filenames(!) in the configured path, these will be displayed if speaker data is enabled.
+			# cat=plugin.tx_streamovationsvp/e_speakers/020; type=string; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_speakers_imgDir
 			imgDir =
-			# cat=plugin.tx_streamovationsvp/e_speakers/030; type=int+; label=Speaker avatar width (pixels)
-			imgWidth = 150
-			# cat=plugin.tx_streamovationsvp/e_speakers/040; type=int+; label=Speaker avatar height (pixels)
-			imgHeight = 150
-			# cat=plugin.tx_streamovationsvp/e_speakers/050; type=string; label=Default speaker avatar path: If a speaker has no matching avatar, this is the image that is displayed.
+			# cat=plugin.tx_streamovationsvp/e_speakers/030; type=string; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_speakers_imgDefault
 			imgDefault = EXT:streamovations_vp/Resources/Public/Image/speaker-avatar.jpg
+			# cat=plugin.tx_streamovationsvp/e_speakers/040; type=int+; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_speakers_imgWidth
+			imgWidth = 150
+			# cat=plugin.tx_streamovationsvp/e_speakers/050; type=int+; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_speakers_imgHeight
+			imgHeight = 150
 		}
 		
-		# cat=plugin.tx_streamovationsvp/f_polling/010; type=int; label=Polling interval (seconds): Polling interval for topic/speaker data during a livestream, as long one of these is enabled. Setting the interval to anything lower than 1 disables polling.
+		# cat=plugin.tx_streamovationsvp/f_polling/010; type=int; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_polling_interval
 		polling.interval = 5
 	}
 }

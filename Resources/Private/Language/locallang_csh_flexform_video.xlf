@@ -1,71 +1,92 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2015-01-12T11:02:10Z" product-name="streamovations_vp">
-		<header/>
+	<file source-language="en" datatype="plaintext" original="messages"
+		date="2015-01-12T11:02:10Z" product-name="streamovations_vp">
+		<header />
 		<body>
 			<trans-unit id="switchableControllerActions.alttitle">
-				<source>Kies type plugin</source>
+				<source>Pick plugin type</source>
 			</trans-unit>
 			<trans-unit id="switchableControllerActions.description">
-				<source>Het type plugin bepaalt de weergave van het content-element op de frontend. Een "Lijst" produceert bijvoorbeeld een lijst van opnames waarop de gebruiker kan doorklikken, terwijl een "Livestream" direct een livestream op de pagina toont indien beschikbaar.</source>
+				<source>The plugin type determines what view is shown on the
+					frontend. List/Show is the default view, showing a configurable
+					list on which the user can click to individual videostreams. Preset
+					single video shows a single configured videostream directly, and
+					nothing else. Livestream does the same, but looks specifically for
+					a livestream that is currently active.</source>
 			</trans-unit>
-			
+
 			<trans-unit id="settings.event.dateAt.alttitle">
-				<source>Toon specifieke dag</source>
+				<source>Show videos specific date</source>
 			</trans-unit>
 			<trans-unit id="settings.event.dateAt.description">
-				<source>Toon uitsluitend videostreams die plaats vonden op de gekozen dag. Let op dat het gebruik van dit veld de andere datum/tijd velden doet vervallen!</source>
+				<source>Shows videostreams specifically of the chosen date. Note
+					that the use of this field will disable the other date/time fields!
+				</source>
 			</trans-unit>
 			<trans-unit id="settings.event.dateFrom.alttitle">
-				<source>Toon vanaf</source>
+				<source>Show videos starting on date/time</source>
 			</trans-unit>
 			<trans-unit id="settings.event.dateFrom.description">
-				<source>Toon videostreams die hebben plaatsgevonden vanaf het gekozen tijdstip. Dit veld kan gecombineerd worden met "Toon t/m". Let op dat het gebruik van dit veld wordt genegeerd als "Toon specifieke dag" gebruikt wordt!</source>
+				<source>Shows videostreams that started on or after the chosen
+					date/time. This field can be combined with the "End" field to set a
+					limited range. Note that this field is disabled if the "Date" field
+					is used!</source>
 			</trans-unit>
 			<trans-unit id="settings.event.dateTo.alttitle">
-				<source>Toon t/m</source>
+				<source>Show videos up until date/time</source>
 			</trans-unit>
 			<trans-unit id="settings.event.dateTo.description">
-				<source>Toon videostreams die hebben plaatsgevonden tot en met het gekozen tijdstip. Dit veld kan gecombineerd worden met "Toon vanaf". Let op dat het gebruik van dit veld wordt genegeerd als "Toon specifieke dag" gebruikt wordt!</source>
+				<source>Shows videostreams that started and ended up until the
+					chosen date/time. This field can be combined with the "Start" field
+					to set a limited range. Note that this field is disabled if the
+					"Date" field is used!</source>
 			</trans-unit>
-			
+
 			<trans-unit id="settings.event.category.alttitle">
-				<source>Categorie</source>
+				<source>Category</source>
 			</trans-unit>
 			<trans-unit id="settings.event.category.description">
-				<source>Toon videostreams met de gekozen categorie.</source>
+				<source>Show videostreams of the chosen category.</source>
 			</trans-unit>
 			<trans-unit id="settings.event.subCategory.alttitle">
-				<source>Subcategorie</source>
+				<source>Sub Category</source>
 			</trans-unit>
 			<trans-unit id="settings.event.subCategory.description">
-				<source>Toon videostreams met de gekozen subcategorie.</source>
+				<source>Show videostreams of the chosen subcategory.</source>
 			</trans-unit>
 			<trans-unit id="settings.event.tags.alttitle">
 				<source>Tags</source>
 			</trans-unit>
 			<trans-unit id="settings.event.tags.description">
-				<source>Toon videostreams met de gekozen tags. In geval van meerdere tags, dien je ze te scheiden met een dubbele punt.</source>
+				<source>Show videostreams with the chosen tags. In case of multiple
+					tags, separate them with a colon.</source>
 			</trans-unit>
-			
+
 			<trans-unit id="settings.playlist.hash.alttitle">
-				<source>Hash</source>
+				<source>Videostream Session Hash</source>
 			</trans-unit>
 			<trans-unit id="settings.playlist.hash.description">
-				<source>Geef hier de unieke hash op van de videostream die getoond moet worden.</source>
+				<source>Set the unique session hash of the videostream that is to be
+					played by this plugin. The hash can be found within the
+					Streamovations Video CMS.</source>
 			</trans-unit>
-			
+
 			<trans-unit id="settings.showPid.alttitle">
-				<source>Toon Pagina ID</source>
+				<source>Target Page for Show-view</source>
 			</trans-unit>
 			<trans-unit id="settings.showPid.description">
-				<source>Door hier een andere pagina met een plugin met Lijst-weergave in te stellen, verwijzen videostreams die in dit content-element gelinkt worden, afgespeeld op de gekozen pagina.</source>
+				<source>If you want videostream links to point to another page with
+					the List/Show plugin type, you can set the page id here. This can
+					be used to simulate a list/show separation of pages.</source>
 			</trans-unit>
 			<trans-unit id="settings.backPid.alttitle">
-				<source>Terug Pagina ID</source>
+				<source>Back Page on Show-view</source>
 			</trans-unit>
 			<trans-unit id="settings.backPid.description">
-				<source>Door hier een andere pagina met een plugin met Lijst-weergave in te stellen, verwijst de "Terug" link in dit content-element naar de gekozen pagina.</source>
+				<source>If you want videostream back-links to point to another page
+					with List/Show plugin type, you can set the page id here. This can
+					be used to simulate a list/show separation of pages.</source>
 			</trans-unit>
 		</body>
 	</file>
