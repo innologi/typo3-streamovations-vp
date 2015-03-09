@@ -184,16 +184,12 @@
 				</target>
 			</trans-unit>
 			<trans-unit id="ts_settings_jwPlayer_width" approved="yes">
-				<source>Player width (pixels): Must correspond with styling. The
-					default styling assumes a value of 600px.
-				</source>
-				<target state="translated">Breedte speler (pixels): Moet overeenkomen met
-					de styling. De standaard styling gaat uit van 600 pixels breed.
-				</target>
+				<source>Player width (pixels/percentage)</source>
+				<target state="translated">Breedte speler (pixels/percentage)</target>
 			</trans-unit>
 			<trans-unit id="ts_settings_jwPlayer_height" approved="yes">
-				<source>Player height (pixels)</source>
-				<target state="translated">Hoogte speler (pixels)</target>
+				<source>Player height (pixels/percentage)</source>
+				<target state="translated">Hoogte speler (pixels/percentage)</target>
 			</trans-unit>
 			<trans-unit id="ts_settings_jwPlayer_liveLanguage"
 				approved="yes">

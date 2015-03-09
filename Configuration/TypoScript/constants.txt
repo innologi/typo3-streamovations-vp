@@ -46,9 +46,9 @@ plugin.tx_streamovationsvp {
 		jwPlayer {
 			# cat=plugin.tx_streamovationsvp/b_player/020; type=string; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_jwPlayer_key
 			key =
-			# cat=plugin.tx_streamovationsvp/c_jw/010; type=int+; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_jwPlayer_width
+			# cat=plugin.tx_streamovationsvp/c_jw/010; type=small; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_jwPlayer_width
 			width = 64%
-			# cat=plugin.tx_streamovationsvp/c_jw/020; type=int+; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_jwPlayer_height
+			# cat=plugin.tx_streamovationsvp/c_jw/020; type=small; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_jwPlayer_height
 			height =
 			# cat=plugin.tx_streamovationsvp/c_jw/030; type=small; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_jwPlayer_liveLanguage
 			liveLanguage = or,nl,en

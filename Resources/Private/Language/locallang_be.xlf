@@ -125,12 +125,10 @@
 				</source>
 			</trans-unit>
 			<trans-unit id="ts_settings_jwPlayer_width">
-				<source>Player width (pixels): Must correspond with styling. The
-					default styling assumes a value of 600px.
-				</source>
+				<source>Player width (pixels/percentage)</source>
 			</trans-unit>
 			<trans-unit id="ts_settings_jwPlayer_height">
-				<source>Player height (pixels)</source>
+				<source>Player height (pixels/percentage)</source>
 			</trans-unit>
 			<trans-unit id="ts_settings_jwPlayer_liveLanguage">
 				<source>Livestream language: Sets the order of preferred languages

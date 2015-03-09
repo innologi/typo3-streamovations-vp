@@ -45,8 +45,8 @@ These constants are all editable in the Template module's Constant Editor.
 	`rest.baseUri`_                   string
 	`settings.player`_                integer   1
 	`settings.jwPlayer.key`_          string
-	`settings.jwPlayer.width`_        integer   600
-	`settings.jwPlayer.height`_       integer   355
+	`settings.jwPlayer.width`_        string    64%
+	`settings.jwPlayer.height`_       string
 	`settings.jwPlayer.liveLanguage`_ csv       or,nl,en
 	`settings.jwPlayer.smilSupport`_  boolean   1
 	`settings.jwPlayer.smilWrap`_     wrap      smil:\|/jwplayer.smil
@@ -246,11 +246,11 @@ settings.jwPlayer.width
 
 :typoscript:`plugin.tx_streamovationsvp.settings.jwPlayer.width = 600`
 
-The Player width in pixels. Only applies if JW Player is the chosen player.
+The Player width in pixels or percentage. Only applies if JW Player is the chosen player.
 
-.. important::
+.. note::
 
-   If you change this value, you might want to change the corresponding styling as well. In the default CSS file, this is set on the element styling of :code:`.tx-streamovations-vp .video-player`
+   If you wish to change the dimensions of the player when the SMV Player is active, you will need to provide custom CSS setting the width and/or height of the element :code:`.tx-streamovations-vp .video-player`
 
 .. _settings.jwPlayer.height:
 
@@ -259,7 +259,11 @@ settings.jwPlayer.height
 
 :typoscript:`plugin.tx_streamovationsvp.settings.jwPlayer.height = 355`
 
-The Player height in pixels. Only applies if JW Player is the chosen player.
+The Player height in pixels or percentage. Only applies if JW Player is the chosen player.
+
+.. note::
+
+   If you wish to change the dimensions of the player when the SMV Player is active, you will need to provide custom CSS setting the width and/or height of the element :code:`.tx-streamovations-vp .video-player`
 
 .. _settings.jwPlayer.liveLanguage:
 
