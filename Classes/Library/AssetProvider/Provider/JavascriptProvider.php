@@ -109,7 +109,7 @@ class JavascriptProvider extends ProviderAbstract {
 		// @see \TYPO3\CMS\Frontend\Page\PageGenerator::renderContentWithHeader() (~line:865)
 		if (isset($GLOBALS['TSFE']->config['config']['removeDefaultJS']) && $GLOBALS['TSFE']->config['config']['removeDefaultJS'] === 'external') {
 			$conf['file'] = PageGenerator::inline2TempFile($inline, 'js');
-			$this->addFile($conf, $key);
+			$this->addFile($conf, $id);
 		} else {
 			$methodName = (bool) $conf['placeInFooter'] ? 'addJsFooterInlineCode' : 'addJsInlineCode';
 			// @see http://docs.typo3.org/typo3cms/TyposcriptReference/Setup/Page/Index.html#jsinline
