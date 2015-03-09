@@ -6,6 +6,10 @@
 .. This is 'Includes.txt'. It is included at the very top of each and
    every ReST source file in this documentation project (= manual).
 
+.. |extkey| replace:: streamovations_vp
+.. |companyshort| replace:: Streamovations
+.. |company| replace:: |companyshort| BVBA
+.. |videocms| replace:: |companyshort| Video CMS
 
 .. ==================================================
 .. DEFINE SOME TEXT ROLES

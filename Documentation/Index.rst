@@ -14,7 +14,7 @@ Streamovations Video Player
 .. only:: html
 
 	:Classification:
-		streamovations_vp
+		|extkey|
 
 	:Version:
 		|release|
@@ -23,10 +23,10 @@ Streamovations Video Player
 		en
 
 	:Description:
-		Streamovations Video Player
+		|company| Video Player
 
 	:Keywords:
-		comma,separated,list,of,keywords
+		video,streaming,videostreaming,media
 
 	:Copyright:
 		2014
@@ -58,8 +58,3 @@ Streamovations Video Player
 	User/Index
 	Administrator/Index
 	Configuration/Index
-	Developer/Index
-	KnownProblems/Index
-	ToDoList/Index
-	ChangeLog/Index
-	Targets
