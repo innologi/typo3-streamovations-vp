@@ -4,20 +4,19 @@
 	position:relative;
 }
 .tx-streamovations-vp.fullwidth {
-	width:940px;
+	width:100%;
 }
 
 .tx-streamovations-vp ul {
-	margin:0 !important;
-	padding:0 !important;
+	margin:0;
+	padding:0;
 }
 .tx-streamovations-vp ul li {
 	list-style:none;
 }
-
+/* width only applies to smvplayer */
 .tx-streamovations-vp .video-player {
-	width:600px;
-	height:355px;
+	width:64%;
 	clear:none;
 }
 
@@ -52,7 +51,7 @@
 
 .tx-streamovations-vp .topics {
 	float:right;
-	width:325px;
+	width:32%;
 	font-size:.8rem;
 }
 .tx-streamovations-vp .topic {
@@ -65,7 +64,7 @@
 }
 
 .tx-streamovations-vp .speakers {
-	width:570px;
+	width:60%;
 	height:220px;
 	padding:15px 0;
 }
