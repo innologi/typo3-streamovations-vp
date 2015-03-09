@@ -31,7 +31,6 @@ plugin.tx_streamovationsvp {
 				}
 				cache {
 					enable = 1
-					#lifetime = 3600
 				}
 			}
 			Event {
@@ -150,21 +149,6 @@ plugin.tx_streamovationsvp {
 			imgWidth = {$plugin.tx_streamovationsvp.settings.speakers.imgWidth}
 			imgDefault = {$plugin.tx_streamovationsvp.settings.speakers.imgDefault}
 		}
-		
-		# these are all overruled by flexform for now
-		event {
-			dateFrom =
-			dateTo =
-			dateAt =
-			category =
-			subCategory =
-			tags =
-		}
-		playlist {
-			hash =
-		}
-		showPid =
-		backPid =
 	}
 }
 
