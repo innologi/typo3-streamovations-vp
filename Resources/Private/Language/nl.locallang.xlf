@@ -7,7 +7,7 @@
 		<body>
 			<trans-unit id="topic_header" approved="yes">
 				<source>Topics</source>
-				<target state="translated">Agendapunten</target>
+				<target state="translated">Onderwerpen</target>
 			</trans-unit>
 			<trans-unit id="speaker_header" approved="yes">
 				<source>Speakers</source>
@@ -23,7 +23,7 @@
 			</trans-unit>
 			<trans-unit id="topic_link_title" approved="yes">
 				<source>Jump to this topic in the video</source>
-				<target state="translated">Spring naar dit agendapunt in de video</target>
+				<target state="translated">Spring naar dit onderwerp in de video</target>
 			</trans-unit>
 			<trans-unit id="event_link_title" approved="yes">
 				<source>Videostream</source>
