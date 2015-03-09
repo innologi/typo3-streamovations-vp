@@ -77,11 +77,15 @@ class PlaylistService {
 
 		$playlistData = array(
 			'playlist' => array(),
-			'width' => $settings['width'],
-			'height' => $settings['height'],
 			// used by SVPS, not by jwplayer
 			'application' => $application
 		);
+		if (isset($settings['width'][0])) {
+			$playlistData['width'] = $settings['width'];
+		}
+		if (isset($settings['height'][0])) {
+			$playlistData['height'] = $settings['height'];
+		}
 
 		$playlistItems = $playlist->getPlaylistItems();
 		foreach ($playlistItems as $playlistItem) {
