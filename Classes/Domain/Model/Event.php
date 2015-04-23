@@ -100,6 +100,11 @@ class Event extends ResponseAbstract {
 	 */
 	protected $streamingType;
 
+	/**
+	 * @var boolean
+	 */
+	protected $published;
+
 
 
 	/**
@@ -340,6 +345,27 @@ class Event extends ResponseAbstract {
 	 */
 	public function setStreamingType($streamingType) {
 		$this->streamingType = $streamingType;
+		return $this;
+	}
+
+
+	/**
+	 * Returns published
+	 *
+	 * @return boolean
+	 */
+	public function getPublished() {
+		return $this->published;
+	}
+
+	/**
+	 * Sets published
+	 *
+	 * @param boolean $published
+	 * @return \Innologi\StreamovationsVp\Domain\Model\Event
+	 */
+	public function setPublished($published) {
+		$this->published = $published;
 		return $this;
 	}
 

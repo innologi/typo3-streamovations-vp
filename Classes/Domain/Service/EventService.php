@@ -54,4 +54,19 @@ class EventService implements SingletonInterface {
 		return $events;
 	}
 
+	/**
+	 * Filters out specified streamingType from $events.
+	 *
+	 * @param array $events
+	 * @return array
+	 */
+	public function filterOutUnpublished(array $events) {
+		foreach ($events as $index => $event) {
+			if (!$event->getPublished()) {
+				unset($events[$index]);
+			}
+		}
+		return $events;
+	}
+
 }

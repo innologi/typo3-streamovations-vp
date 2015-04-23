@@ -89,7 +89,9 @@ class VideoController extends Controller {
 
 			/* @var $eventService \Innologi\StreamovationsVp\Domain\Service\EventService */
 			$eventService = $this->objectManager->get('Innologi\\StreamovationsVp\\Domain\\Service\\EventService');
-			$events = $eventService->filterOutLiveStreams($events);
+			$events = $eventService->filterOutLiveStreams(
+				$eventService->filterOutUnpublished($events)
+			);
 
 			$this->view->assign('events', $events);
 
