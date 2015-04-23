@@ -40,7 +40,7 @@ class EventService implements SingletonInterface {
 	const STREAMINGTYPE_LIVE = 'live';
 
 	/**
-	 * Filters out specified streamingType from $events.
+	 * Filters out streamingType 'live' from a collection of $events.
 	 *
 	 * @param array $events
 	 * @return array
@@ -55,7 +55,8 @@ class EventService implements SingletonInterface {
 	}
 
 	/**
-	 * Filters out specified streamingType from $events.
+	 * Filters out videostreams with a published-state set to FALSE
+	 * from a collection of $events.
 	 *
 	 * @param array $events
 	 * @return array
