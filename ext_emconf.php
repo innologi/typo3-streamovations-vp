@@ -12,7 +12,7 @@
 
 $EM_CONF[$_EXTKEY] = array(
 	'title' => 'Streamovations Video Player',
-	'description' => 'Streamovations Video Player',
+	'description' => 'Streaming Video Player (JW player or JW player-based) that connects to your Streamovations instance for live-streaming, VOD and additional (interactive) metadata (e.g. topic, speaker)',
 	'category' => 'plugin',
 	'author' => 'Frenck Lutke',
 	'author_email' => 'typo3@innologi.nl',
