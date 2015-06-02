@@ -45,14 +45,18 @@ abstract class ProviderServiceAbstract implements ProviderServiceInterface, Sing
 	 *
 	 * @var array
 	 */
-	protected $configuration;
+	protected $configuration = array(
+		'default' => array()
+	);
 
 	/**
 	 * Asset-loading typoscript
 	 *
 	 * @var array
 	 */
-	protected $typoscript;
+	protected $typoscript = array(
+		'default.' => array()
+	);
 
 	/**
 	 * @var string
@@ -82,19 +86,23 @@ abstract class ProviderServiceAbstract implements ProviderServiceInterface, Sing
 		$frameworkConfiguration = $configurationManager->getConfiguration(
 			ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK
 		);
-		$this->configuration = array_merge(
-			array('default' => array()),
-			$frameworkConfiguration['assets']
-		);
+		if (isset($frameworkConfiguration['assets'])) {
+			$this->configuration = array_merge(
+				$this->configuration,
+				$frameworkConfiguration['assets']
+			);
+		}
 
 		// inline configurations require the original TS
 		$originalTypoScript = $configurationManager->getConfiguration(
 			ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT
 		);
-		$this->typoscript = array_merge(
-			array('default.' => array()),
-			$originalTypoScript['plugin.'][$this->extensionTsKey]['assets.']
-		);
+		if (isset($originalTypoScript['plugin.'][$this->extensionTsKey]['assets.'])) {
+			$this->typoscript = array_merge(
+				$this->typoscript,
+				$originalTypoScript['plugin.'][$this->extensionTsKey]['assets.']
+			);
+		}
 	}
 
 }
