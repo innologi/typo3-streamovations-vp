@@ -50,7 +50,11 @@ class RequestFactory extends FactoryAbstract implements RequestFactoryInterface{
 		$settings = $this->getRepositorySettings($objectType);
 		return $this->objectManager->get(
 			__NAMESPACE__ . '\\RequestInterface',
-			$this->createRequestUriObject($settings['request']),
+			$this->createRequestUriObject(
+				isset($settings['request'])
+					? $settings['request']
+					: array()
+			),
 			$objectType,
 			(isset($settings['cache'])
 				? $settings['cache']
