@@ -26,6 +26,10 @@
 				<source>Livestream</source>
 				<target state="translated">Livestream</target>
 			</trans-unit>
+			<trans-unit id="ff_video_pluginType.advanced" approved="yes">
+				<source>Show-view (Advanced)</source>
+				<target state="translated">Enkele weergave (Geavanceerd)</target>
+			</trans-unit>
 			<trans-unit id="ff_video_dateAt" approved="yes">
 				<source>Video Date</source>
 				<target state="translated">Video Datum</target>

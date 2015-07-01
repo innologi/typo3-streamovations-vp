@@ -20,6 +20,9 @@
 			<trans-unit id="ff_video_pluginType.live">
 				<source>Livestream</source>
 			</trans-unit>
+			<trans-unit id="ff_video_pluginType.advanced">
+				<source>Show-view (Advanced)</source>
+			</trans-unit>
 			<trans-unit id="ff_video_dateAt">
 				<source>Video Date</source>
 			</trans-unit>

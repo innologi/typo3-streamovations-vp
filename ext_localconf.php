@@ -7,15 +7,16 @@ if (!defined('TYPO3_MODE')) {
 	'Innologi.' . $_EXTKEY,
 	'Video',
 	array(
-		'Video' => 'list, presetShow, show, liveStream',
+		'Video' => 'list, presetShow, show, liveStream, advancedShow',
 	),
+	// @LOW review if we absolutely can't cache presetShow, show and advancedShow
 	// non-cacheable actions
 	array(
 		// because all actions draw their data from a rest-service,
 		// we're not caching any of them. instead, we rely on a
 		// caching table with configurable caching lifetime per
 		// rest-repository
-		'Video' => 'list, presetShow, show, liveStream',
+		'Video' => 'list, presetShow, show, liveStream, advancedShow',
 	)
 );
 
@@ -34,4 +35,4 @@ if (!isset($TYPO3_CONF_VARS['SYS']['caching']['cacheConfigurations']['streamovat
 
 // register eID script for metadata processing
 $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'][$_EXTKEY . '_meetingdata'] =
-'EXT:' . $_EXTKEY . '/Classes/Eid/Meetingdata.php';
+	'EXT:' . $_EXTKEY . '/Classes/Eid/Meetingdata.php';

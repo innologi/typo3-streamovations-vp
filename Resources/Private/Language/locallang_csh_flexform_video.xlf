@@ -13,7 +13,9 @@
 					list on which the user can click to individual videostreams. Preset
 					single video shows a single configured videostream directly, and
 					nothing else. Livestream does the same, but looks specifically for
-					a livestream that is currently active.</source>
+					a livestream that is currently active. Advanced Show is entirely
+					TypoScript driven and therefore the most flexible.
+				</source>
 			</trans-unit>
 
 			<trans-unit id="settings.event.dateAt.alttitle">

@@ -17,7 +17,8 @@
 					list on which the user can click to individual videostreams. Preset
 					single video shows a single configured videostream directly, and
 					nothing else. Livestream does the same, but looks specifically for
-					a livestream that is currently active.
+					a livestream that is currently active. Advanced Show is entirely
+					TypoScript driven and therefore the most flexible.
 				</source>
 				<target state="translated">Het plugin type bepaalt de weergave op de
 					frontend. Lijst/Enkel is de standaard weergave, waarin een
@@ -25,6 +26,8 @@
 					naar individuele videostreams. Specifieke video toont een enkele
 					video die hier ingesteld wordt, en niets meer. Livestream doet
 					hetzelfde, maar zoekt specifiek naar een actieve livestream.
+					Geadvanceerde Enkele weergave wordt gedreven door TypoScript
+					configuratie en is daardoor de meest flexibele optie.
 				</target>
 			</trans-unit>
 

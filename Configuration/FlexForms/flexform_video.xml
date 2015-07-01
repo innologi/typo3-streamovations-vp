@@ -30,6 +30,10 @@
 							<numIndex index="0">LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ff_video_pluginType.live</numIndex>
 							<numIndex index="1">Video->liveStream</numIndex>
 						</numIndex>
+						<numIndex index="3" type="array">
+							<numIndex index="0">LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ff_video_pluginType.advanced</numIndex>
+							<numIndex index="1">Video->advancedShow</numIndex>
+						</numIndex>
 					</items>
 					<maxitems>1</maxitems>
 					<size>1</size>
@@ -75,7 +79,7 @@
 		<settings.event.category>
 			<TCEforms>
 				<label>LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ff_video_category</label>
-				<displayCond>FIELD:switchableControllerActions:!=:Video->presetShow</displayCond>
+				<displayCond>FIELD:switchableControllerActions:!IN:Video->presetShow,Video->advancedShow</displayCond>
 				<config>
 					<type>input</type>
 					<size>50</size>
@@ -88,7 +92,7 @@
 		<settings.event.subCategory>
 			<TCEforms>
 				<label>LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ff_video_subCategory</label>
-				<displayCond>FIELD:switchableControllerActions:!=:Video->presetShow</displayCond>
+				<displayCond>FIELD:switchableControllerActions:!IN:Video->presetShow,Video->advancedShow</displayCond>
 				<config>
 					<type>input</type>
 					<size>50</size>
@@ -101,7 +105,7 @@
 		<settings.event.tags>
 			<TCEforms>
 				<label>LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ff_video_tags</label>
-				<displayCond>FIELD:switchableControllerActions:!=:Video->presetShow</displayCond>
+				<displayCond>FIELD:switchableControllerActions:!IN:Video->presetShow,Video->advancedShow</displayCond>
 				<config>
 					<type>input</type>
 					<size>50</size>

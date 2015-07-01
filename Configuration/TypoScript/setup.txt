@@ -149,6 +149,14 @@ plugin.tx_streamovationsvp {
 			imgWidth = {$plugin.tx_streamovationsvp.settings.speakers.imgWidth}
 			imgDefault = {$plugin.tx_streamovationsvp.settings.speakers.imgDefault}
 		}
+		advanced {
+			enable = 0
+			category =
+			subCategory =
+			tags =
+			dateAt =
+			dateTimeAt =
+		}
 	}
 }
 

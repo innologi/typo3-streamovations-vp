@@ -236,4 +236,85 @@ class VideoController extends Controller {
 		);
 	}
 
+	/**
+	 * Show playlist as directed by typoscript configuration.
+	 *
+	 * This is flexible enough to configure it to use e.g.
+	 * another ext's GET variables to determine which video to show.
+	 *
+	 * @return void
+	 */
+	public function advancedShowAction() {
+		$contentObject = $this->configurationManager->getContentObject();
+		$typoscript = $this->configurationManager->getConfiguration(
+			\TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT
+		);
+		$advanced = $typoscript['plugin.']['tx_streamovationsvp.']['settings.']['advanced.'];
+
+		if (isset($advanced['enable'])) {
+
+			// 'enable' can be a TS object, just as much as any other property
+			if (isset($advanced['enable.'])) {
+				$advanced['enable'] = $contentObject->cObjGetSingle($advanced['enable'], $advanced['enable.']);
+				unset($advanced['enable.']);
+			}
+			if ((bool) $advanced['enable']) {
+
+				$supportedKeys = array(
+					'dateTimeAt',
+					'dateAt',
+					'category',
+					'subCategory',
+					'tags'
+				);
+				foreach ($supportedKeys as $key) {
+					$oKey = $key . '.';
+					if (isset($advanced[$key][0]) && isset($advanced[$oKey]) && is_array($advanced[$oKey]) && !empty($advanced[$oKey])) {
+						$advanced[$key] = $contentObject->cObjGetSingle($advanced[$key], $advanced[$oKey]);
+						unset($advanced[$oKey]);
+					}
+				}
+
+				try {
+					$this->eventRepository
+						->setCategory($advanced['category'])
+						->setSubCategory($advanced['subCategory'])
+						->setTags($advanced['tags']);
+
+					// dateTimeAt has preference over dateAt
+					$events = NULL;
+					if (isset($advanced['dateTimeAt'][0])) {
+						$dateTime = new \DateTime($advanced['dateTimeAt']);
+						$events = $this->eventRepository->findAtDateTime($dateTime);
+					} elseif (isset($advanced['dateAt'][0])) {
+						$dateTime = new \DateTime($advanced['dateAt']);
+						$events = $this->eventRepository->findAtDate($dateTime);
+					} else {
+						// no use continuing if neither format is available
+						return;
+					}
+
+					/* @var $eventService \Innologi\StreamovationsVp\Domain\Service\EventService */
+					$eventService = $this->objectManager->get('Innologi\\StreamovationsVp\\Domain\\Service\\EventService');
+					$events = $eventService->filterOutLiveStreams(
+						$eventService->filterOutUnpublished($events)
+					);
+
+					if (isset($events[0])) {
+						$arguments = array(
+							'hash' => $events[0]->getEventId(),
+							// @TODO is this one relevant?
+							'__noRedirectOnException' => TRUE,
+							'__noBackPid' => TRUE
+						);
+						$this->forward('show', NULL, NULL, $arguments);
+					}
+
+				} catch (HttpReturnedError $e) {
+					// no stream found returns a 404, which in this case really isn't an error
+				}
+			}
+		}
+	}
+
 }
