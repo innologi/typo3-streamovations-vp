@@ -1,6 +1,13 @@
 /**
  * Streamovations Video Player Starter (SVPS)
  *
+ * Triggers several jQuery events you can use to interact with:
+ * - SVPS:play = playing starts
+ * - SVPS:inactive-topic = all topics deactivated
+ * - SVPS:inactive-speaker = all speakers deactivated
+ * - SVPS:active-topic {id,index} = topic activates, provides data
+ * - SVPS:active-speaker {id,index} = speaker activates, provides data
+ *
  * @package streamovations_vp
  * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
@@ -537,8 +544,11 @@ var SvpStarter = (function($) {
 	 */
 	function deactivateElement(type) {
 		if (meetingdata[type]) {
-			$('.' + select.container + ' .' + type + 's .' + type + '.active').removeClass('active');
+			var $elems = $('.' + select.container + ' .' + type + 's');
+
+			$('.' + type + '.active', $elems).removeClass('active');
 			active[type] = 0;
+			$elems.trigger('SVPS:inactive-' + type);
 		}
 	}
 
@@ -550,9 +560,18 @@ var SvpStarter = (function($) {
 	 * @return void
 	 */
 	function activateElement(id, type) {
-		deactivateElement(type);
-		$('.' + select.container + ' .' + type + 's .' + type + '[data-' + type + '=' + id + ']').first().addClass('active');
+		var $elems = $('.' + select.container + ' .' + type + 's'),
+			$elem = $('.' + type + '[data-' + type + '=' + id + ']', $elems);
+
+		// avoiding deactivateElement() because don't want its trigger and we already have $elems
+		$('.' + type + '.active', $elems).removeClass('active');
 		active[type] = id;
+
+		$elem.first().addClass('active');
+		$elems.trigger('SVPS:active-' + type, {
+			id: id,
+			index: $elem.index()
+		});
 		log(logMsg.activate + ' ' + type + ' ' + id, false);
 	}
 
@@ -890,6 +909,13 @@ var SvpStarter = (function($) {
 					log(logMsg.invalid_player, true);
 					return false;
 			}
+
+			// even though JW Player has its own onPlay events, adding
+			// more general jQuery triggers can help when code needs
+			// to refer to these events before SVPS is defined
+			SVPS.player.onPlay(function() {
+				$player.trigger('SVPS:play');
+			});
 
 			// meetingdata refers to streamfile id's, but we can only request playlist id from jwplayer object
 			if (data.hasOwnProperty('playlist')) {
