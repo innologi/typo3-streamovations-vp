@@ -634,7 +634,7 @@ var SvpStarter = (function($) {
 	 */
 	function seek(topic) {
 		// e.g. when IDLE or BUFFERING
-		var state = SVPS.jw.getState();
+		var state = SVPS.jw.getState().toUpperCase();
 		if (state !== 'PLAYING') {
 			// not all relevant onSeek events will trigger if player hasn't started
 			applySeekOnPlay(topic);
