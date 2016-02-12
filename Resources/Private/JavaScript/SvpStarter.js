@@ -98,6 +98,9 @@ var SvpStarter = (function($) {
 	var orig = {
 		// SVPS.player
 		player: {
+			onSeek: null,
+			onPlay: null,
+			onPause: null,
 			next: null,
 			previous: null,
 			setQualityLevel: null,
@@ -518,17 +521,17 @@ var SvpStarter = (function($) {
 		}
 		for (c in callbacks.onSeek) {
 			if (callbacks.onSeek.hasOwnProperty(c)) {
-				SVPS.jw.onSeek(callbacks.onSeek[c]);
+				orig.player.onSeek(callbacks.onSeek[c]);
 			}
 		}
 		for (c in callbacks.onPlay) {
 			if (callbacks.onPlay.hasOwnProperty(c)) {
-				SVPS.jw.onPlay(callbacks.onPlay[c]);
+				orig.player.onPlay(callbacks.onPlay[c]);
 			}
 		}
 		for (c in callbacks.onPause) {
 			if (callbacks.onPause.hasOwnProperty(c)) {
-				SVPS.jw.onPause(callbacks.onPause[c]);
+				orig.player.onPause(callbacks.onPause[c]);
 			}
 		}
 		log(logMsg.events_re, false);
@@ -574,7 +577,7 @@ var SvpStarter = (function($) {
 		});
 		log(logMsg.activate + ' ' + type + ' ' + id, false);
 	}
-
+	// @TODO __do we still need this?
 	/**
 	 * Recursively call playlistNext()
 	 *
@@ -599,7 +602,7 @@ var SvpStarter = (function($) {
 			seek(topic);
 		}
 	}
-
+	// @TODO __do we still need this?
 	/**
 	 * Recursively call playlistPrev()
 	 *
@@ -624,7 +627,7 @@ var SvpStarter = (function($) {
 			seek(topic);
 		}
 	}
-
+	// @TODO __replace all typeof() with typeof?
 	/**
 	 * Performs a seek while keeping in mind some of the limits of
 	 * jwplayer, smvplayer and flash
@@ -634,11 +637,20 @@ var SvpStarter = (function($) {
 	 */
 	function seek(topic) {
 		// e.g. when IDLE or BUFFERING
-		var state = SVPS.jw.getState().toUpperCase();
-		if (state !== 'PLAYING') {
+		if (typeof(SVPS.player.getStatus) !== 'undefined') {
+			// smvplayer
+			var state = SVPS.player.getStatus();
+		} else {
+			// jwplayer
+			var state = SVPS.player.getState();
+		}
+
+		if (state.toUpperCase() !== 'PLAYING') {
 			// not all relevant onSeek events will trigger if player hasn't started
 			applySeekOnPlay(topic);
-			SVPS.jw.play(true);
+			SVPS.player.play(true);
+			// @TODO __this was necessary for old smvplayer, so.. remove?
+			//SVPS.jw.play(true);
 		} else {
 			SVPS.player.seek(topic.time);
 		}
@@ -660,6 +672,8 @@ var SvpStarter = (function($) {
 		}
 		seekOnPlay[topic.playlist][topic.time] = true;
 		// note that this onPlay isn't added to callbacks with smvPlayer, that would be incredibly useless
+		//SVPS.player.onPlay(function (e) {
+		// @TODO __this was necessary for old smvplayer, so.. remove?
 		SVPS.jw.onPlay(function (e) {
 			// there's no way to delete onPlay event callbacks.. so we need these conditions :(
 			if (seekOnPlay[topic.playlist][topic.time]) {
@@ -696,6 +710,7 @@ var SvpStarter = (function($) {
 		if (licenseKey) {
 			jwplayer.key = licenseKey;
 		} else if(requireLicense) {
+			// @TODO __we might not need to set it for new smvplayer since its given in config.json, so lose the requirement?
 			log(logMsg.no_jwplayer_key, true);
 			return false;
 		}
@@ -714,9 +729,11 @@ var SvpStarter = (function($) {
 			if (typeof(smvplayer) !== 'undefined') {
 				SVPS.player = smvplayer(select.player);
 				SVPS.player.init(data);
+				// @TODO __necessary for new SMV player, but not old. if SVPS.jw is not needed anymore in new, than we can get rid of that though
+				select.player = 'smvplayer_engineWrapper_' + select.player;
+
 				// smvplayer does not provide full jwplayer api, so we need a reference to preserve consistency in all of SVPS
 				SVPS.jw = jwplayer(select.player);
-
 				// Smvplayer calls jwplayer.remove() on moving in the playlist, which clears the entire jwplayer
 				// instance, including event handlers, so we need a construct that reassigns SVPS.jw and
 				// all of the event handler callbacks. This is what reset() is for.
@@ -724,17 +741,20 @@ var SvpStarter = (function($) {
 					callbacks.onTime.push(callback);
 					SVPS.jw.onTime(callback);
 				};
+				orig.player.onSeek = SVPS.player.onSeek;
 				SVPS.player.onSeek = function(callback) {
 					callbacks.onSeek.push(callback);
-					SVPS.jw.onSeek(callback);
+					orig.player.onSeek(callback);
 				};
+				orig.player.onPlay = SVPS.player.onPlay;
 				SVPS.player.onPlay = function(callback) {
 					callbacks.onPlay.push(callback);
-					SVPS.jw.onPlay(callback);
+					orig.player.onPlay(callback);
 				};
+				orig.player.onPause = SVPS.player.onPause;
 				SVPS.player.onPause = function(callback) {
 					callbacks.onPause.push(callback);
-					SVPS.jw.onPause(callback);
+					orig.player.onPause(callback);
 				};
 				// overrule player.next()
 				orig.player.next = SVPS.player.next;
@@ -813,7 +833,7 @@ var SvpStarter = (function($) {
 		}
 		return false;
 	}
-
+	// @TODO remove?
 	/**
 	 * Create the video player by using native HTML5 methods
 	 *
@@ -821,14 +841,14 @@ var SvpStarter = (function($) {
 	 *
 	 * @return boolean True on success, false on failure
 	 */
-	function createNativeHtml5Player() {
+	/*function createNativePlayer() {
 		// #@LOW finish implementation?
 		if (!!document.createElement('video').canPlayType) {
 			// fallback
 		}
 		log('ERROR: unfinished implementation', true);
 		return false;
-	}
+	}*/
 
 	/**
 	 * Actual SVPS object, offers public methods/properties
@@ -927,7 +947,7 @@ var SvpStarter = (function($) {
 			}
 
 			if (this.isLiveStream) {
-				// note that event handlers are note initialized during a livestream:
+				// note that event handlers are not initialized during a livestream:
 				// this is because a livestream is fed via polling and not via interaction
 				if (meetingdata.topic || meetingdata.speaker) {
 					initLiveCounters();
