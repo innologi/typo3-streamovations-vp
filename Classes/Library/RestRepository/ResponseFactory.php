@@ -66,6 +66,7 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 	 */
 	public function createByRawResponse($rawResponse, $responseType, $objectType) {
 		$settings = $this->getRepositorySettings($objectType);
+		$response = NULL;
 
 		// convert response to array
 		switch ($responseType) {
@@ -74,6 +75,13 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 				break;
 			default:
 				// @TODO add XML support
+		}
+
+		// raw response was not as expected
+		if (!is_array($response)) {
+			throw new Exception\UnexpectedResponseStructure(
+				'Response not of expected type \'' . $responseType . '\': ' . $rawResponse
+			);
 		}
 
 		// response configuration
