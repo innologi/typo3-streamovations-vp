@@ -165,6 +165,7 @@ class VideoController extends Controller {
 		// @LOW we should autodetect this once we allow livestreams via list
 		$this->view->assign('isLiveStream', $isLiveStream);
 		$this->view->assign('hash', $hash);
+		$this->view->assign('requestUri', $this->uriBuilder->getRequest()->getRequestUri());
 
 		// unless __noBackPid was set, assign a back-page
 		if ($this->request->getInternalArgument('__noBackPid') !== TRUE) {

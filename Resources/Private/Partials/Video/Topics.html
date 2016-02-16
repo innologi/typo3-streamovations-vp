@@ -4,14 +4,14 @@
 	<f:then>
 		<ol>
 			<f:for each="{topics}" as="topic">
-				<f:render partial="Video/TopicListItem" arguments="{topic:topic, isLiveStream:isLiveStream}" />
+				<f:render partial="Video/TopicListItem" arguments="{uri:uri, topic:topic, isLiveStream:isLiveStream}" />
 			</f:for>
 		</ol>
 	</f:then>
 	<f:else>
 		<f:if condition="{isLiveStream}">
 			<ol class="template">
-				<f:render partial="Video/TopicListItem" arguments="{topic:{id:'', title:'', description:''}, isLiveStream:isLiveStream, extraClass:' template'}" />
+				<f:render partial="Video/TopicListItem" arguments="{uri:uri, topic:{id:'', title:'', description:''}, isLiveStream:isLiveStream, extraClass:' template'}" />
 			</ol>
 		</f:if>
 	</f:else>

@@ -2,7 +2,7 @@
 	<f:if condition="{isLiveStream}">
 	<f:then><span class="topic-title">{topic.title}</span></f:then>
 	<f:else>
-		<a href="#"
+		<a href="{uri}#!"
 			class="topic-link topic-title"
 			title="{f:translate(key:'topic_link_title')}"
 		>{topic.title}</a>

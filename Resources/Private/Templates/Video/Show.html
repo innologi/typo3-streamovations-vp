@@ -4,11 +4,10 @@
 
 <f:if condition="{playlist}">
 <f:then>
-
 	<f:if condition="{settings.topics.enable}">
 		<f:render
 			partial="Video/Topics"
-			arguments="{topics:meetingdata.topics, timeline:meetingdata.topicTimeline, isLiveStream:isLiveStream}"
+			arguments="{uri:requestUri, topics:meetingdata.topics, timeline:meetingdata.topicTimeline, isLiveStream:isLiveStream}"
 		/>
 	</f:if>
 
