@@ -90,7 +90,7 @@ class PlaylistService {
 		$playlistItems = $playlist->getPlaylistItems();
 		foreach ($playlistItems as $playlistItem) {
 			/* @var $playlistItem \Innologi\StreamovationsVp\Domain\Model\Playlist\PlaylistItem */
-			$sourceFile = $this->getSourceFile($urlParts, $ports, $playlistItem->getSource(), $settings);
+			$sourceFile = $this->getSourceFile($urlParts, $ports, $playlistItem->getSource(), $application, $settings);
 
 			$playlistData['playlist'][] = array(
 				// @LOW 'image' => ''
@@ -116,10 +116,11 @@ class PlaylistService {
 	 * @param array $urlParts
 	 * @param array $ports
 	 * @param \Innologi\StreamovationsVp\Library\RestRepository\ResponseInterface $source
+	 * @param string $application
 	 * @param array $settings
 	 * @return string
 	 */
-	protected function getSourceFile(array $urlParts, array $ports, \Innologi\StreamovationsVp\Library\RestRepository\ResponseInterface $source, array $settings) {
+	protected function getSourceFile(array $urlParts, array $ports, \Innologi\StreamovationsVp\Library\RestRepository\ResponseInterface $source, $application, array $settings) {
 		/* @var $source \Innologi\StreamovationsVp\Domain\Model\Playlist\Source */
 
 		$useSmil = (bool) $settings['smilSupport'];
