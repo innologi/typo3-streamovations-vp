@@ -23,7 +23,8 @@ namespace Innologi\StreamovationsVp\Library\RestRepository;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
+use TYPO3\CMS\Core\Cache\CacheManager;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Abstract REST Request
  *
@@ -233,7 +234,7 @@ abstract class RequestAbstract implements RequestInterface {
 			$this->cacheLifetime = isset($cacheSettings['lifetime'])
 				? (int) $cacheSettings['lifetime']
 				: NULL;
-			$this->cache = $GLOBALS['typo3CacheManager']->getCache('streamovations_vp_rest');
+			$this->cache = GeneralUtility::makeInstance(CacheManager::class)->getCache('streamovations_vp_rest');
 		}
 	}
 
