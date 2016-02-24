@@ -10,8 +10,10 @@
 			arguments="{uri:requestUri, topics:meetingdata.topics, timeline:meetingdata.topicTimeline, isLiveStream:isLiveStream}"
 		/>
 	</f:if>
-
-	<div id="tx-streamovations-vp-play" class="video-player"></div>
+	
+	<div class="video-player-container">
+		<div id="tx-streamovations-vp-play" class="video-player"></div>
+	</div>
 	<script type="application/json" id="tx-streamovations-vp-playerdata" data-hash="{hash}">
 		{playlist -> f:format.raw()}
 	</script>

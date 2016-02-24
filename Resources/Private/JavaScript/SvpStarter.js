@@ -222,6 +222,8 @@ var SvpStarter = (function($) {
 	var select = {
 		// id of player HTML element
 		player: 'tx-streamovations-vp-play',
+		// class of player container
+		playerContainer: 'video-player-container',
 		// id of player data HTML element
 		data: 'tx-streamovations-vp-playerdata',
 		// id of topic timeline HTML element
@@ -890,7 +892,7 @@ var SvpStarter = (function($) {
 		 */
 		init: function() {
 			// check if necessary elements exist
-			var $player = $('#' + select.player),
+			var $player = $('.' + select.playerContainer),
 				$data = $('#' + select.data).first();
 			if (!$player.exists() || !$data.exists()) {
 				// at least one of necessary elements does not exist
