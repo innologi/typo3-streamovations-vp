@@ -5,8 +5,8 @@
 <f:if condition="{events}">
 <f:then>
 	<ul>
-		<s:collection.sort subject="{events}" as="sortedEvents" sortBy="startUnix" order="DESC">
-		<s:collection.groupedForDateTime each="{sortedEvents}" as="groupEvents" groupBy="startUnix" dateTimeFormat="Y" groupKey="year">
+		<s:collection.sort subject="{events}" as="sortedEvents" sortBy="start" order="DESC">
+		<s:collection.groupedForDateTime each="{sortedEvents}" as="groupEvents" groupBy="start" dateTimeFormat="Y" groupKey="year">
 			<li class="events">
 				<p class="events-header">{year}</p>
 				<ul>

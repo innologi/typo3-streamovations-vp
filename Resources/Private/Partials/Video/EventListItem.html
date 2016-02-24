@@ -2,7 +2,7 @@
 	<f:link.action
 		action="show"
 		arguments="{hash:event.eventId}"
-		title="{f:translate(key:'event_link_title')} {f:format.date(format:'d-m-Y, H:i', date:'@{event.startUnix}')} - {f:format.date(format:'H:i', date:'@{event.endUnix}')}"
+		title="{f:translate(key:'event_link_title')} {f:format.date(format:'d-m-Y, H:i', date:'{event.start}')} - {f:format.date(format:'H:i', date:'{event.end}')}"
 		class="event-link"
 		pageUid="{showPid}"
 	>

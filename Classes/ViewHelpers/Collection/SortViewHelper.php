@@ -84,6 +84,9 @@ class SortViewHelper extends AbstractViewHelper {
 		if (isset($this->arguments['sortBy'])) {
 			foreach ($subject as $key => $value) {
 				$key = $this->getPropertyValue($value, $this->arguments['sortBy']);
+				if ($key instanceof \DateTime) {
+					$key = $key->getTimestamp();
+				}
 				while (isset($result[$key])) {
 					$key .= '_1';
 				}
