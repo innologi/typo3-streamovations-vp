@@ -224,6 +224,8 @@ var SvpStarter = (function($) {
 		player: 'tx-streamovations-vp-play',
 		// class of player container
 		playerContainer: 'video-player-container',
+		// player engine wrapper pre-wrap id
+		engineWrapper: 'smvplayer_engineWrapper_',
 		// id of player data HTML element
 		data: 'tx-streamovations-vp-playerdata',
 		// id of topic timeline HTML element
@@ -731,11 +733,12 @@ var SvpStarter = (function($) {
 			if (typeof(smvplayer) !== 'undefined') {
 				SVPS.player = smvplayer(select.player);
 				SVPS.player.init(data);
-				// @TODO __necessary for new SMV player, but not old. if SVPS.jw is not needed anymore in new, than we can get rid of that though
-				select.player = 'smvplayer_engineWrapper_' + select.player;
 
+				// SMV player changes the player id, so we should too if we want to get the actual JW player object
+				select.player = select.engineWrapper + select.player;
 				// smvplayer does not provide full jwplayer api, so we need a reference to preserve consistency in all of SVPS
 				SVPS.jw = jwplayer(select.player);
+
 				// Smvplayer calls jwplayer.remove() on moving in the playlist, which clears the entire jwplayer
 				// instance, including event handlers, so we need a construct that reassigns SVPS.jw and
 				// all of the event handler callbacks. This is what reset() is for.
