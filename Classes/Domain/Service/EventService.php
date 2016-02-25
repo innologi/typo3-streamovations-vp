@@ -70,4 +70,19 @@ class EventService implements SingletonInterface {
 		return $events;
 	}
 
+	/**
+	 * Find the first Live stream available in the array.
+	 *
+	 * @param array $events
+	 * @return \Innologi\StreamovationsVp\Domain\Model\Event|boolean
+	 */
+	public function findFirstLiveStream(array $events) {
+		foreach ($events as $event) {
+			if ($event->getStreamingType() === self::STREAMINGTYPE_LIVE) {
+				return $event;
+			}
+		}
+		return FALSE;
+	}
+
 }

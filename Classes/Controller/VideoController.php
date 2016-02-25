@@ -208,16 +208,22 @@ class VideoController extends Controller {
 	 */
 	public function liveStreamAction() {
 		try {
-			// there is no need to 'filter out' VODs, because only LIVEstreams are active @ requested time (=now)
+			// @FIX wait, eventRepo caches by default, doesn't it? Can we disable it here?
 			$events = $this->eventRepository
 				->setCategory($this->settings['event']['category'])
 				->setSubCategory($this->settings['event']['subCategory'])
 				->setTags($this->settings['event']['tags'])
 				->findAtDateTime(new \DateTime());
 
-			if (isset($events[0])) {
+			// although only LIVEstreams should be active @ requested time (=now), this is not
+			// necessarily the case, as some tests have pointed out. So we need to filter.
+			/* @var $eventService \Innologi\StreamovationsVp\Domain\Service\EventService */
+			$eventService = $this->objectManager->get('Innologi\\StreamovationsVp\\Domain\\Service\\EventService');
+			$event = $eventService->findFirstLiveStream($events);
+
+			if ($event !== FALSE) {
 				$arguments = array(
-					'hash' => $events[0]->getEventId(),
+					'hash' => $event->getEventId(),
 					'isLiveStream' => TRUE,
 					'__noRedirectOnException' => TRUE,
 					'__noBackPid' => TRUE
