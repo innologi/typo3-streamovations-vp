@@ -66,10 +66,14 @@ class EidUtility extends \TYPO3\CMS\Frontend\Utility\EidUtility {
 			TRUE
 		);
 
-		// TCA isn't necessary for all eID scripts that depend on TSFE, but the
-		// existence of the following array is required in a RootlineUtility method
-		if (!isset($GLOBALS['TCA']['pages']['columns'])) {
-			$GLOBALS['TCA']['pages']['columns'] = array();
+		// TCA isn't necessary for all eID scripts that depend on TSFE, but ..
+		if (!isset($GLOBALS['TCA']['pages'])) {
+			$GLOBALS['TCA']['pages'] = array(
+				// required due to PageRepository->enableFields() in TYPO3 7.x
+				'ctrl' => array(),
+				// required due to a RootlineUtility method in TYPO3 6.x
+				'columns' => array()
+			);
 		}
 
 		// initializes feUser used to determine various settings necessary for determineId()
