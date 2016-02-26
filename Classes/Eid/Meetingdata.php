@@ -63,6 +63,7 @@ class Meetingdata {
 			'json' => 0
 		);
 
+		// @TODO test this with TYPO3 7.6
 		// initialize TSFE to make TS accessible to extbase configuration manager
 		EidUtility::initTSFE();
 		// initialize extbase bootstrap, so we can use repositories
@@ -89,15 +90,42 @@ class Meetingdata {
 									'speakerTimeline' => $timelineConfig
 								)
 							),
-							// disables caching
-							'cache' => array(
-								'enable' => 0
-							)
+							// cache concurrent requests to Streamovations API to lighten its load
+							'cache' => $this->getOptimalCacheValues()
 						)
 					)
 				)
 			)
 		);
+	}
+
+	/**
+	 * Returns cache settings based on the polling interval used to call
+	 * this specific eID script.
+	 *
+	 * Note that when lifetime===interval, testresults show that the second polling call
+	 * of the visitor responsible for the cache, will result in him retrieving his own
+	 * cache result once, which makes the current polling interval completely useless.
+	 * To remedy this we do lifetime-1.
+	 *
+	 * If interval was already at 1, we can only force-disable caching to keep the chosen
+	 * interval remaining effective.
+	 *
+	 * @throws \Exception
+	 * @return array
+	 */
+	protected function getOptimalCacheValues() {
+		// note that this isn't the extbase way, but it's a hell of a lot quicker, which is the point of eID
+		if (!isset($GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_streamovationsvp.']['settings.']['polling.']['interval'][0])) {
+			throw new \Exception('Could not determine polling interval.');
+		}
+
+		$cacheSettings = array();
+		$cacheSettings['lifetime'] = ((int) $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_streamovationsvp.']['settings.']['polling.']['interval']) - 1;
+		if ($cacheSettings['lifetime'] < 1) {
+			$cacheSettings['enable'] = 0;
+		}
+		return $cacheSettings;
 	}
 
 	/**

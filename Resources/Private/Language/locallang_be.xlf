@@ -181,7 +181,7 @@
 				<source>Polling interval (seconds): Polling interval for
 					topic/speaker data during a livestream, as long one of these is
 					enabled. Setting the interval to anything lower than 1 disables
-					polling.
+					polling. Setting it to 1 disables caching for polling.
 				</source>
 			</trans-unit>
 		</body>

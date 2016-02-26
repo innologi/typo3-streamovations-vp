@@ -157,6 +157,8 @@ plugin.tx_streamovationsvp {
 			dateAt =
 			dateTimeAt =
 		}
+		# @TODO settings like these are also read by AssetProvider. I should find a way to store them in settings first, then refer to settings for AssetProvider
+		polling.interval = {$plugin.tx_streamovationsvp.settings.polling.interval}
 	}
 }
 

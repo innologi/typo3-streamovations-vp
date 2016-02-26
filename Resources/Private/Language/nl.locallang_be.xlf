@@ -276,12 +276,13 @@
 				<source>Polling interval (seconds): Polling interval for
 					topic/speaker data during a livestream, as long one of these is
 					enabled. Setting the interval to anything lower than 1 disables
-					polling.
+					polling. Setting it to 1 disables caching for polling.
 				</source>
 				<target state="translated">Polling interval (seconden): De interval tussen
 					het ophalen van onderwerp/spreker data gedurende een livestream,
 					mits minstens één van de twee ingeschakeld is. Bij een interval
-					kleiner dan 1 wordt polling uitgeschakeld.
+					kleiner dan 1 wordt polling uitgeschakeld. Bij een interval van
+					1 vindt er geen caching plaats bij de polling.
 				</target>
 			</trans-unit>
 		</body>

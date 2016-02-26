@@ -264,16 +264,19 @@ abstract class RequestAbstract implements RequestInterface {
 	 * A cache entry identifier is generated based on:
 	 * - the request uri
 	 * - if a raw response is requested / stored
+	 * - cache lifetime
 	 *
 	 * This way, each unique request will have its own cache entry, with the additional ability
-	 * to differentiate between a cached raw response or a mapped response (default).
+	 * to differentiate between a cached raw response or a mapped response (default). Also, the
+	 * cache lifetime is included to prevent a cache retrieval of the same uri for e.g. 1 hour
+	 * to be retrieved for one that is set for e.g. 10 seconds.
 	 *
-	 * @param string $isRawResponse
+	 * @param boolean $isRawResponse
 	 * @return string
 	 */
 	protected function generateCacheEntryIdentifier($isRawResponse = FALSE) {
 		return md5(
-			$this->requestUri->getRequestUri() . '---' . (int) ($isRawResponse || $this->forceRawResponse)
+			$this->requestUri->getRequestUri() . '---' . (int) ($isRawResponse || $this->forceRawResponse) . '---' . $this->cacheLifetime
 		);
 	}
 
