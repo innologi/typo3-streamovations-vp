@@ -57,6 +57,11 @@ abstract class RequestAbstract implements RequestInterface {
 	protected $cacheLifetime = NULL;
 
 	/**
+	 * @var boolean
+	 */
+	protected $cacheTags = FALSE;
+
+	/**
 	 * @var integer
 	 */
 	protected $responseType = RequestInterface::RESPONSETYPE_JSON;
@@ -154,9 +159,7 @@ abstract class RequestAbstract implements RequestInterface {
 	 */
 	protected function getResponseFromCache($findRawResponse = FALSE) {
 		$response = NULL;
-		$entryIdentifier = md5(
-			$this->requestUri->getRequestUri() . '---' . (int) ($findRawResponse || $this->forceRawResponse)
-		);
+		$entryIdentifier = $this->generateCacheEntryIdentifier($findRawResponse);
 		if ($this->cache->has($entryIdentifier)) {
 			$response = $this->cache->get($entryIdentifier);
 		}
@@ -171,10 +174,27 @@ abstract class RequestAbstract implements RequestInterface {
 	 * @return void
 	 */
 	protected function storeResponseInCache($response, $isRawResponse = FALSE) {
-		$entryIdentifier = md5(
-			$this->requestUri->getRequestUri() . '---' . (int) ($isRawResponse || $this->forceRawResponse)
+		$tags = array();
+
+		// only enable tags if requested by our cache settings, as these tags are wonderful for tracking
+		// down caching issues, but are completely unused in and add overhead to production
+		if ($this->cacheTags) {
+			/** @var RepositoryMapperInterface $repositoryMapper */
+			$repositoryMapper = $this->objectManager->get(__NAMESPACE__ . '\\RepositoryMapperInterface');
+			$tags = array(
+				$repositoryMapper->getRepositoryNameFromObjectType($this->responseObjectType),
+				'lifetime_' . $this->cacheLifetime,
+				'raw_' . (int) ($isRawResponse || $this->forceRawResponse),
+				'type_' . $this->responseType
+			);
+		}
+
+		$this->cache->set(
+			$this->generateCacheEntryIdentifier($isRawResponse),
+			$response,
+			$tags,
+			$this->cacheLifetime
 		);
-		$this->cache->set($entryIdentifier, $response, array(), $this->cacheLifetime);
 	}
 
 	/**
@@ -224,6 +244,7 @@ abstract class RequestAbstract implements RequestInterface {
 	 * Settings supported:
 	 * - enable
 	 * - lifetime
+	 * - tags
 	 *
 	 * @param array $cacheSettings
 	 * @return void
@@ -234,8 +255,26 @@ abstract class RequestAbstract implements RequestInterface {
 			$this->cacheLifetime = isset($cacheSettings['lifetime'])
 				? (int) $cacheSettings['lifetime']
 				: NULL;
+			$this->cacheTags = isset($cacheSettings['tags']) && (bool) $cacheSettings['tags'];
 			$this->cache = GeneralUtility::makeInstance(CacheManager::class)->getCache('streamovations_vp_rest');
 		}
+	}
+
+	/**
+	 * A cache entry identifier is generated based on:
+	 * - the request uri
+	 * - if a raw response is requested / stored
+	 *
+	 * This way, each unique request will have its own cache entry, with the additional ability
+	 * to differentiate between a cached raw response or a mapped response (default).
+	 *
+	 * @param string $isRawResponse
+	 * @return string
+	 */
+	protected function generateCacheEntryIdentifier($isRawResponse = FALSE) {
+		return md5(
+			$this->requestUri->getRequestUri() . '---' . (int) ($isRawResponse || $this->forceRawResponse)
+		);
 	}
 
 	/**

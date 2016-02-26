@@ -41,6 +41,11 @@ abstract class FactoryAbstract implements SingletonInterface {
 	protected $objectManager;
 
 	/**
+	 * @var RepositoryMapperInterface
+	 */
+	protected $repositoryMapper;
+
+	/**
 	 * General REST configuration
 	 *
 	 * @var array
@@ -63,6 +68,7 @@ abstract class FactoryAbstract implements SingletonInterface {
 	public function __construct(\TYPO3\CMS\Extbase\Object\ObjectManagerInterface $objectManager) {
 		// because we want objectManager in __construct, we can't rely on DI as it is always later
 		$this->objectManager = $objectManager;
+		$this->repositoryMapper = $objectManager->get(__NAMESPACE__ . '\\RepositoryMapperInterface');
 		$this->initializeConfiguration();
 	}
 
@@ -81,28 +87,13 @@ abstract class FactoryAbstract implements SingletonInterface {
 	}
 
 	/**
-	 * Returns the repository name from object type
-	 *
-	 * @param string $objectType
-	 * @return string
-	 */
-	protected function getRepositoryNameFromObjectType($objectType) {
-		$repositoryName = $objectType;
-		// remove namespace
-		if ( ($pos = strrpos($objectType, '\\')) !== FALSE ) {
-			$repositoryName = substr($objectType, ($pos + 1));
-		}
-		return $repositoryName;
-	}
-
-	/**
 	 * Returns repository settings
 	 *
 	 * @param string $objectType
 	 * @return array
 	 */
 	protected function getRepositorySettings($objectType) {
-		$type = $this->getRepositoryNameFromObjectType($objectType);
+		$type = $this->repositoryMapper->getRepositoryNameFromObjectType($objectType);
 		if (!isset($this->settings[$type])) {
 			$this->settings[$type] = $this->mergeRepositorySettings($type);
 		}

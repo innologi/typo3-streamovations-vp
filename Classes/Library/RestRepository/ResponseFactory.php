@@ -123,7 +123,7 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 			$response = $this->responseConfigurator->configureProperties(
 				$response,
 				$settings['response']['property'],
-				$this->getRepositoryNameFromObjectType($objectType)
+				$this->repositoryMapper->getRepositoryNameFromObjectType($objectType)
 			);
 		}
 
