@@ -16,14 +16,14 @@ plugin.tx_streamovationsvp {
 	
 	# rest repository configuration
 	rest {
-		features {
-			# only works for request types that support it
-			ignoreHttpConfiguration = 0
-			# model-less fallback, i.e. for development purposes or eid scripts 
-			disableResponseMapper = 0
-		}
 		repository {
 			default {
+				features {
+					# only works for request types that support it
+					ignoreHttpConfiguration = 0
+					# model-less fallback, i.e. for development purposes or eid scripts 
+					disableResponseMapper = 0
+				}
 				request {
 					scheme = {$plugin.tx_streamovationsvp.rest.scheme}
 					baseUri = {$plugin.tx_streamovationsvp.rest.baseUri}
@@ -71,6 +71,14 @@ plugin.tx_streamovationsvp {
 						speakerTimeline.json = 1
 					}
 				}
+			}
+		}
+		
+		# different cache lifetimes for livestreams
+		controller.Video.action.liveStream {
+			repository {
+				default.cache.lifetime = 60
+				Event.cache.lifetime = 30
 			}
 		}
 	}

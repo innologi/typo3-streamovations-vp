@@ -24,6 +24,7 @@ namespace Innologi\StreamovationsVp\Library\RestRepository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use TYPO3\CMS\Core\SingletonInterface;
+// @LOW shouldn't this be an abstract?
 /**
  * REST Repository
  *
@@ -39,6 +40,11 @@ class Repository implements RepositoryInterface,SingletonInterface {
 	 * @inject
 	 */
 	protected $objectManager;
+
+	/**
+	 * @var array
+	 */
+	protected $originalRequestParameters = array();
 
 	/**
 	 * Domain Object class name
@@ -59,6 +65,20 @@ class Repository implements RepositoryInterface,SingletonInterface {
 	 */
 	public function __construct() {
 		$this->initializeObjectType();
+	}
+
+	/**
+	 * Sets original Request parameters
+	 *
+	 * @param \TYPO3\CMS\Extbase\Mvc\Request $originalRequest
+	 * @return $this
+	 */
+	public function setOriginalRequestParameters(\TYPO3\CMS\Extbase\Mvc\Request $originalRequest) {
+		$this->originalRequestParameters = array(
+			'controller' => $originalRequest->getControllerName(),
+			'action' => $originalRequest->getControllerActionName()
+		);
+		return $this;
 	}
 
 	/**
@@ -94,7 +114,9 @@ class Repository implements RepositoryInterface,SingletonInterface {
 		/* @var $requestFactory RequestFactoryInterface */
 		$requestFactory = $this->objectManager->get(__NAMESPACE__ . '\\RequestFactoryInterface');
 
-		return $requestFactory->create($this->objectType, $this->forceRawResponse);
+		return $requestFactory
+			->reset($this->originalRequestParameters['controller'], $this->originalRequestParameters['action'])
+			->create($this->objectType, $this->forceRawResponse);
 	}
 
 }

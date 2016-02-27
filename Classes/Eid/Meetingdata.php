@@ -74,16 +74,16 @@ class Meetingdata {
 			// overrule property json encoding
 			array(
 				'rest' => array(
-					'features' => array(
-						// If we don't disable it, the changed configurations of
-						// the timelines conflict with the domain models and thus
-						// reflection would cause errors in the response mapper.
-						//
-						// Also: this gives us better performance in this use-case.
-						'disableResponseMapper' => 1
-					),
 					'repository' => array(
 						'Meetingdata' => array(
+							'features' => array(
+								// If we don't disable it, the changed configurations of
+								// the timelines conflict with the domain models and thus
+								// reflection would cause errors in the response mapper.
+								//
+								// Also: this gives us better performance in this use-case.
+								'disableResponseMapper' => 1
+							),
 							'response' => array(
 								'property' => array(
 									'topicTimeline' => $timelineConfig,

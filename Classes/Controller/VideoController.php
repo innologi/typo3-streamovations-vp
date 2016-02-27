@@ -56,6 +56,22 @@ class VideoController extends Controller {
 	protected $meetingdataRepository;
 
 	/**
+	 * Initializes the controller before invoking an action method.
+	 *
+	 * @return void
+	 * @api
+	 */
+	protected function initializeAction() {
+		parent::initializeAction();
+		// at this point, the request is set and initialized, so we can pass it to the repositories
+		if ($this->request->getInternalArgument('__noRestSettingsOverride') !== TRUE) {
+			$this->eventRepository->setOriginalRequestParameters($this->request);
+			$this->playlistRepository->setOriginalRequestParameters($this->request);
+			$this->meetingdataRepository->setOriginalRequestParameters($this->request);
+		}
+	}
+
+	/**
 	 * Lists sessions
 	 *
 	 * @return void
@@ -208,7 +224,6 @@ class VideoController extends Controller {
 	 */
 	public function liveStreamAction() {
 		try {
-			// @FIX wait, eventRepo caches by default, doesn't it? Can we disable it here?
 			$events = $this->eventRepository
 				->setCategory($this->settings['event']['category'])
 				->setSubCategory($this->settings['event']['subCategory'])
@@ -225,6 +240,7 @@ class VideoController extends Controller {
 				$arguments = array(
 					'hash' => $event->getEventId(),
 					'isLiveStream' => TRUE,
+					'__noRestSettingsOverride' => TRUE,
 					'__noRedirectOnException' => TRUE,
 					'__noBackPid' => TRUE
 				);

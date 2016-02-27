@@ -45,12 +45,12 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 	protected $responseMapper;
 
 	/**
-	 * Initializes the configuration
+	 * Initializes the class properties
 	 *
 	 * @return void
 	 */
-	protected function initializeConfiguration() {
-		parent::initializeConfiguration();
+	protected function initialize() {
+		parent::initialize();
 		$this->responseConfigurator = $this->objectManager->get(__NAMESPACE__ . '\\ResponseConfiguratorInterface');
 		$this->responseMapper = $this->objectManager->get(__NAMESPACE__ . '\\ResponseMapperInterface');
 	}
@@ -65,7 +65,7 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 	 * @return mixed Array or object
 	 */
 	public function createByRawResponse($rawResponse, $responseType, $objectType) {
-		$settings = $this->getRepositorySettings($objectType);
+		$settings = $this->repositorySettingsManager->getSettings($objectType);
 		$response = NULL;
 
 		// convert response to array
@@ -116,18 +116,18 @@ class ResponseFactory extends FactoryAbstract implements ResponseFactoryInterfac
 	 * @return ResponseInterface
 	 */
 	public function create(array $response, $objectType) {
-		$settings = $this->getRepositorySettings($objectType);
+		$settings = $this->repositorySettingsManager->getSettings($objectType);
 
 		// property configuration
 		if (isset($settings['response']['property'])) {
 			$response = $this->responseConfigurator->configureProperties(
 				$response,
 				$settings['response']['property'],
-				$this->repositoryMapper->getRepositoryNameFromObjectType($objectType)
+				$this->repositorySettingsManager->getRepositoryNameFromObjectType($objectType)
 			);
 		}
 
-		if (isset($this->configuration['features']['disableResponseMapper']) && (bool) $this->configuration['features']['disableResponseMapper']) {
+		if (isset($settings['features']['disableResponseMapper']) && (bool) $settings['features']['disableResponseMapper']) {
 			// response mapper disabled: can be great for performance in specific
 			// use-cases, but don't rely on this for production-ready extensions!
 			/* @var $response ResponseInterface */

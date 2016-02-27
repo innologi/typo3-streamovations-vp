@@ -30,7 +30,7 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  *
  * This class is meant to be used only for proof-of-concepts.
  * It is a fallback once you disable the response-mapper via TS:
- * rest.features.disableResponseMapper = 1
+ * rest.repository.XXXXX.features.disableResponseMapper = 1
  *
  * It allows you to use response objects in extbase and fluid
  * as if all their properties are defined and have getters and

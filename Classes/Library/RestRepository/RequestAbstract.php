@@ -179,10 +179,10 @@ abstract class RequestAbstract implements RequestInterface {
 		// only enable tags if requested by our cache settings, as these tags are wonderful for tracking
 		// down caching issues, but are completely unused in and add overhead to production
 		if ($this->cacheTags) {
-			/** @var RepositoryMapperInterface $repositoryMapper */
-			$repositoryMapper = $this->objectManager->get(__NAMESPACE__ . '\\RepositoryMapperInterface');
+			/** @var RepositorySettingsManagerInterface $repositorySettingsManager */
+			$repositorySettingsManager = $this->objectManager->get(__NAMESPACE__ . '\\RepositorySettingsManagerInterface');
 			$tags = array(
-				$repositoryMapper->getRepositoryNameFromObjectType($this->responseObjectType),
+				$repositorySettingsManager->getRepositoryNameFromObjectType($this->responseObjectType),
 				'lifetime_' . $this->cacheLifetime,
 				'raw_' . (int) ($isRawResponse || $this->forceRawResponse),
 				'type_' . $this->responseType

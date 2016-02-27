@@ -23,36 +23,40 @@ namespace Innologi\StreamovationsVp\Library\RestRepository;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use TYPO3\CMS\Core\SingletonInterface;
+
 /**
- * REST Repository Mapper
+ * REST Repository Settings Manager Interface
  *
  * @package InnologiLibs
  * @subpackage RestRepository
  * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class RepositoryMapper implements RepositoryMapperInterface,SingletonInterface {
+interface RepositorySettingsManagerInterface {
 
 	/**
-	 * @var array
+	 * Sets settings context
+	 *
+	 * @param string $controller
+	 * @param string $action
+	 * @return $this
 	 */
-	protected $objectTypeMap = array();
+	public function setContext($controller = NULL, $action = NULL);
 
 	/**
-	 * {@inheritDoc}
-	 * @see RepositoryMapperInterface::getRepositoryNameFromObjectType()
+	 * Returns Repository Name from Object Type
+	 *
+	 * @param string $objectType
+	 * @return string
 	 */
-	public function getRepositoryNameFromObjectType($objectType) {
-		if (!isset($this->objectTypeMap[$objectType])) {
-			$repositoryName = $objectType;
-			// remove namespace
-			if ( ($pos = strrpos($objectType, '\\')) !== FALSE ) {
-				$repositoryName = substr($objectType, ($pos + 1));
-			}
-			$this->objectTypeMap[$objectType] = $repositoryName;
-		}
-		return $this->objectTypeMap[$objectType];
-	}
+	public function getRepositoryNameFromObjectType($objectType);
+
+	/**
+	 * Returns repository settings
+	 *
+	 * @param string $objectType
+	 * @return array
+	 */
+	public function getSettings($objectType);
 
 }

@@ -23,7 +23,6 @@ namespace Innologi\StreamovationsVp\Library\RestRepository;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Core\SingletonInterface;
 /**
  * Factory Abstract
@@ -41,23 +40,9 @@ abstract class FactoryAbstract implements SingletonInterface {
 	protected $objectManager;
 
 	/**
-	 * @var RepositoryMapperInterface
+	 * @var RepositorySettingsManagerInterface
 	 */
-	protected $repositoryMapper;
-
-	/**
-	 * General REST configuration
-	 *
-	 * @var array
-	 */
-	protected $configuration;
-
-	/**
-	 * Merged REST configuration of default and objectType
-	 *
-	 * @var array
-	 */
-	protected $settings = array();
+	protected $repositorySettingsManager;
 
 	/**
 	 * Class constructor
@@ -66,58 +51,18 @@ abstract class FactoryAbstract implements SingletonInterface {
 	 * @return void
 	 */
 	public function __construct(\TYPO3\CMS\Extbase\Object\ObjectManagerInterface $objectManager) {
-		// because we want objectManager in __construct, we can't rely on DI as it is always later
+		// because we want objectManager in __construct, we can't rely on DI as DI is always later
 		$this->objectManager = $objectManager;
-		$this->repositoryMapper = $objectManager->get(__NAMESPACE__ . '\\RepositoryMapperInterface');
-		$this->initializeConfiguration();
+		$this->initialize();
 	}
 
 	/**
-	 * Initializes the configuration
+	 * Initializes the class properties
 	 *
 	 * @return void
 	 */
-	protected function initializeConfiguration() {
-		/* @var $configurationManager \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface */
-		$configurationManager = $this->objectManager->get('TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManagerInterface');
-		$frameworkConfiguration = $configurationManager->getConfiguration(
-			ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK
-		);
-		$this->configuration = $frameworkConfiguration['rest'];
-	}
-
-	/**
-	 * Returns repository settings
-	 *
-	 * @param string $objectType
-	 * @return array
-	 */
-	protected function getRepositorySettings($objectType) {
-		$type = $this->repositoryMapper->getRepositoryNameFromObjectType($objectType);
-		if (!isset($this->settings[$type])) {
-			$this->settings[$type] = $this->mergeRepositorySettings($type);
-		}
-		return $this->settings[$type];
-	}
-
-	/**
-	 * Merges default and type-specific settings
-	 *
-	 * @param string $type
-	 * @return array
-	 */
-	protected function mergeRepositorySettings($type) {
-		$config = $this->configuration['repository'];
-
-		$settings = array();
-		if (isset($config[$type])) {
-			$settings = $config[$type];
-		}
-		if (isset($config['default'])) {
-			// merging of default settings with type-specific
-			$settings = array_replace_recursive($config['default'], $settings);
-		}
-		return $settings;
+	protected function initialize() {
+		$this->repositorySettingsManager = $this->objectManager->get(__NAMESPACE__ . '\\RepositorySettingsManagerInterface');
 	}
 
 }

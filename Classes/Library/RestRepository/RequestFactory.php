@@ -32,12 +32,24 @@ namespace Innologi\StreamovationsVp\Library\RestRepository;
  * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class RequestFactory extends FactoryAbstract implements RequestFactoryInterface{
+class RequestFactory extends FactoryAbstract implements RequestFactoryInterface {
 
 	/**
 	 * @var string
 	 */
 	protected $httpConfKey = 'ignoreHttpConfiguration';
+
+	/**
+	 * Resets settings context
+	 *
+	 * @param string $controller
+	 * @param string $action
+	 * @return $this
+	 */
+	public function reset($controller = NULL, $action = NULL) {
+		$this->repositorySettingsManager->setContext($controller, $action);
+		return $this;
+	}
 
 	/**
 	 * Create REST request object
@@ -47,7 +59,7 @@ class RequestFactory extends FactoryAbstract implements RequestFactoryInterface{
 	 * @return RequestInterface
 	 */
 	public function create($objectType, $forceRawResponse = FALSE) {
-		$settings = $this->getRepositorySettings($objectType);
+		$settings = $this->repositorySettingsManager->getSettings($objectType);
 		return $this->objectManager->get(
 			__NAMESPACE__ . '\\RequestInterface',
 			$this->createRequestUriObject(
@@ -61,9 +73,10 @@ class RequestFactory extends FactoryAbstract implements RequestFactoryInterface{
 				: array()
 			),
 			$forceRawResponse,
-			(isset($this->configuration['features'][$this->httpConfKey])
-				&& (bool) $this->configuration['features'][$this->httpConfKey]
+			(isset($settings['features'][$this->httpConfKey])
+				&& (bool) $settings['features'][$this->httpConfKey]
 					? array()
+					// @TODO see if this still exists in TYPO3 7
 					: $GLOBALS['TYPO3_CONF_VARS']['HTTP']
 			)
 		);

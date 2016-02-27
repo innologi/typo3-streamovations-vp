@@ -35,6 +35,15 @@ namespace Innologi\StreamovationsVp\Library\RestRepository;
 interface RequestFactoryInterface {
 
 	/**
+	 * Resets settings context
+	 *
+	 * @param string $controller
+	 * @param string $action
+	 * @return $this
+	 */
+	public function reset($controller = NULL, $action = NULL);
+
+	/**
 	 * Create REST request object
 	 *
 	 * @param string $objectType
