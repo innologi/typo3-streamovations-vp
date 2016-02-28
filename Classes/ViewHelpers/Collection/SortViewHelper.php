@@ -84,9 +84,6 @@ class SortViewHelper extends AbstractViewHelper {
 		if (isset($this->arguments['sortBy'])) {
 			foreach ($subject as $key => $value) {
 				$key = $this->getPropertyValue($value, $this->arguments['sortBy']);
-				if ($key instanceof \DateTime) {
-					$key = $key->getTimestamp();
-				}
 				while (isset($result[$key])) {
 					$key .= '_1';
 				}
@@ -114,7 +111,7 @@ class SortViewHelper extends AbstractViewHelper {
 	protected function getPropertyValue($object, $property) {
 		$value = ObjectAccess::getPropertyPath($object, $property);
 		if ($value instanceof \DateTime) {
-			// @LOW what if the value is a DateTime obj? sort on timestamp? (format(U))
+			$value = $value->getTimestamp();
 		} elseif ($value instanceof ObjectStorage || is_array($value)) {
 			// @LOW what if the value is a collection itself?
 		}
