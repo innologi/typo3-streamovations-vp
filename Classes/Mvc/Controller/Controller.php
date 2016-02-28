@@ -25,7 +25,9 @@ namespace Innologi\StreamovationsVp\Mvc\Controller;
  ***************************************************************/
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
+use TYPO3\CMS\Fluid\View\AbstractTemplateView;
 use Innologi\StreamovationsVp\Library\RestRepository\Exception\RestException;
 use Innologi\StreamovationsVp\Library\RestRepository\Exception\HttpReturnedError;
 use Innologi\StreamovationsVp\Library\RestRepository\Exception\HostUnreachable;
@@ -46,18 +48,24 @@ class Controller extends ActionController {
 	protected $assetProviderService;
 
 	/**
-	 * Initializes the controller before invoking an action method.
+	 * Initializes the view before invoking an action method.
+	 *
+	 * Override this method to solve assign variables common for all actions
+	 * or prepare the view in another way before the action is called.
+	 *
+	 * @param \TYPO3\CMS\Extbase\Mvc\View\ViewInterface $view The view to be initialized
 	 *
 	 * @return void
 	 * @api
 	 */
-	protected function initializeAction() {
-		parent::initializeAction();
-		// provide assets as configured per action
-		$this->assetProviderService->provideAssets(
-			$this->request->getControllerName(),
-			$this->request->getControllerActionName()
-		);
+	protected function initializeView(ViewInterface $view) {
+		if ($view instanceof AbstractTemplateView && $this->request->getFormat() === 'html') {
+			// provide assets as configured per action
+			$this->assetProviderService->provideAssets(
+				$this->request->getControllerName(),
+				$this->request->getControllerActionName()
+			);
+		}
 	}
 
 	/**
