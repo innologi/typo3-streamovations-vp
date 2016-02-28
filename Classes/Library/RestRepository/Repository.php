@@ -24,7 +24,6 @@ namespace Innologi\StreamovationsVp\Library\RestRepository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use TYPO3\CMS\Core\SingletonInterface;
-// @LOW shouldn't this be an abstract?
 /**
  * REST Repository
  *
@@ -33,7 +32,7 @@ use TYPO3\CMS\Core\SingletonInterface;
  * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class Repository implements RepositoryInterface,SingletonInterface {
+abstract class Repository implements RepositoryInterface,SingletonInterface {
 
 	/**
 	 * @var \TYPO3\CMS\Extbase\Object\ObjectManagerInterface
