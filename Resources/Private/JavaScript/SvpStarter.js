@@ -308,7 +308,7 @@ var SvpStarter = (function($) {
 	 */
 	function initPolling() {
 		if (pollingInterval > 0) {
-			if (typeof(SvpPolling) !== 'undefined') {
+			if (typeof SvpPolling !== 'undefined') {
 				var interval = pollingInterval * 1000,
 					hash = $('#' + select.data).attr('data-hash');
 
@@ -631,7 +631,7 @@ var SvpStarter = (function($) {
 			seek(topic);
 		}
 	}
-	// @TODO __replace all typeof() with typeof?
+
 	/**
 	 * Performs a seek while keeping in mind some of the limits of
 	 * jwplayer, smvplayer and flash
@@ -640,8 +640,9 @@ var SvpStarter = (function($) {
 	 * @return void
 	 */
 	function seek(topic) {
+		// @FIX create single API
 		// e.g. when IDLE or BUFFERING
-		if (typeof(SVPS.player.getStatus) !== 'undefined') {
+		if (typeof SVPS.player.getStatus !== 'undefined') {
 			// smvplayer
 			var state = SVPS.player.getStatus();
 		} else {
@@ -707,7 +708,7 @@ var SvpStarter = (function($) {
 	function initJwPlayer(requireLicense) {
 		var licenseKey = '###JWPLAYER_KEY###';
 
-		if (typeof(jwplayer) === 'undefined') {
+		if (typeof jwplayer === 'undefined') {
 			log(logMsg.no_jwplayer, true);
 			return false;
 		}
@@ -730,7 +731,7 @@ var SvpStarter = (function($) {
 	function createSmvPlayer(data) {
 		if (initJwPlayer(true)) {
 			// smvplayer object needs to exist
-			if (typeof(smvplayer) !== 'undefined') {
+			if (typeof smvplayer !== 'undefined') {
 				SVPS.player = smvplayer(select.player);
 				SVPS.player.init(data);
 
@@ -838,22 +839,6 @@ var SvpStarter = (function($) {
 		}
 		return false;
 	}
-	// @TODO remove?
-	/**
-	 * Create the video player by using native HTML5 methods
-	 *
-	 * UNFINISHED IMPLEMENTATION
-	 *
-	 * @return boolean True on success, false on failure
-	 */
-	/*function createNativePlayer() {
-		// #@LOW finish implementation?
-		if (!!document.createElement('video').canPlayType) {
-			// fallback
-		}
-		log('ERROR: unfinished implementation', true);
-		return false;
-	}*/
 
 	/**
 	 * Actual SVPS object, offers public methods/properties
@@ -912,7 +897,7 @@ var SvpStarter = (function($) {
 				return false;
 			}
 			$data.html('');
-			if (typeof(data) !== 'object') {
+			if (typeof data !== 'object') {
 				log(logMsg.player_data_invalid, true);
 				return false;
 			}
