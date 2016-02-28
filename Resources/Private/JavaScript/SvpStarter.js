@@ -640,16 +640,8 @@ var SvpStarter = (function($) {
 	 * @return void
 	 */
 	function seek(topic) {
-		// @FIX create single API
 		// e.g. when IDLE or BUFFERING
-		if (typeof SVPS.player.getStatus !== 'undefined') {
-			// smvplayer
-			var state = SVPS.player.getStatus();
-		} else {
-			// jwplayer
-			var state = SVPS.player.getState();
-		}
-
+		var state = SVPS.player.getState();
 		if (state.toUpperCase() !== 'PLAYING') {
 			// not all relevant onSeek events will trigger if player hasn't started
 			applySeekOnPlay(topic);
@@ -789,25 +781,48 @@ var SvpStarter = (function($) {
 				// because smvplayer doesnt use the playlist as jwplayer does, we emulate
 				// some specific playlist methods on SVPS.player to create a shared api
 				// where this is covenient for SVPS
-				SVPS.player.getPlaylistIndex = function() {
-					return SVPS.player.getTimeline().currentItem;
-				};
-				SVPS.player.playlistNext = function() {
-					SVPS.player.next();
-				};
-				SVPS.player.playlistPrev = function() {
-					SVPS.player.previous();
-				};
-				SVPS.player.playlistItem = function(index, topic) {
-					var moveAction = index - SVPS.player.getPlaylistIndex();
-					if (moveAction > 0) {
-						recursiveMoveNext(0, moveAction, topic);
-					} else if(moveAction < 0) {
-						recursiveMovePrevious(0, moveAction, topic);
+				if (typeof SVPS.player.getPlaylistIndex === 'undefined') {
+					SVPS.player.getPlaylistIndex = function() {
+						return SVPS.player.getTimeline().currentItem;
+					};
+				} else {
+					log('Function smvplayer.getPlaylistIndex() already exists! SVPS will fail!', true);
+				}
+				if (typeof SVPS.player.playlistNext === 'undefined') {
+					SVPS.player.playlistNext = function() {
+						SVPS.player.next();
+					};
+				} else {
+					log('Function smvplayer.playlistNext() already exists! SVPS will fail!', true);
+				}
+				if (typeof SVPS.player.playlistPrev === 'undefined') {
+					SVPS.player.playlistPrev = function() {
+						SVPS.player.previous();
+					};
+				} else {
+					log('Function smvplayer.playlistPrev() already exists! SVPS will fail!', true);
+				}
+				if (typeof SVPS.player.playlistItem === 'undefined') {
+					SVPS.player.playlistItem = function(index, topic) {
+						var moveAction = index - SVPS.player.getPlaylistIndex();
+						if (moveAction > 0) {
+							recursiveMoveNext(0, moveAction, topic);
+						} else if(moveAction < 0) {
+							recursiveMovePrevious(0, moveAction, topic);
+						}
+						// to differentiate from the returnvalue of SVPS.jw.playlistItem()
+						return 2;
+					};
+				} else {
+					log('Function smvplayer.playlistItem() already exists! SVPS will fail!', true);
+				}
+				if (typeof SVPS.player.getState === 'undefined') {
+					SVPS.player.getState = function() {
+						return SVPS.player.getStatus();
 					}
-					// to differentiate from the returnvalue of SVPS.jw.playlistItem()
-					return 2;
-				};
+				} else {
+					log('Function smvplayer.getState() already exists! SVPS will fail!', true);
+				}
 
 				return true;
 			}
