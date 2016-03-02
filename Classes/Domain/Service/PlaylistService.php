@@ -68,6 +68,8 @@ class PlaylistService {
 		/* @var $playlist \Innologi\StreamovationsVp\Domain\Model\Playlist */
 		$ports = $playlist->getPorts();
 		$application = $playlist->getApplication();
+		// @TODO add configuration to set protocol preference
+		// @TODO possible need to add multiple sources to support different devices
 		$urlParts = array(
 			0 => 'rtmp',
 			1 => '://' . $playlist->getServer() . ':',
@@ -78,7 +80,9 @@ class PlaylistService {
 		$playlistData = array(
 			'playlist' => array(),
 			// used by SVPS, not by jwplayer
-			'application' => $application
+			'application' => $application,
+			'androidhls' => TRUE,
+			'primary' => 'html5'
 		);
 		if (isset($settings['width'][0])) {
 			$playlistData['width'] = $settings['width'];
