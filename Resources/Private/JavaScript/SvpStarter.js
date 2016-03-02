@@ -59,10 +59,9 @@ var SvpStarter = (function($) {
 	 * @var object
 	 */
 	var idMap = {
-		// streamfile id: playlist id
-		playlist: {},
 		// topic id: topic obj
 		topic: {}
+		//speaker: {}
 	};
 
 	/**
@@ -78,34 +77,13 @@ var SvpStarter = (function($) {
 	};
 
 	/**
-	 * Currently active data types
+	 * Currently active data types / player
 	 *
 	 * @var object
 	 */
 	var active = {
 		topic: 0,
 		speaker: 0
-	};
-
-	/**
-	 * Original object property references, for those we need to overrule
-	 *
-	 * Some smvPlayer properties need overruling as a way to extend them.
-	 * This is especially useful for methods that destroy the jwplayer object.
-	 *
-	 * @var object
-	 */
-	var orig = {
-		// SVPS.player
-		player: {
-			onSeek: null,
-			onPlay: null,
-			onPause: null,
-			next: null,
-			previous: null,
-			setQualityLevel: null,
-			setAudioLanguage: null
-		}
 	};
 
 	/**
@@ -126,11 +104,20 @@ var SvpStarter = (function($) {
 	/**
 	 * Used to limit seekOnPlays to 1
 	 *
-	 * Necessary for applySeekOnPlay() to work.
+	 * Necessary for applySeekOnPlay() to work on anything other than JW7.
 	 *
 	 * @var object
 	 */
 	var seekOnPlay = {};
+
+	/**
+	 * Used to limit seekOnPlays to 1
+	 *
+	 * Necessary for JW6 onPlaylist seeks.
+	 *
+	 * @var object
+	 */
+	var seekOnPlaylist = {};
 
 	/**
 	 * Registers a hit of onSeek events, to determine if topics/speakers
@@ -154,7 +141,7 @@ var SvpStarter = (function($) {
 		/**
 		 * For use of general detection of current type element
 		 *
-		 * SVPS.player.onTime()
+		 * onTime()
 		 *
 		 * @param t object Timestamp
 		 * @param type string topic/speaker
@@ -164,7 +151,7 @@ var SvpStarter = (function($) {
 			return function(e) {
 				if (e.position >= t.start && e.position < (t.start+0.4)
 					&& t.id !== active[type]
-					&& timeIsOnPlaylist(t)
+					&& t.playlist === getPlaylistIndex()
 				) {
 					activateElement(t.id, type);
 				}
@@ -174,7 +161,7 @@ var SvpStarter = (function($) {
 		/**
 		 * For use of general detection of type element of seeked time
 		 *
-		 * SVPS.player.onSeek()
+		 * onSeek()
 		 *
 		 * @param t object Timestamp
 		 * @param type string topic/speaker
@@ -183,7 +170,7 @@ var SvpStarter = (function($) {
 		onSeek: function(t, type) {
 			return function(e) {
 				if (e.offset >= t.start && e.offset < t.end
-					&& timeIsOnPlaylist(t)
+					&& t.playlist === getPlaylistIndex()
 				) {
 					if (t.id !== active[type]) {
 						activateElement(t.id, type);
@@ -198,7 +185,7 @@ var SvpStarter = (function($) {
 		 * For use of finalizing the onSeek() handler callbacks as a means to
 		 * deactivate the given type when no matches occurred in previous callbacks
 		 *
-		 * SVPS.player.onSeek()
+		 * onSeek()
 		 *
 		 * @param type string topic/speaker
 		 * @return {Function}
@@ -225,7 +212,9 @@ var SvpStarter = (function($) {
 		// class of player container
 		playerContainer: 'video-player-container',
 		// player engine wrapper pre-wrap id
-		engineWrapper: 'smvplayer_engineWrapper_',
+		smvWrapper: 'smvplayer_engineWrapper_',
+		// player engine wrapper post-wrap id
+		html5Wrapper: '_html5videotag',
 		// id of player data HTML element
 		data: 'tx-streamovations-vp-playerdata',
 		// id of topic timeline HTML element
@@ -245,6 +234,7 @@ var SvpStarter = (function($) {
 		no_svpp: 'SVPP not loaded, polling inactive',
 		svpp_off: 'Polling disabled',
 		no_player_data: 'The player element or player data is not available',
+		no_playlist: 'Missing essential playlist data',
 		no_json_support: 'No JSON.parse support in user agent',
 		player_data_invalid: 'Player data is invalid or in an unsupported format',
 		invalid_player: 'No supported player configured',
@@ -255,6 +245,7 @@ var SvpStarter = (function($) {
 		events_speaker_init: 'initializing speaker event handlers',
 		events_re: 'Reattached event callbacks',
 		no_timestamp: 'Topic has no registered timestamps',
+		no_playlist_seek: 'Can only seek to other playlist item during playback',
 		activate: 'Activated'
 	};
 
@@ -266,6 +257,69 @@ var SvpStarter = (function($) {
 	$.fn.exists = function() {
 		return this.length !== 0;
 	};
+
+	/**
+	 * onSeek wrapper. Method will be created on player initialization.
+	 *
+	 * @param callback object Function callback
+	 * @return void
+	 */
+	var onSeek = null;
+
+	/**
+	 * onTime wrapper. Method will be created on player initialization.
+	 *
+	 * @param callback object Function callback
+	 * @return void
+	 */
+	var onTime = null;
+
+	/**
+	 * onPlay wrapper. Method will be created on player initialization.
+	 *
+	 * @param callback object Function callback
+	 * @return void
+	 */
+	var onPlay = null;
+
+	/**
+	 * onPause wrapper. Method will be created on player initialization.
+	 *
+	 * @param callback object Function callback
+	 * @return void
+	 */
+	var onPause = null;
+
+	/**
+	 * Get current playlist id wrapper. Method will be created on player initialization.
+	 *
+	 * @return integer
+	 */
+	var getPlaylistIndex = null;
+
+	/**
+	 * Get playlist id from time object wrapper. Method will be created on player initialization.
+	 *
+	 * @return integer
+	 */
+	var getPlaylistIndexFromTimeObject = null;
+
+	/**
+	 * Seek topic wrapper. Method will be created on player initialization.
+	 *
+	 * @param topic object Topic to seek
+	 * @return void
+	 */
+	var seek = null;
+
+	/**
+	 * Seek time wrapper. Method will be created on player initialization.
+	 *
+	 * @param time integer
+	 * @param playlist integer
+	 * @return void
+	 */
+	var seekTime = null;
 
 	/**
 	 * Logs message to console, and allows to differentiate between errors and info
@@ -312,10 +366,10 @@ var SvpStarter = (function($) {
 				var interval = pollingInterval * 1000,
 					hash = $('#' + select.data).attr('data-hash');
 
-				SVPS.player.onPlay(function() {
+				onPlay(function() {
 					SvpPolling.init(hash, currentPage, interval);
 				});
-				SVPS.player.onPause(function() {
+				onPause(function() {
 					SvpPolling.stop();
 					deactivateElement('speaker');
 					deactivateElement('topic');
@@ -384,18 +438,20 @@ var SvpStarter = (function($) {
 
 	/**
 	 * Meetingdata refers to streamfile id's, but we can only request playlist id from jwplayer object.
-	 * This method pushes playlist id's paired to their streamfile id's into the idMap variable.
+	 * This returns a playlist streamfileId => playlistIndex collection.
 	 *
 	 * @param data object Playlist data directly parsed from JSON response
-	 * @return void
+	 * @return object
 	 */
-	function pushPlaylistToIdMap(data) {
+	function formatPlaylistData(data) {
+		var playlistData = {};
 		for(var id in data) {
 			if (data.hasOwnProperty(id)) {
 				var p = data[id];
-				idMap.playlist[p.streamfileId] = parseInt(id, 10);
+				playlistData[p.streamfileId] = parseInt(id, 10);
 			}
 		}
+		return playlistData;
 	}
 
 	/**
@@ -474,23 +530,39 @@ var SvpStarter = (function($) {
 			time.end = j < timeline.length && time.streamfileId === timeline[j].streamfileId
 				? Math.floor(timeline[j].relativeTime / 1000)
 				: Number.MAX_SAFE_INTEGER;
+			time.playlist = getPlaylistIndexFromTimeObject(time);
 
 			if (pushToIdMap) {
 				idMap[elemType][time.id] = {
-					playlist: idMap.playlist[time.streamfileId],
+					playlist: time.playlist,
 					time: time.start
 				};
 			}
 
 			// set events on times
-			SVPS.player.onTime(eventHandler.onTime(time, elemType));
+			onTime(eventHandler.onTime(time, elemType));
 
 			// set events on seeks
-			SVPS.player.onSeek(eventHandler.onSeek(time, elemType));
+			onSeek(eventHandler.onSeek(time, elemType));
 		}
 
 		// final onseek deactivates actives if no previous onseek had a hit
-		SVPS.player.onSeek(eventHandler.onSeekFinal(elemType));
+		onSeek(eventHandler.onSeekFinal(elemType));
+	}
+
+	/**
+	 * Resets SVPS.player events (html5 tag) to the correct time and playlist.
+	 * Needs to be called when the smvplayer replaces the html5 tag and
+	 * effectively destroys a number of parameters.
+	 *
+	 * @return void
+	 */
+	function resetHtml5(time, playlist) {
+		deactivateElement('speaker');
+		deactivateElement('topic');
+		applySeekOnPlay(time, playlist);
+		// only play-specific callbacks need to re-attached
+		reattachPlayCallbacks();
 	}
 
 	/**
@@ -500,7 +572,7 @@ var SvpStarter = (function($) {
 	 *
 	 * @return void
 	 */
-	function reset() {
+	function resetJw() {
 		SVPS.jw = jwplayer(select.player);
 		// if really new, an onReady will be fired
 		SVPS.jw.onReady(function(e) {
@@ -512,7 +584,8 @@ var SvpStarter = (function($) {
 	}
 
 	/**
-	 * Reattach callbacks on event handlers, if stored in respective arrays
+	 * Reattach callbacks on event handlers, if stored in respective arrays.
+	 * Necessary for smvplayer's resetJw() call, see that method's description.
 	 *
 	 * @return void
 	 */
@@ -525,17 +598,29 @@ var SvpStarter = (function($) {
 		}
 		for (c in callbacks.onSeek) {
 			if (callbacks.onSeek.hasOwnProperty(c)) {
-				orig.player.onSeek(callbacks.onSeek[c]);
+				SVPS.smv.onSeek(callbacks.onSeek[c]);
 			}
 		}
+		reattachPlayCallbacks();
+	}
+
+	/**
+	 * Reattach callbacks on event handlers, if stored in respective arrays.
+	 * Necessary for smvplayer's resetJw() and resetHtml5() calls, see
+	 * those methods' descriptions.
+	 *
+	 * @return void
+	 */
+	function reattachPlayCallbacks() {
+		var c = null;
 		for (c in callbacks.onPlay) {
 			if (callbacks.onPlay.hasOwnProperty(c)) {
-				orig.player.onPlay(callbacks.onPlay[c]);
+				SVPS.smv.onPlay(callbacks.onPlay[c]);
 			}
 		}
 		for (c in callbacks.onPause) {
 			if (callbacks.onPause.hasOwnProperty(c)) {
-				orig.player.onPause(callbacks.onPause[c]);
+				SVPS.smv.onPause(callbacks.onPause[c]);
 			}
 		}
 		log(logMsg.events_re, false);
@@ -581,113 +666,32 @@ var SvpStarter = (function($) {
 		});
 		log(logMsg.activate + ' ' + type + ' ' + id, false);
 	}
-	// @TODO __do we still need this?
-	/**
-	 * Recursively call playlistNext()
-	 *
-	 * smvplayer only, jwplayer doesn't need this.
-	 *
-	 * @param current int Current recursion in moving next
-	 * @param limit int Endpoint of recursion
-	 * @param topic object
-	 * @return void
-	 */
-	function recursiveMoveNext(current, limit, topic) {
-		SVPS.player.playlistNext();
-		current++;
-		if (current < limit) {
-			SVPS.jw.onReady(function (e) {
-				// timeout prevents flash from crashing :')
-				setTimeout(function() {
-					recursiveMoveNext(current, limit, topic);
-				}, 50);
-			});
-		} else {
-			seek(topic);
-		}
-	}
-	// @TODO __do we still need this?
-	/**
-	 * Recursively call playlistPrev()
-	 *
-	 * smvplayer only, jwplayer doesn't need this.
-	 *
-	 * @param current int Current recursion in moving back
-	 * @param limit int Endpoint of recursion
-	 * @param topic object
-	 * @return void
-	 */
-	function recursiveMovePrevious(current, limit, topic) {
-		SVPS.player.playlistPrev();
-		current--;
-		if (current > limit) {
-			SVPS.jw.onReady(function (e) {
-				// timeout prevents flash from crashing
-				setTimeout(function() {
-					recursiveMovePrevious(current, limit, topic);
-				}, 50);
-			});
-		} else {
-			seek(topic);
-		}
-	}
-
-	/**
-	 * Performs a seek while keeping in mind some of the limits of
-	 * jwplayer, smvplayer and flash
-	 *
-	 * @param topic object
-	 * @return void
-	 */
-	function seek(topic) {
-		// e.g. when IDLE or BUFFERING
-		var state = SVPS.player.getState();
-		if (state.toUpperCase() !== 'PLAYING') {
-			// not all relevant onSeek events will trigger if player hasn't started
-			applySeekOnPlay(topic);
-			SVPS.player.play(true);
-			// @TODO __this was necessary for old smvplayer, so.. remove?
-			//SVPS.jw.play(true);
-		} else {
-			SVPS.player.seek(topic.time);
-		}
-	}
 
 	/**
 	 * Applies a seek() on the player's onPlay event handler.
-	 * Useful when player isn't playing, otherwise flash may crash :')
+	 * Useful when player isn't playing, otherwise flash may crash
+	 * or the player may stall :')
 	 *
 	 * Justifies the seekOnPlay var, which is a shame but there's no way
-	 * around it for now.
+	 * around it for now except with JW player 7. (which replaces this
+	 * method on initialization)
 	 *
-	 * @param topic object
+	 * @param time integer
+	 * @param playlist integer
 	 * @return void
 	 */
-	function applySeekOnPlay(topic) {
-		if (!seekOnPlay.hasOwnProperty(topic.playlist)) {
-			seekOnPlay[topic.playlist] = {};
+	function applySeekOnPlay(time, playlist) {
+		if (!seekOnPlay.hasOwnProperty(playlist)) {
+			seekOnPlay[playlist] = {};
 		}
-		seekOnPlay[topic.playlist][topic.time] = true;
-		// note that this onPlay isn't added to callbacks with smvPlayer, that would be incredibly useless
-		//SVPS.player.onPlay(function (e) {
-		// @TODO __this was necessary for old smvplayer, so.. remove?
-		SVPS.jw.onPlay(function (e) {
-			// there's no way to delete onPlay event callbacks.. so we need these conditions :(
-			if (seekOnPlay[topic.playlist][topic.time]) {
-				SVPS.player.seek(topic.time);
-				seekOnPlay[topic.playlist][topic.time] = false;
+		seekOnPlay[playlist][time] = true;
+		onPlay(function (e) {
+			// can't delete the onPlay event callback.. hence the condition :(
+			if (seekOnPlay[playlist][time]) {
+				seekTime(time, playlist);
+				seekOnPlay[playlist][time] = false;
 			}
 		});
-	}
-
-	/**
-	 * Returns if time is on current playlist item
-	 *
-	 * @param t object Timestamp object
-	 * @return boolean
-	 */
-	function timeIsOnPlaylist(t) {
-		return idMap.playlist[t.streamfileId] === SVPS.player.getPlaylistIndex();
 	}
 
 	/**
@@ -697,7 +701,7 @@ var SvpStarter = (function($) {
 	 * @param requireLicense boolean If true, will fail if no licenseKey was provided
 	 * @return booelean True on success, false on failure
 	 */
-	function initJwPlayer(requireLicense) {
+	function initJwPlayerVariables(requireLicense) {
 		var licenseKey = '###JWPLAYER_KEY###';
 
 		if (typeof jwplayer === 'undefined') {
@@ -707,7 +711,6 @@ var SvpStarter = (function($) {
 		if (licenseKey) {
 			jwplayer.key = licenseKey;
 		} else if(requireLicense) {
-			// @TODO __we might not need to set it for new smvplayer since its given in config.json, so lose the requirement?
 			log(logMsg.no_jwplayer_key, true);
 			return false;
 		}
@@ -720,108 +723,27 @@ var SvpStarter = (function($) {
 	 * @param data object Parsed JSON data
 	 * @return boolean True on success, false on failure
 	 */
-	function createSmvPlayer(data) {
-		if (initJwPlayer(true)) {
+	function initSmvPlayer(data) {
+		if (initJwPlayerVariables(false)) {
 			// smvplayer object needs to exist
 			if (typeof smvplayer !== 'undefined') {
-				SVPS.player = smvplayer(select.player);
-				SVPS.player.init(data);
+				SVPS.smv = smvplayer(select.player);
+				SVPS.smv.init(data);
 
-				// SMV player changes the player id, so we should too if we want to get the actual JW player object
-				select.player = select.engineWrapper + select.player;
-				// smvplayer does not provide full jwplayer api, so we need a reference to preserve consistency in all of SVPS
-				SVPS.jw = jwplayer(select.player);
+				// works for any type of smvplayer
+				getPlaylistIndex = function() {
+					return SVPS.smv.getCurrentPlaylistItem().streamfileId;
+				};
+				getPlaylistIndexFromTimeObject = function(time) {
+					return time.streamfileId;
+				}
 
-				// Smvplayer calls jwplayer.remove() on moving in the playlist, which clears the entire jwplayer
-				// instance, including event handlers, so we need a construct that reassigns SVPS.jw and
-				// all of the event handler callbacks. This is what reset() is for.
-				SVPS.player.onTime = function(callback) {
-					callbacks.onTime.push(callback);
-					SVPS.jw.onTime(callback);
-				};
-				orig.player.onSeek = SVPS.player.onSeek;
-				SVPS.player.onSeek = function(callback) {
-					callbacks.onSeek.push(callback);
-					orig.player.onSeek(callback);
-				};
-				orig.player.onPlay = SVPS.player.onPlay;
-				SVPS.player.onPlay = function(callback) {
-					callbacks.onPlay.push(callback);
-					orig.player.onPlay(callback);
-				};
-				orig.player.onPause = SVPS.player.onPause;
-				SVPS.player.onPause = function(callback) {
-					callbacks.onPause.push(callback);
-					orig.player.onPause(callback);
-				};
-				// overrule player.next()
-				orig.player.next = SVPS.player.next;
-				SVPS.player.next = function() {
-					orig.player.next();
-					reset();
-				};
-				// overrule player.previous()
-				orig.player.previous = SVPS.player.previous;
-				SVPS.player.previous = function() {
-					orig.player.previous();
-					reset();
-				};
-				// overrule player.setQualityLevel()
-				orig.player.setQualityLevel = SVPS.player.setQualityLevel;
-				SVPS.player.setQualityLevel = function(q) {
-					orig.player.setQualityLevel(q);
-					reset();
-				};
-				// overrule player.setAudioLanguage()
-				orig.player.setAudioLanguage = SVPS.player.setAudioLanguage;
-				SVPS.player.setAudioLanguage = function(l) {
-					orig.player.setAudioLanguage(l);
-					reset();
-				};
-				// because smvplayer doesnt use the playlist as jwplayer does, we emulate
-				// some specific playlist methods on SVPS.player to create a shared api
-				// where this is covenient for SVPS
-				if (typeof SVPS.player.getPlaylistIndex === 'undefined') {
-					SVPS.player.getPlaylistIndex = function() {
-						return SVPS.player.getTimeline().currentItem;
-					};
-				} else {
-					log('Function smvplayer.getPlaylistIndex() already exists! SVPS will fail!', true);
-				}
-				if (typeof SVPS.player.playlistNext === 'undefined') {
-					SVPS.player.playlistNext = function() {
-						SVPS.player.next();
-					};
-				} else {
-					log('Function smvplayer.playlistNext() already exists! SVPS will fail!', true);
-				}
-				if (typeof SVPS.player.playlistPrev === 'undefined') {
-					SVPS.player.playlistPrev = function() {
-						SVPS.player.previous();
-					};
-				} else {
-					log('Function smvplayer.playlistPrev() already exists! SVPS will fail!', true);
-				}
-				if (typeof SVPS.player.playlistItem === 'undefined') {
-					SVPS.player.playlistItem = function(index, topic) {
-						var moveAction = index - SVPS.player.getPlaylistIndex();
-						if (moveAction > 0) {
-							recursiveMoveNext(0, moveAction, topic);
-						} else if(moveAction < 0) {
-							recursiveMovePrevious(0, moveAction, topic);
-						}
-						// to differentiate from the returnvalue of SVPS.jw.playlistItem()
-						return 2;
-					};
-				} else {
-					log('Function smvplayer.playlistItem() already exists! SVPS will fail!', true);
-				}
-				if (typeof SVPS.player.getState === 'undefined') {
-					SVPS.player.getState = function() {
-						return SVPS.player.getStatus();
-					}
-				} else {
-					log('Function smvplayer.getState() already exists! SVPS will fail!', true);
+				// do further initialization based on the utilized engine
+				var engine = SVPS.smv.getEngine();
+				if (engine === 'jw') {
+					initSmvJwPlayer();
+				} else if (engine === 'html5') {
+					initSmvHtml5Player();
 				}
 
 				return true;
@@ -833,26 +755,310 @@ var SvpStarter = (function($) {
 	}
 
 	/**
+	 * SMV player initialization that is JW-player engine specific.
+	 *
+	 * @return void
+	 */
+	function initSmvJwPlayer() {
+		// reflect active player object
+		SVPS.player = SVPS.smv;
+		// SMV player changes the player id, so we should too if we want to get the actual JW player object
+		select.player = select.smvWrapper + select.player;
+		// smvplayer does not provide full jwplayer api, so we need a reference to preserve consistency
+		SVPS.jw = jwplayer(select.player);
+
+		// Smvplayer calls jwplayer.remove() on moving in the playlist, which clears the entire jwplayer
+		// instance, including event handlers, so we need a construct that reassigns SVPS.jw and
+		// all of the event handler callbacks. This is what resetJw() is for.
+		onTime = function(callback) {
+			callbacks.onTime.push(callback);
+			SVPS.jw.onTime(callback);
+		};
+		// @LOW note that according to Streamovations employees, it could be a bug that these aren't reattached by SMV player
+		onSeek = function(callback) {
+			callbacks.onSeek.push(callback);
+			SVPS.smv.onSeek(callback);
+		};
+		onPlay = function(callback) {
+			callbacks.onPlay.push(callback);
+			SVPS.smv.onPlay(callback);
+		};
+		onPause = function(callback) {
+			callbacks.onPause.push(callback);
+			SVPS.smv.onPause(callback);
+		};
+
+		// Original smv property references, for those we need to overrule
+		var orig = {};
+		// overrule player.next()
+		orig.next = SVPS.smv.next;
+		SVPS.smv.next = function() {
+			orig.next();
+			resetJw();
+		};
+		// overrule player.previous()
+		orig.previous = SVPS.smv.previous;
+		SVPS.smv.previous = function() {
+			orig.previous();
+			resetJw();
+		};
+		// overrule player.setQualityLevel()
+		orig.setQualityLevel = SVPS.smv.setQualityLevel;
+		SVPS.smv.setQualityLevel = function(q) {
+			orig.setQualityLevel(q);
+			resetJw();
+		};
+		// overrule player.setAudioLanguage()
+		orig.setAudioLanguage = SVPS.smv.setAudioLanguage;
+		SVPS.smv.setAudioLanguage = function(l) {
+			orig.setAudioLanguage(l);
+			resetJw();
+		};
+
+		// seek methods
+		seek = function(topic) {
+			// e.g. when BUFFERING or PAUSED (seek on IDLE doesn't stall SMV)
+			var state = SVPS.smv.getStatus();
+			if (state !== 'PLAYING' && state !== 'IDLE') {
+				// not all relevant onSeek events will trigger if player hasn't started
+				applySeekOnPlay(topic.time, topic.playlist);
+				SVPS.smv.play();
+			} else {
+				seekTime(topic.time, topic.playlist);
+			}
+		}
+		seekTime = function(time, playlist) {
+			if (playlist === getPlaylistIndex()) {
+				// otherwise, smv player issues a warning
+				playlist = null;
+			}
+			SVPS.smv.seek(time, playlist);
+			if (playlist !== null) {
+				resetJw();
+			}
+		}
+
+	}
+
+	/**
+	 * SMV player initialization that is HTML5 engine specific.
+	 * - used by mobile devices.
+	 *
+	 * @return void
+	 */
+	function initSmvHtml5Player() {
+		// SMV player changes the player id, so we should too if we want to get the actual HTML5 video tag
+		select.player = select.player + select.html5Wrapper;
+		// reflect active player object
+		SVPS.player = document.getElementById(select.player);
+
+		// add onTime alternative event listener
+		SVPS.player.addEventListener('timeupdate', function(e) {
+			for (var c in callbacks.onTime) {
+				if (callbacks.onTime.hasOwnProperty(c)) {
+					callbacks.onTime[c]({position: this.currentTime});
+				}
+			}
+		});
+
+		// add onSeek alternative event listener
+		SVPS.player.addEventListener('seeking', function(e) {
+			log("Seeking event fired: time " + this.currentTime);
+			for (var c in callbacks.onSeek) {
+				if (callbacks.onSeek.hasOwnProperty(c)) {
+					callbacks.onSeek[c]({offset: this.currentTime});
+				}
+			}
+		});
+
+		// our own event listeners aren't destroyed, so we can keep these simple
+		onTime = function(callback) {
+			callbacks.onTime.push(callback);
+		};
+		onSeek = function(callback) {
+			callbacks.onSeek.push(callback);
+		};
+		// onPlay and onPause survive a playlist change, but not Quality or Audio change
+		onPlay = function(callback) {
+			callbacks.onPlay.push(callback);
+			SVPS.smv.onPlay(callback);
+		};
+		onPause = function(callback) {
+			callbacks.onPause.push(callback);
+			SVPS.smv.onPause(callback);
+		};
+
+		// Original smv property references, for those we need to overrule
+		var orig = {};
+		// overrule player.setQualityLevel()
+		orig.setQualityLevel = SVPS.smv.setQualityLevel;
+		SVPS.smv.setQualityLevel = function(q) {
+			var time = SVPS.player.currentTime;
+			var playlist = getPlaylistIndex();
+			orig.setQualityLevel(q);
+			resetHtml5(time, playlist);
+		};
+		// overrule player.setAudioLanguage()
+		orig.setAudioLanguage = SVPS.smv.setAudioLanguage;
+		SVPS.smv.setAudioLanguage = function(l) {
+			var time = SVPS.player.currentTime;
+			var playlist = getPlaylistIndex();
+			orig.setAudioLanguage(l);
+			resetHtml5(time, playlist);
+		};
+		// Since an automatic playlist change does not result in calling the public method next(),
+		// but instead, its private counterpart, I cannot overwrite these with any effect. Instead,
+		// I can use SMV's onComplete event handler.
+		SVPS.smv.onComplete(function (e) {
+			deactivateElement('speaker');
+			deactivateElement('topic');
+		});
+
+		// seek methods
+		seek = function(topic) {
+			// note! SMVplayer playlist change on seek is BUGGY @ state !== 'PLAYING'
+			var playlist = topic.playlist === getPlaylistIndex() ? null : topic.playlist;
+			if (SVPS.smv.getStatus() === 'PLAYING') {
+				seekTime(topic.time, playlist);
+			} else if (playlist === null) {
+				applySeekOnPlay(topic.time, null);
+				SVPS.smv.play();
+			} else {
+				// @LOW we don't support this because of bugs:
+				// - when player hasn't started yet, smvplayer loses track of his actual playlist item
+				// - when player has started, applyOnSeek will not seek?
+				log(logMsg.no_playlist_seek, true);
+			}
+		}
+		seekTime = function(time, playlist) {
+			SVPS.smv.seek(time, playlist);
+		}
+	}
+
+	/**
 	 * Create the video player by using the jwplayer object
 	 *
 	 * @param data object Parsed JSON data
 	 * @return boolean True on success, false on failure
 	 */
-	function createJwPlayer(data) {
-		if (initJwPlayer(false)) {
+	function initJwPlayer(data) {
+		if (initJwPlayerVariables(false)) {
 			jwplayer(select.player).setup(data);
 			// apparently setup() creates a new object, so assign these AFTER setup()
-			SVPS.player = jwplayer(select.player);
-			SVPS.jw = SVPS.player;
+			SVPS.jw = jwplayer(select.player);
+			// reflect active player object
+			SVPS.player = SVPS.jw;
+
+			// just use JW player internal functions
+			onTime = function(callback) {
+				SVPS.jw.onTime(callback);
+			};
+			onSeek = function(callback) {
+				SVPS.jw.onSeek(callback);
+			};
+			onPlay = function(callback) {
+				SVPS.jw.onPlay(callback);
+			};
+			onPause = function(callback) {
+				SVPS.jw.onPause(callback);
+			};
+			getPlaylistIndex = function() {
+				return SVPS.jw.getPlaylistIndex();
+			}
 
 			// on changing playlist item, deactivate elements
-			SVPS.player.onPlaylistItem(function(e) {
+			SVPS.jw.onPlaylistItem(function(e) {
 				deactivateElement('speaker');
 				deactivateElement('topic');
 			});
+
+			// seek methods
+			seek = function(topic) {
+				// e.g. when IDLE or BUFFERING (seek on IDLE stalls JW)
+				if (SVPS.jw.getState().toUpperCase() !== 'PLAYING') {
+					// not all relevant onSeek events will trigger if player hasn't started
+					applySeekOnPlay(topic.time, topic.playlist);
+					SVPS.jw.play();
+				} else {
+					seekTime(topic.time, topic.playlist);
+				}
+			}
+
+			// meetingdata refers to streamfile id's, which are unknown to JW player, hence a workaround:
+			if (data.hasOwnProperty('playlist')) {
+				var playlistData = formatPlaylistData(data.playlist);
+				getPlaylistIndexFromTimeObject = function(time) {
+					return playlistData[time.streamfileId];
+				}
+			} else {
+				// note that if data.playlist is missing, the Streamovations REST response has changed and meetingdata will break
+				log(logMsg.no_playlist, true)
+				meetingdata.topic = false;
+				meetingdata.speaker = false;
+			}
+
+			// do further initialization based on JW player version
+			if (typeof SVPS.jw.version !== 'undefined' && SVPS.jw.version.charAt(0) === '7') {
+				initJw7Player();
+			} else {
+				initJw6Player();
+			}
+
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * JW player initialization that is v7 specific.
+	 *
+	 * @return void
+	 */
+	function initJw7Player() {
+		// remaining seek method
+		seekTime = function(time, playlistId) {
+			if (getPlaylistIndex() !== playlistId) {
+				SVPS.jw.once('playlistItem', function() {
+					SVPS.jw.once('play', function() {
+						SVPS.jw.seek(time);
+					});
+				});
+				SVPS.jw.playlistItem(playlistId);
+			} else {
+				SVPS.jw.seek(time);
+			}
+		}
+
+		// replace original function, as we can use the once() method
+		applySeekOnPlay = function(time, playlist) {
+			SVPS.jw.once('play', function() {
+				seekTime(time, playlist);
+			});
+		}
+	}
+
+	/**
+	 * JW player initialization that is v6 specific.
+	 *
+	 * @return void
+	 */
+	function initJw6Player() {
+		// remaining seek methods
+		seekTime = function(time, playlistId) {
+			if (getPlaylistIndex() !== playlistId) {
+				seekOnPlaylist[playlistId] = true;
+				SVPS.jw.onPlaylistItem(function(e) {
+					// similar construction to applySeekOnPlay, unfortunately
+					if (seekOnPlaylist[playlistId]) {
+						SVPS.jw.seek(time);
+						seekOnPlaylist[playlistId] = false;
+					}
+				});
+				SVPS.jw.playlistItem(playlistId);
+			} else {
+				SVPS.jw.seek(time);
+			}
+		}
 	}
 
 	/**
@@ -877,6 +1083,14 @@ var SvpStarter = (function($) {
 		 * @var object
 		 */
 		jw: null,
+
+		/**
+		 * Wrapper to substitute smvplayer object for smvplayer-only calls
+		 * Keep public for debugging
+		 *
+		 * @var object
+		 */
+		smv: null,
 
 		/**
 		 * Consistent property determining if current item is live or not (vod)
@@ -920,12 +1134,12 @@ var SvpStarter = (function($) {
 			// Supports multiple player types
 			switch (playerType) {
 				case 2:
-					if (!createSmvPlayer(data)) {
+					if (!initSmvPlayer(data)) {
 						return false;
 					}
 					break;
 				case 1:
-					if (!createJwPlayer(data)) {
+					if (!initJwPlayer(data)) {
 						return false;
 					}
 					break;
@@ -935,17 +1149,13 @@ var SvpStarter = (function($) {
 					return false;
 			}
 
-			// even though JW Player has its own onPlay events, adding
+			// even though the player has its own onPlay events, adding
 			// more general jQuery triggers can help when code needs
 			// to refer to these events before SVPS is defined
-			SVPS.player.onPlay(function() {
+			onPlay(function() {
 				$player.trigger('SVPS:play');
 			});
 
-			// meetingdata refers to streamfile id's, but we can only request playlist id from jwplayer object
-			if (data.hasOwnProperty('playlist')) {
-				pushPlaylistToIdMap(data.playlist);
-			}
 			// determine if this is a livestream
 			if (data.hasOwnProperty('application')) {
 				this.isLiveStream = data.application === 'rtplive';
@@ -1026,15 +1236,6 @@ var SvpStarter = (function($) {
 		jumpToTopic: function(id) {
 			var topic = idMap.topic[id];
 			if (topic !== undefined) {
-				if (topic.playlist !== this.player.getPlaylistIndex()) {
-					if (this.player.playlistItem(topic.playlist, topic) === 2) {
-						// a returnvalue of 2 indicates smvplayer, meaning seek() is being taken care of elsewhere.
-						// this is necessary because smvplayer requires us to use an unknown number of setTimeouts
-						// and continuing with a seek() here before those have finished can lead to events being
-						// set for SVPS.jw before smvplayer is done iteratively destroying and reinitializing it.
-						return;
-					}
-				}
 				seek(topic);
 			} else {
 				log(logMsg.no_timestamp, true);
