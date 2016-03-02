@@ -722,6 +722,7 @@ var SvpStarter = (function($) {
 	 *
 	 * @param data object Parsed JSON data
 	 * @return boolean True on success, false on failure
+	 * @see http://wiki.streamovations.be/doku.php?id=smvplayer:javascript-api
 	 */
 	function initSmvPlayer(data) {
 		if (initJwPlayerVariables(false)) {
@@ -1013,6 +1014,7 @@ var SvpStarter = (function($) {
 	 * JW player initialization that is v7 specific.
 	 *
 	 * @return void
+	 * @see https://github.com/jwplayer/jwplayer/wiki/2.1-JW-Player-7-API-Changes
 	 */
 	function initJw7Player() {
 		// remaining seek method
