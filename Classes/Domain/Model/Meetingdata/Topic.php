@@ -30,7 +30,7 @@ namespace Innologi\StreamovationsVp\Domain\Model\Meetingdata;
  * @package streamovations_vp
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class Topic  extends MeetingdataAbstract {
+class Topic extends MeetingdataAbstract {
 
 	/**
 	 * @var string
