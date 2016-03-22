@@ -201,7 +201,8 @@ abstract class ProviderAbstract implements ProviderInterface {
 			);
 		}
 
-		// @LOW for full if support, we actually need to provide $typoscript['if'], but then we have to add additional checks etc.
+		// @LOW for full if support, we actually need to provide $typoscript['if'] from processConfiguration(),
+			// but then we have to add additional checks etc. to accomodate the 'key.' keys.
 			// so who cares until we need to use isNull or any stdWrap on any of the if-properties
 		// process typoscript if condition
 		if (isset($conf['if']) && !$this->contentObject->checkIf($conf['if'])) {
