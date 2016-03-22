@@ -49,6 +49,7 @@ var SvpStarter = (function($) {
 	 * @var object
 	 */
 	var meetingdata = {
+		breaks: parseInt('###MEETINGDATA_BREAKS###', 10),
 		topic: parseInt('###MEETINGDATA_TOPICS###', 10),
 		speaker: parseInt('###MEETINGDATA_SPEAKERS###', 10)
 	};
@@ -83,7 +84,8 @@ var SvpStarter = (function($) {
 	 */
 	var active = {
 		topic: 0,
-		speaker: 0
+		speaker: 0,
+		eventBreak: false
 	};
 
 	/**
@@ -380,6 +382,35 @@ var SvpStarter = (function($) {
 		} else {
 			log(logMsg.svpp_off, false);
 		}
+	}
+
+	// @TODO ___doc
+	function processLatestEventBreak(array) {
+		var eventBreak = array[array.length-1];
+		if (eventBreak.valid) {
+			// @TODO ___test this value
+			var now = Math.round(new Date().getTime() / 1000);
+			if (active.eventBreak) {
+				// @TODO ___test this value when null
+				if (eventBreak.utcEnd !== null && eventBreak.utcEnd <= now) {
+					resumeStream();
+				}
+			} else if (eventBreak.utc < now) {
+				if (eventBreak.utcEnd === null || eventBreak.utcEnd > now) {
+					interruptStream();
+				}
+			}
+		}
+	}
+	// @FIX finish these
+	function resumeStream() {
+
+		active.eventBreak = false;
+	}
+	function interruptStream() {
+		SVPS.jw.remove();
+
+		active.eventBreak = true;
 	}
 
 	/**
@@ -1175,7 +1206,7 @@ var SvpStarter = (function($) {
 			if (this.isLiveStream) {
 				// note that event handlers are not initialized during a livestream:
 				// this is because a livestream is fed via polling and not via interaction
-				if (meetingdata.topic || meetingdata.speaker) {
+				if (meetingdata.topic || meetingdata.speaker || meetingdata.breaks) {
 					initLiveCounters();
 					initPolling();
 				}
@@ -1234,6 +1265,15 @@ var SvpStarter = (function($) {
 					&& data.speakerTimeline.length > 0
 				) {
 					activateLatestElement(data.speakerTimeline, 'speaker');
+				}
+			}
+			if (meetingdata.breaks) {
+				// check for new breaks
+				if (data.hasOwnProperty('eventBreaks')
+					&& data.eventBreaks !== false
+					&& data.eventBreaks.length > 0
+				) {
+					processLatestEventBreak(data.eventBreaks);
 				}
 			}
 		},
