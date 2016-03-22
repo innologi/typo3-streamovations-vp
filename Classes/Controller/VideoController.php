@@ -326,7 +326,6 @@ class VideoController extends Controller {
 					if (isset($events[0])) {
 						$arguments = array(
 							'hash' => $events[0]->getEventId(),
-							// @TODO is this one relevant?
 							'__noRedirectOnException' => TRUE,
 							'__noBackPid' => TRUE
 						);

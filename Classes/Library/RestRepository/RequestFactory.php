@@ -76,7 +76,6 @@ class RequestFactory extends FactoryAbstract implements RequestFactoryInterface 
 			(isset($settings['features'][$this->httpConfKey])
 				&& (bool) $settings['features'][$this->httpConfKey]
 					? array()
-					// @TODO see if this still exists in TYPO3 7
 					: $GLOBALS['TYPO3_CONF_VARS']['HTTP']
 			)
 		);
