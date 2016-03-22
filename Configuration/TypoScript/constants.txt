@@ -20,8 +20,10 @@ plugin.tx_streamovationsvp {
 		includeJquery = 1
 		# cat=plugin.tx_streamovationsvp/file/020; type=string; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_javascript_jqueryLib
 		jqueryLib = EXT:streamovations_vp/Resources/Public/JavaScript/jQuery/jquery-1.11.1.min.js
-		# cat=plugin.tx_streamovationsvp/file/030; type=string; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_javascript_jwPlayerLib
-		jwPlayerLib = EXT:streamovations_vp/Resources/Public/JavaScript/jwPlayer/jwplayer.js
+		# cat=plugin.tx_streamovationsvp/file/030; type=string; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_javascript_jwPlayer6Lib 
+		jwPlayer6Lib = EXT:streamovations_vp/Resources/Public/JavaScript/jwPlayer6/jwplayer.js
+		# cat=plugin.tx_streamovationsvp/file/030; type=string; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_javascript_jwPlayer7Lib 
+		jwPlayer7Lib = EXT:streamovations_vp/Resources/Public/JavaScript/jwPlayer7/jwplayer.js
 		# cat=plugin.tx_streamovationsvp/file/040; type=string; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_javascript_smvPlayerLib
 		smvPlayerLib =
 		
@@ -40,7 +42,7 @@ plugin.tx_streamovationsvp {
 		baseUri =
 	}
 	settings {
-		# cat=plugin.tx_streamovationsvp/b_player/010; type=options[JW Player=1, Streamovations Player=2]; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_player
+		# cat=plugin.tx_streamovationsvp/b_player/010; type=options[JW Player (6.x)=1, JW Player (7.x)=2, Streamovations Player=3]; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_player
 		player = 1
 		
 		jwPlayer {

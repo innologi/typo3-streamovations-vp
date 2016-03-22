@@ -92,15 +92,25 @@ plugin.tx_streamovationsvp {
 					jQuery.if.value = {$plugin.tx_streamovationsvp.javascript.includeJquery}
 					jQuery.if.equals = 1
 					jQuery.forceOnTop = 1
-					jwPlayer = {$plugin.tx_streamovationsvp.javascript.jwPlayerLib}
-					jwPlayer.placeInFooter = 1
-					smvPlayer = {$plugin.tx_streamovationsvp.javascript.smvPlayerLib}
-					smvPlayer.placeInFooter = 1
+					
+					jwPlayer6 = {$plugin.tx_streamovationsvp.javascript.jwPlayer6Lib}
+					jwPlayer6.if.value = {$plugin.tx_streamovationsvp.settings.player}
+					jwPlayer6.if.equals = 1
+					jwPlayer6.placeInFooter = 1
 					# this sucks, but if not loaded from original location, it can't find its dependencies out of the box
-					jwPlayer.disableCompression = 1
-					jwPlayer.excludeFromConcatenation = 1
-					smvPlayer.disableCompression = 1
-					smvPlayer.excludeFromConcatenation = 1
+					jwPlayer6.disableCompression = 1
+					jwPlayer6.excludeFromConcatenation = 1
+					
+					jwPlayer7 < .jwPlayer6
+					jwPlayer7 = {$plugin.tx_streamovationsvp.javascript.jwPlayer7Lib}
+					jwPlayer7.if.value = {$plugin.tx_streamovationsvp.settings.player}
+					jwPlayer7.if.equals = 2
+					
+					smvPlayer < .jwPlayer6
+					smvPlayer = {$plugin.tx_streamovationsvp.javascript.smvPlayerLib}
+					smvPlayer.if >
+					#smvPlayer.if.value = {$plugin.tx_streamovationsvp.settings.player}
+					#smvPlayer.if.equals = 3
 				}
 				inline {
 					tx_streamovationsvp_jsInline {
