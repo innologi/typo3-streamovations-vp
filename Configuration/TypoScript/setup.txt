@@ -103,14 +103,11 @@ plugin.tx_streamovationsvp {
 					
 					jwPlayer7 < .jwPlayer6
 					jwPlayer7 = {$plugin.tx_streamovationsvp.javascript.jwPlayer7Lib}
-					jwPlayer7.if.value = {$plugin.tx_streamovationsvp.settings.player}
 					jwPlayer7.if.equals = 2
 					
 					smvPlayer < .jwPlayer6
 					smvPlayer = {$plugin.tx_streamovationsvp.javascript.smvPlayerLib}
-					smvPlayer.if >
-					#smvPlayer.if.value = {$plugin.tx_streamovationsvp.settings.player}
-					#smvPlayer.if.equals = 3
+					smvPlayer.if.equals = 3
 				}
 				inline {
 					tx_streamovationsvp_jsInline {
