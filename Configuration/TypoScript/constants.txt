@@ -5,6 +5,7 @@
 # customsubcategory=d_topics=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_category_topics
 # customsubcategory=e_speakers=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_category_speakers
 # customsubcategory=f_polling=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_category_polling
+# customsubcategory=g_breaks=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_category_breaks
 
 plugin.tx_streamovationsvp {
 	view {
@@ -61,6 +62,8 @@ plugin.tx_streamovationsvp {
 			# see http://support.jwplayer.com/customer/portal/articles/1430398-dynamic-rtmp-streaming
 		}
 		
+		# cat=plugin.tx_streamovationsvp/g_breaks/010; type=boolean; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_breaks_enable
+		breaks.enable = 1
 		# cat=plugin.tx_streamovationsvp/d_topics/010; type=boolean; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_topics_enable
 		topics.enable = 1
 		speakers {

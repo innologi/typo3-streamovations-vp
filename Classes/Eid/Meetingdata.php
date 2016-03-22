@@ -63,7 +63,6 @@ class Meetingdata {
 			'json' => 0
 		);
 
-		// @TODO test this with TYPO3 7.6
 		// initialize TSFE to make TS accessible to extbase configuration manager
 		EidUtility::initTSFE();
 		// initialize extbase bootstrap, so we can use repositories
@@ -84,8 +83,14 @@ class Meetingdata {
 								// Also: this gives us better performance in this use-case.
 								'disableResponseMapper' => 1
 							),
+							// @TODO ___test eventbreaks
 							'response' => array(
 								'property' => array(
+									'eventBreaks' => array(
+										'filterList' => 'last',
+										// don't remove eventBreaks (is removed through default config)
+										'remove' => 0
+									),
 									'topicTimeline' => $timelineConfig,
 									'speakerTimeline' => $timelineConfig
 								)

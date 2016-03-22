@@ -53,7 +53,7 @@ plugin.tx_streamovationsvp {
 			Meetingdata {
 				request.apiUri = api.php/meetingdata
 				response {
-					exclude = result
+					exclude = result,confidentialSessions,twitterHashtag
 					property {
 						timestamps {
 							mappings {
@@ -69,6 +69,7 @@ plugin.tx_streamovationsvp {
 						}
 						topicTimeline.json = 1
 						speakerTimeline.json = 1
+						eventBreaks.remove = 1
 					}
 				}
 			}
@@ -127,6 +128,8 @@ plugin.tx_streamovationsvp {
 							SPEAKER_IMAGE_DIR = USER
 							SPEAKER_IMAGE_DIR.userFunc = Innologi\StreamovationsVp\TypoScript\Utility->resolvePath
 							SPEAKER_IMAGE_DIR.path = {$plugin.tx_streamovationsvp.settings.speakers.imgDir}
+							MEETINGDATA_BREAKS = TEXT
+							MEETINGDATA_BREAKS.value = {$plugin.tx_streamovationsvp.settings.breaks.enable}
 							MEETINGDATA_TOPICS = TEXT
 							MEETINGDATA_TOPICS.value = {$plugin.tx_streamovationsvp.settings.topics.enable}
 							MEETINGDATA_SPEAKERS = TEXT
@@ -153,6 +156,9 @@ plugin.tx_streamovationsvp {
 			liveLanguage = {$plugin.tx_streamovationsvp.settings.jwPlayer.liveLanguage}
 			smilSupport = {$plugin.tx_streamovationsvp.settings.jwPlayer.smilSupport}
 			smilWrap = {$plugin.tx_streamovationsvp.settings.jwPlayer.smilWrap}
+		}
+		breaks {
+			enable = {$plugin.tx_streamovationsvp.settings.breaks.enable}
 		}
 		topics {
 			enable = {$plugin.tx_streamovationsvp.settings.topics.enable}
