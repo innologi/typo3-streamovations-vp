@@ -12,7 +12,19 @@
 	</f:if>
 	
 	<div class="video-player-container">
-		<div id="tx-streamovations-vp-play" class="video-player"></div>
+		<f:if condition="{interruptPlayer}">
+		<f:then>
+			<div class="video-player-break">
+				<div class="text">
+					<div class="title"><f:translate key="video_break_title" /></div>
+					<div class="sub"><f:translate key="video_break_sub" /></div>
+				</div>
+			</div>
+		</f:then>
+		<f:else>
+			<div id="tx-streamovations-vp-play" class="video-player"></div>
+		</f:else>
+		</f:if>
 	</div>
 	<script type="application/json" id="tx-streamovations-vp-playerdata" data-hash="{hash}">
 		{playlist -> f:format.raw()}

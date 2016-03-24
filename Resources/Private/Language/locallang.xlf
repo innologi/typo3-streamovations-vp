@@ -61,6 +61,13 @@
 			<trans-unit id="no_list_header">
 				<source>No videostream</source>
 			</trans-unit>
+			
+			<trans-unit id="video_break_title">
+				<source>Temporary interruption</source>
+			</trans-unit>
+			<trans-unit id="video_break_sub">
+				<source>The videostream will be resumed momentarily</source>
+			</trans-unit>
 
 
 			<trans-unit id="noscript">
