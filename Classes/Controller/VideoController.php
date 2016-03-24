@@ -140,7 +140,7 @@ class VideoController extends Controller {
 		$playerType = (int)$this->settings['player'];
 
 		// smvPlayer requires raw response
-		if ($playerType === 2) {
+		if ($playerType === 3) {
 			$this->playlistRepository->setForceRawResponse(TRUE);
 		}
 
@@ -155,7 +155,7 @@ class VideoController extends Controller {
 					$this->extensionName
 				);
 
-				if ($playerType === 1) {
+				if ($playerType !== 3) {
 					// for jwPlayer we need to construct a valid configuration from the playlist-response
 					$playlistData = $playlistService->createJwplayerSetup($playlist, $this->settings['jwPlayer']);
 				}

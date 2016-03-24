@@ -938,131 +938,135 @@ var SvpStarter = (function($) {
 
 	/**
 	 * Create the video player by using the jwplayer object
+	 * - Should be called by a specific JW version initializer
+	 *
+	 * @param data object Parsed JSON data
+	 * @return void
+	 */
+	function initJwPlayerShared(data) {
+		jwplayer(select.player).setup(data);
+		// apparently setup() creates a new object, so assign these AFTER setup()
+		SVPS.jw = jwplayer(select.player);
+		// reflect active player object
+		SVPS.player = SVPS.jw;
+
+		// just use JW player internal functions
+		onTime = function(callback) {
+			SVPS.jw.onTime(callback);
+		};
+		onSeek = function(callback) {
+			SVPS.jw.onSeek(callback);
+		};
+		onPlay = function(callback) {
+			SVPS.jw.onPlay(callback);
+		};
+		onPause = function(callback) {
+			SVPS.jw.onPause(callback);
+		};
+		getPlaylistIndex = function() {
+			return SVPS.jw.getPlaylistIndex();
+		}
+
+		// on changing playlist item, deactivate elements
+		SVPS.jw.onPlaylistItem(function(e) {
+			deactivateElement('speaker');
+			deactivateElement('topic');
+		});
+
+		// seek methods
+		seek = function(topic) {
+			// e.g. when IDLE or BUFFERING (seek on IDLE stalls JW)
+			if (SVPS.jw.getState().toUpperCase() !== 'PLAYING') {
+				// not all relevant onSeek events will trigger if player hasn't started
+				applySeekOnPlay(topic.time, topic.playlist);
+				SVPS.jw.play();
+			} else {
+				seekTime(topic.time, topic.playlist);
+			}
+		}
+
+		// meetingdata refers to streamfile id's, which are unknown to JW player, hence a workaround:
+		if (data.hasOwnProperty('playlist')) {
+			var playlistData = formatPlaylistData(data.playlist);
+			getPlaylistIndexFromTimeObject = function(time) {
+				return playlistData[time.streamfileId];
+			}
+		} else {
+			// note that if data.playlist is missing, the Streamovations REST response has changed and meetingdata will break
+			log(logMsg.no_playlist, true)
+			meetingdata.topic = false;
+			meetingdata.speaker = false;
+		}
+	}
+
+	/**
+	 * JW player 7.x initialization
 	 *
 	 * @param data object Parsed JSON data
 	 * @return boolean True on success, false on failure
+	 * @see https://github.com/jwplayer/jwplayer/wiki/2.1-JW-Player-7-API-Changes
 	 */
-	function initJwPlayer(data) {
-		if (initJwPlayerVariables(false)) {
-			jwplayer(select.player).setup(data);
-			// apparently setup() creates a new object, so assign these AFTER setup()
-			SVPS.jw = jwplayer(select.player);
-			// reflect active player object
-			SVPS.player = SVPS.jw;
+	function initJw7Player(data) {
+		if (initJwPlayerVariables(true)) {
+			initJwPlayerShared(data);
 
-			// just use JW player internal functions
-			onTime = function(callback) {
-				SVPS.jw.onTime(callback);
-			};
-			onSeek = function(callback) {
-				SVPS.jw.onSeek(callback);
-			};
-			onPlay = function(callback) {
-				SVPS.jw.onPlay(callback);
-			};
-			onPause = function(callback) {
-				SVPS.jw.onPause(callback);
-			};
-			getPlaylistIndex = function() {
-				return SVPS.jw.getPlaylistIndex();
-			}
-
-			// on changing playlist item, deactivate elements
-			SVPS.jw.onPlaylistItem(function(e) {
-				deactivateElement('speaker');
-				deactivateElement('topic');
-			});
-
-			// seek methods
-			seek = function(topic) {
-				// e.g. when IDLE or BUFFERING (seek on IDLE stalls JW)
-				if (SVPS.jw.getState().toUpperCase() !== 'PLAYING') {
-					// not all relevant onSeek events will trigger if player hasn't started
-					applySeekOnPlay(topic.time, topic.playlist);
-					SVPS.jw.play();
+			// remaining seek method
+			seekTime = function(time, playlistId) {
+				if (getPlaylistIndex() !== playlistId) {
+					SVPS.jw.once('playlistItem', function() {
+						SVPS.jw.once('play', function() {
+							SVPS.jw.seek(time);
+						});
+					});
+					SVPS.jw.playlistItem(playlistId);
 				} else {
-					seekTime(topic.time, topic.playlist);
+					SVPS.jw.seek(time);
 				}
 			}
 
-			// meetingdata refers to streamfile id's, which are unknown to JW player, hence a workaround:
-			if (data.hasOwnProperty('playlist')) {
-				var playlistData = formatPlaylistData(data.playlist);
-				getPlaylistIndexFromTimeObject = function(time) {
-					return playlistData[time.streamfileId];
-				}
-			} else {
-				// note that if data.playlist is missing, the Streamovations REST response has changed and meetingdata will break
-				log(logMsg.no_playlist, true)
-				meetingdata.topic = false;
-				meetingdata.speaker = false;
+			// replace original function, as we can use the once() method
+			applySeekOnPlay = function(time, playlist) {
+				SVPS.jw.once('play', function() {
+					seekTime(time, playlist);
+				});
 			}
-
-			// do further initialization based on JW player version
-			if (typeof SVPS.jw.version !== 'undefined' && SVPS.jw.version.charAt(0) === '7') {
-				initJw7Player();
-			} else {
-				initJw6Player();
-			}
-
 			return true;
 		}
 		return false;
 	}
 
 	/**
-	 * JW player initialization that is v7 specific.
+	 * JW player 6.x initialization
 	 *
-	 * @return void
-	 * @see https://github.com/jwplayer/jwplayer/wiki/2.1-JW-Player-7-API-Changes
+	 * @param data object Parsed JSON data
+	 * @return boolean True on success, false on failure
 	 */
-	function initJw7Player() {
-		// remaining seek method
-		seekTime = function(time, playlistId) {
-			if (getPlaylistIndex() !== playlistId) {
-				SVPS.jw.once('playlistItem', function() {
-					SVPS.jw.once('play', function() {
-						SVPS.jw.seek(time);
+	function initJw6Player(data) {
+		if (initJwPlayerVariables(false)) {
+			initJwPlayerShared(data);
+
+			// remaining seek methods
+			seekTime = function(time, playlistId) {
+				if (getPlaylistIndex() !== playlistId) {
+					seekOnPlaylist[playlistId] = true;
+					SVPS.jw.onPlaylistItem(function(e) {
+						// similar construction to applySeekOnPlay, unfortunately
+						if (seekOnPlaylist[playlistId]) {
+							SVPS.jw.seek(time);
+							seekOnPlaylist[playlistId] = false;
+						}
 					});
-				});
-				SVPS.jw.playlistItem(playlistId);
-			} else {
-				SVPS.jw.seek(time);
+					SVPS.jw.playlistItem(playlistId);
+				} else {
+					SVPS.jw.seek(time);
+				}
 			}
+			return true;
 		}
-
-		// replace original function, as we can use the once() method
-		applySeekOnPlay = function(time, playlist) {
-			SVPS.jw.once('play', function() {
-				seekTime(time, playlist);
-			});
-		}
+		return false;
 	}
 
-	/**
-	 * JW player initialization that is v6 specific.
-	 *
-	 * @return void
-	 */
-	function initJw6Player() {
-		// remaining seek methods
-		seekTime = function(time, playlistId) {
-			if (getPlaylistIndex() !== playlistId) {
-				seekOnPlaylist[playlistId] = true;
-				SVPS.jw.onPlaylistItem(function(e) {
-					// similar construction to applySeekOnPlay, unfortunately
-					if (seekOnPlaylist[playlistId]) {
-						SVPS.jw.seek(time);
-						seekOnPlaylist[playlistId] = false;
-					}
-				});
-				SVPS.jw.playlistItem(playlistId);
-			} else {
-				SVPS.jw.seek(time);
-			}
-		}
-	}
-
+	// @TODO turn around the init conditions: return false if true
 	/**
 	 * Actual SVPS object, offers public methods/properties
 	 *
@@ -1135,13 +1139,18 @@ var SvpStarter = (function($) {
 
 			// Supports multiple player types
 			switch (playerType) {
-				case 2:
+				case 3:
 					if (!initSmvPlayer(data)) {
 						return false;
 					}
 					break;
+				case 2:
+					if (!initJw7Player(data)) {
+						return false;
+					}
+					break;
 				case 1:
-					if (!initJwPlayer(data)) {
+					if (!initJw6Player(data)) {
 						return false;
 					}
 					break;

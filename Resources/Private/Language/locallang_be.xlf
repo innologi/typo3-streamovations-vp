@@ -87,9 +87,14 @@
 			<trans-unit id="ts_javascript_jqueryLib">
 				<source>jQuery Library path</source>
 			</trans-unit>
-			<trans-unit id="ts_javascript_jwPlayerLib">
-				<source>JW Player path: If you're using a license key, make sure
+			<trans-unit id="ts_javascript_jwPlayer6Lib">
+				<source>JW Player (6.x) path: If you're using a license key, make sure
 					this points to a compatible version.
+				</source>
+			</trans-unit>
+			<trans-unit id="ts_javascript_jwPlayer7Lib">
+				<source>JW Player (7.x) path: You need to use a license key, so make
+					sure this points to a compatible version.
 				</source>
 			</trans-unit>
 			<trans-unit id="ts_javascript_smvPlayerLib">
@@ -113,10 +118,12 @@
 				</source>
 			</trans-unit>
 			<trans-unit id="ts_settings_player">
-				<source>Pick Video Player: Choose which video player to use. If you
-					wish to use the Streamovations player, inquire at your contact at
-					Streamovations BVBA about this, as it will require additional
-					player files, as well as your own JW Player license key.
+				<source>Pick Video Player: Choose which video player to use. By default,
+					JW Player 6.x is set, as it does not require a license key. If you
+					wish to use JW Player 7.x or the Streamovations player, be sure to
+					set your own JW Player license key. Aditionally, if you wish to use
+					the Streamovations player, inquire at your contact at Streamovations
+					BVBA about this, as it will require additional player files as well.
 				</source>
 			</trans-unit>
 			<trans-unit id="ts_settings_jwPlayer_key">
@@ -124,7 +131,7 @@
 					logo. Please note that your license key will be exposed to
 					knowledgeable viewers of the plugin, as is always the case with JW
 					Player. You need a valid license key for use of the Streamovations
-					player.
+					player and JW Player 7.x.
 				</source>
 			</trans-unit>
 			<trans-unit id="ts_settings_jwPlayer_width">
