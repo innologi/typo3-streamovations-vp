@@ -244,7 +244,7 @@ abstract class RequestAbstract implements RequestInterface {
 
 		if (!empty($headers)) {
 			foreach ($headers as $header => $value) {
-				$this->headers[] = $header . ': ' . is_array($value) ? join(',', $value) : $value;
+				$this->headers[] = $header . ': ' . (is_array($value) ? join(',', $value) : $value);
 			}
 		}
 	}
