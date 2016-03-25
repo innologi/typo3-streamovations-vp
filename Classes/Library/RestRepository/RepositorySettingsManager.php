@@ -25,6 +25,7 @@ namespace Innologi\StreamovationsVp\Library\RestRepository;
  ***************************************************************/
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use TYPO3\CMS\Extbase\Service\TypoScriptService;
 /**
  * REST Repository Settings Manager
  *
@@ -133,7 +134,43 @@ class RepositorySettingsManager implements RepositorySettingsManagerInterface,Si
 			// merging of default settings with type-specific
 			$settings = array_replace_recursive($configuration['default'], $settings);
 		}
+
+		// headers can be configured as internal TS objects
+		if (isset($settings['request']['headers']) && is_array($settings['request']['headers'])) {
+			$settings['request']['headers'] = $this->processTypoScript($settings['request']['headers']);
+		}
+
 		return $settings;
+	}
+
+	/**
+	 * Process an array of TypoScript objects.
+	 *
+	 * As we know, an extension typoscript is not processed
+	 * as full TypoScript, i.e. TS objects don't get resolved
+	 * to the intended values. This method takes such typoscript
+	 * and resolves any such object, assuming $setup provides them
+	 * as its top-level elements.
+	 *
+	 * @param array $setup
+	 * @return array
+	 */
+	protected function processTypoScript(array $setup) {
+		$processed = [];
+		$keys = array_keys($setup);
+
+		// convert back to TS formatted array (with . notation)
+		/** @var TypoScriptService $tsService */
+		$tsService = $this->objectManager->get(TypoScriptService::class);
+		$typoscript = $tsService->convertPlainArrayToTypoScriptArray($setup);
+
+		// @LOW Extbase/FLOW api: $configurationManager->getContentObject();
+		/** @var \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $contentObject */
+		$contentObject = $GLOBALS['TSFE']->cObj;
+		foreach ($keys as $key) {
+			$processed[$key] = $contentObject->cObjGetSingle($typoscript[$key], $typoscript[$key . '.']);
+		}
+		return $processed;
 	}
 
 	/**

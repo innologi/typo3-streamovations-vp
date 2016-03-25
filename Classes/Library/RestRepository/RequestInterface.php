@@ -42,12 +42,13 @@ interface RequestInterface {
 	 *
 	 * @param RequestUriInterface $requestUri
 	 * @param string $responseObjectType
+	 * @param array $headers
 	 * @param array $cacheSettings
 	 * @param boolean $forceRawResponse
 	 * @param array $httpConfiguration
 	 * @return void
 	 */
-	public function __construct($requestUri, $responseObjectType, array $cacheSettings = array(), $forceRawResponse = FALSE, array $httpConfiguration = array());
+	public function __construct($requestUri, $responseObjectType, array $headers = array(), array $cacheSettings = array(), $forceRawResponse = FALSE, array $httpConfiguration = array());
 
 	/**
 	 * Adds URL argument
