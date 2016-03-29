@@ -93,18 +93,19 @@ abstract class RequestAbstract implements RequestInterface {
 	 *
 	 * @param RequestUriInterface $requestUri
 	 * @param string $responseObjectType
+	 * @param array $headers
 	 * @param array $cacheSettings
 	 * @param boolean $forceRawResponse
 	 * @param array $httpConfiguration
 	 * @return void
 	 */
-	public function __construct($requestUri, $responseObjectType, array $cacheSettings = array(), $forceRawResponse = FALSE, array $httpConfiguration = array()) {
+	public function __construct($requestUri, $responseObjectType, array $headers = array(), array $cacheSettings = array(), $forceRawResponse = FALSE, array $httpConfiguration = array()) {
 		$this->requestUri = $requestUri;
 		$this->responseObjectType = $responseObjectType;
 		$this->forceRawResponse = $forceRawResponse;
 
 		$this->initCaching($cacheSettings);
-		$this->initRequestHeaders();
+		$this->initRequestHeaders($headers);
 	}
 
 	/**
@@ -229,13 +230,23 @@ abstract class RequestAbstract implements RequestInterface {
 	/**
 	 * Prepares request headers
 	 *
+	 * Note that multi value headers should be given as an array.
+	 * These will then be properly formatted as CSV.
+	 *
+	 * @param array $headers
 	 * @return void
 	 */
-	protected function initRequestHeaders() {
+	protected function initRequestHeaders(array $headers = array()) {
 		$this->headers[] = 'Accept: ' . ($this->responseType === RequestInterface::RESPONSETYPE_JSON
 			? 'application/json'
 			: 'text/xml'
 		);
+
+		if (!empty($headers)) {
+			foreach ($headers as $header => $value) {
+				$this->headers[] = $header . ': ' . (is_array($value) ? join(',', $value) : $value);
+			}
+		}
 	}
 
 	/**
@@ -265,6 +276,7 @@ abstract class RequestAbstract implements RequestInterface {
 	 * - the request uri
 	 * - if a raw response is requested / stored
 	 * - cache lifetime
+	 * - headers
 	 *
 	 * This way, each unique request will have its own cache entry, with the additional ability
 	 * to differentiate between a cached raw response or a mapped response (default). Also, the
@@ -275,9 +287,13 @@ abstract class RequestAbstract implements RequestInterface {
 	 * @return string
 	 */
 	protected function generateCacheEntryIdentifier($isRawResponse = FALSE) {
-		return md5(
-			$this->requestUri->getRequestUri() . '---' . (int) ($isRawResponse || $this->forceRawResponse) . '---' . $this->cacheLifetime
-		);
+		return md5( join('---', [
+			$this->requestUri->getRequestUri(),
+			(int) ($isRawResponse || $this->forceRawResponse),
+			$this->cacheLifetime,
+			join(';', array_keys($this->headers)),
+			join(';', $this->headers)
+		]));
 	}
 
 	/**

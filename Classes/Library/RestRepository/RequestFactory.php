@@ -68,6 +68,10 @@ class RequestFactory extends FactoryAbstract implements RequestFactoryInterface 
 					: array()
 			),
 			$objectType,
+			(isset($settings['request']['headers'])
+				? $settings['request']['headers']
+				: array()
+			),
 			(isset($settings['cache'])
 				? $settings['cache']
 				: array()
