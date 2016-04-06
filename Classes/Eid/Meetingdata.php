@@ -58,7 +58,7 @@ class Meetingdata {
 	 * @return void
 	 */
 	protected function initializeContext() {
-		$timelineConfig = array(
+		$responsePropertyConfig = array(
 			'filterList' => 'last',
 			'json' => 0
 		);
@@ -83,16 +83,10 @@ class Meetingdata {
 								// Also: this gives us better performance in this use-case.
 								'disableResponseMapper' => 1
 							),
-							// @TODO ___test eventbreaks
 							'response' => array(
 								'property' => array(
-									'eventBreaks' => array(
-										'filterList' => 'last',
-										// don't remove eventBreaks (is removed through default config)
-										'remove' => 0
-									),
-									'topicTimeline' => $timelineConfig,
-									'speakerTimeline' => $timelineConfig
+									'topicTimeline' => $responsePropertyConfig,
+									'speakerTimeline' => $responsePropertyConfig,
 								)
 							),
 							// cache concurrent requests to Streamovations API to lighten its load
@@ -111,7 +105,7 @@ class Meetingdata {
 	 * Note that when lifetime===interval, testresults show that the second polling call
 	 * of the visitor responsible for the cache, will result in him retrieving his own
 	 * cache result once, which makes the current polling interval completely useless.
-	 * To remedy this we do lifetime-1.
+	 * To remedy this we do lifetime=interval-1.
 	 *
 	 * If interval was already at 1, we can only force-disable caching to keep the chosen
 	 * interval remaining effective.

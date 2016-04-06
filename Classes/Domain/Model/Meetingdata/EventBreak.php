@@ -27,9 +27,6 @@ use Innologi\StreamovationsVp\Library\RestRepository\ResponseAbstract;
 /**
  * Event break Model
  *
- * This class is currently not used due to its containing property
- * being excluded in anything but the eid script.
- *
  * @package streamovations_vp
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
