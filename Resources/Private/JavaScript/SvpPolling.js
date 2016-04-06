@@ -106,7 +106,7 @@ var SvpPolling = (function($) {
 			scriptPath = document.baseURI + 'index.php?id=' + pid + '&eID=streamovations_vp_meetingdata' + '&hash=' + hash;
 			if (intervalId === null) {
 				log(logMsg.poll_start, false);
-				// @LOW what about a setTimeout instead, iterating it in poll.$.get.done method?
+				// @LOW what about a setTimeout instead, iterating it in poll.$.get.done method? advantage: no overlap possible on slow connections, disadvantage: memory @ nesting? find out!
 				intervalId = setInterval(function() {
 					poll(false);
 				}, interval);

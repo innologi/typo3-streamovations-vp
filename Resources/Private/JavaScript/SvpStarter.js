@@ -211,10 +211,13 @@ var SvpStarter = (function($) {
 	var select = {
 		// id of player HTML element
 		player: 'tx-streamovations-vp-play',
+		playerObj: 'tx-streamovations-vp-play',
+		playerPI: 'tx-streamovations-vp-play',
 		// class of player container
 		playerContainer: 'video-player-container',
 		// player engine wrapper pre-wrap id
-		smvWrapper: 'smvplayer_engineWrapper_',
+		smvWrapper1: 'smvplayer_',
+		smvWrapper2: 'engineWrapper_',
 		// player engine wrapper post-wrap id
 		html5Wrapper: '_html5videotag',
 		// id of player data HTML element
@@ -240,6 +243,7 @@ var SvpStarter = (function($) {
 		no_json_support: 'No JSON.parse support in user agent',
 		player_data_invalid: 'Player data is invalid or in an unsupported format',
 		invalid_player: 'No supported player configured',
+		invalid_eventbreak: 'Eventbreak data is invalid or in an unsupported format',
 		no_jwplayer: 'No jwplayer loaded',
 		no_jwplayer_key: 'A jwplayer license key is required',
 		no_smvplayer: 'No smvplayer loaded',
@@ -248,7 +252,9 @@ var SvpStarter = (function($) {
 		events_re: 'Reattached event callbacks',
 		no_timestamp: 'Topic has no registered timestamps',
 		no_playlist_seek: 'Can only seek to other playlist item during playback',
-		activate: 'Activated'
+		activate: 'Activated',
+		video_break_title: '###VIDEO_BREAK_TITLE###',
+		video_break_sub: '###VIDEO_BREAK_SUB###'
 	};
 
 	/**
@@ -324,6 +330,21 @@ var SvpStarter = (function($) {
 	var seekTime = null;
 
 	/**
+	 * Player stop wrapper. Method will be created on player initialization.
+	 *
+	 * @return void
+	 */
+	var stop = null;
+
+	/**
+	 * Play on Ready wrapper. Method will be created on player initialization.
+	 *
+	 * @param callback object Function callback
+	 * @return void
+	 */
+	var playOnReady = null;
+
+	/**
 	 * Logs message to console, and allows to differentiate between errors and info
 	 *
 	 * @param message string Message to log
@@ -360,22 +381,28 @@ var SvpStarter = (function($) {
 	 * Initialize polling, detects and starts SVPP.
 	 * Is disabled when polling interval is set to 0.
 	 *
+	 * @param continuousPolling boolean
 	 * @return void
 	 */
-	function initPolling() {
+	function initPolling(continuousPolling) {
 		if (pollingInterval > 0) {
 			if (typeof SvpPolling !== 'undefined') {
 				var interval = pollingInterval * 1000,
+				// @TODO specificity!
 					hash = $('#' + select.data).attr('data-hash');
 
-				onPlay(function() {
+				if (continuousPolling) {
 					SvpPolling.init(hash, currentPage, interval);
-				});
-				onPause(function() {
-					SvpPolling.stop();
-					deactivateElement('speaker');
-					deactivateElement('topic');
-				});
+				} else {
+					onPlay(function() {
+						SvpPolling.init(hash, currentPage, interval);
+					});
+					onPause(function() {
+						SvpPolling.stop();
+						deactivateElement('speaker');
+						deactivateElement('topic');
+					});
+				}
 			} else {
 				log(logMsg.no_svpp, true);
 			}
@@ -384,33 +411,84 @@ var SvpStarter = (function($) {
 		}
 	}
 
-	// @TODO ___doc
+	/**
+	 * Processes the latest event break that is passed along
+	 *
+	 * @param array array Contains eventbreaks
+	 * @return void
+	 */
 	function processLatestEventBreak(array) {
 		var eventBreak = array[array.length-1];
-		if (eventBreak.valid) {
-			// @TODO ___test this value
-			var now = Math.round(new Date().getTime() / 1000);
-			if (active.eventBreak) {
-				// @TODO ___test this value when null
-				if (eventBreak.utcEnd !== null && eventBreak.utcEnd <= now) {
-					resumeStream();
-				}
-			} else if (eventBreak.utc < now) {
-				if (eventBreak.utcEnd === null || eventBreak.utcEnd > now) {
-					interruptStream();
+		try {
+			if (eventBreak.valid) {
+				var now = Math.round(new Date().getTime() / 1000);
+				if (active.eventBreak) {
+					if (eventBreak.end !== null && eventBreak.utcEnd <= now) {
+						resumeStream();
+					}
+				} else if (eventBreak.utc <= now) {
+					if (eventBreak.end === null || eventBreak.utcEnd > now) {
+						interruptStream();
+					}
 				}
 			}
+		} catch (e) {
+			log(logMsg.invalid_eventbreak, true);
+			// ideally we would disable breaks, but this is open to abuse because
+			// SVPS.processmeetingdatachange() is a public method
+			//meetingdata.breaks = false;
 		}
 	}
-	// @FIX finish these
+
+	/**
+	 * Resumes an interrupted videostream
+	 *
+	 * @return void
+	 */
 	function resumeStream() {
+		// stop any active polling
+		SvpPolling.stop();
+
+		var $break = $('.' + select.container + ' .video-player-break'),
+			newPlayer = '<div id="' + select.player + '" class="video-player"></div>';
+
+		// replace the interruption with a new player element
+		$break.parent().append(newPlayer);
+		$break.remove();
 
 		active.eventBreak = false;
+		// initialize the new player element from scratch
+		SVPS.init();
+		// automatically start playing
+		playOnReady();
 	}
+
+	/**
+	 * Interrupts a videostream
+	 *
+	 * @return void
+	 */
 	function interruptStream() {
-		SVPS.jw.remove();
+		// stop playing/polling/everything and reset any previously set callback
+		stop();
+		callbacks = {
+			onTime: [],
+			onSeek: [],
+			onPlay: [],
+			onPause: []
+		};
+
+		var $player = $('.' + select.container + ' #' + select.playerPI).first(),
+			replacement = '<div class="video-player-break"><div class="text"><div class="title">' + logMsg.video_break_title + '</div><div class="sub">' + logMsg.video_break_sub + '</div></div></div>';
+
+		// replace the player object with an interruption
+		$player.parent().append(replacement);
+		$player.remove();
 
 		active.eventBreak = true;
+
+		// start continuous polling
+		initPolling(true);
 	}
 
 	/**
@@ -501,6 +579,7 @@ var SvpStarter = (function($) {
 				);
 			});
 
+			// @TODO specificity!
 			// parse meeting data
 			var $topicTimeline = $('#' + select.topicTimeline).first();
 			if ($topicTimeline.exists()) {
@@ -520,6 +599,7 @@ var SvpStarter = (function($) {
 		}
 
 		if (meetingdata.speaker) {
+			// @TODO specificity!
 			var $speakerTimeline = $('#' + select.speakerTimeline).first();
 			if ($speakerTimeline.exists()) {
 				timeline = null;
@@ -604,7 +684,7 @@ var SvpStarter = (function($) {
 	 * @return void
 	 */
 	function resetJw() {
-		SVPS.jw = jwplayer(select.player);
+		SVPS.jw = jwplayer(select.playerObj);
 		// if really new, an onReady will be fired
 		SVPS.jw.onReady(function(e) {
 			deactivateElement('speaker');
@@ -769,6 +849,15 @@ var SvpStarter = (function($) {
 				getPlaylistIndexFromTimeObject = function(time) {
 					return time.streamfileId;
 				}
+				// @LOW SMVnative: we can't set it to autoplay if the video element wasn't created with an autoplay attribute
+				playOnReady = function() {
+					SVPS.smv.whenReady(function() {
+						SVPS.smv.play();
+					});
+				}
+				stop = function() {
+					SVPS.smv.stop();
+				}
 
 				// do further initialization based on the utilized engine
 				var engine = SVPS.smv.getEngine();
@@ -778,6 +867,8 @@ var SvpStarter = (function($) {
 					initSmvHtml5Player();
 				}
 
+				// post init class of original player element changes with SMV
+				select.playerPI = select.smvWrapper1 + select.player;
 				return true;
 			}
 
@@ -795,9 +886,9 @@ var SvpStarter = (function($) {
 		// reflect active player object
 		SVPS.player = SVPS.smv;
 		// SMV player changes the player id, so we should too if we want to get the actual JW player object
-		select.player = select.smvWrapper + select.player;
+		select.playerObj = select.smvWrapper1 + select.smvWrapper2 + select.player;
 		// smvplayer does not provide full jwplayer api, so we need a reference to preserve consistency
-		SVPS.jw = jwplayer(select.player);
+		SVPS.jw = jwplayer(select.playerObj);
 
 		// Smvplayer calls jwplayer.remove() on moving in the playlist, which clears the entire jwplayer
 		// instance, including event handlers, so we need a construct that reassigns SVPS.jw and
@@ -880,9 +971,9 @@ var SvpStarter = (function($) {
 	 */
 	function initSmvHtml5Player() {
 		// SMV player changes the player id, so we should too if we want to get the actual HTML5 video tag
-		select.player = select.player + select.html5Wrapper;
+		select.playerObj = select.player + select.html5Wrapper;
 		// reflect active player object
-		SVPS.player = document.getElementById(select.player);
+		SVPS.player = document.getElementById(select.playerObj);
 
 		// add onTime alternative event listener
 		SVPS.player.addEventListener('timeupdate', function(e) {
@@ -996,6 +1087,14 @@ var SvpStarter = (function($) {
 		};
 		getPlaylistIndex = function() {
 			return SVPS.jw.getPlaylistIndex();
+		}
+		playOnReady = function() {
+			SVPS.jw.onReady(function() {
+				SVPS.jw.play();
+			});
+		}
+		stop = function() {
+			SVPS.jw.stop();
 		}
 
 		// on changing playlist item, deactivate elements
@@ -1146,9 +1245,11 @@ var SvpStarter = (function($) {
 		 */
 		init: function() {
 			// check if necessary elements exist
-			var $player = $('.' + select.playerContainer),
+			// @TODO specificity!
+			var $playerContainer = $('.' + select.playerContainer),
+			// @TODO specificity!
 				$data = $('#' + select.data).first();
-			if (!$player.exists() || !$data.exists()) {
+			if (!$playerContainer.exists() || !$data.exists()) {
 				// at least one of necessary elements does not exist
 				log(logMsg.no_player_data, true);
 				return false;
@@ -1162,57 +1263,70 @@ var SvpStarter = (function($) {
 				log(logMsg.no_json_support, true);
 				return false;
 			}
-			$data.html('');
+			// @TODO possibly place in var, and pass it to init method on next call instead?
+			//$data.html('');
 			if (typeof data !== 'object') {
 				log(logMsg.player_data_invalid, true);
 				return false;
 			}
-
-			// Supports multiple player types
-			switch (playerType) {
-				case 3:
-					if (!initSmvPlayer(data)) {
-						return false;
-					}
-					break;
-				case 2:
-					if (!initJw7Player(data)) {
-						return false;
-					}
-					break;
-				case 1:
-					if (!initJw6Player(data)) {
-						return false;
-					}
-					break;
-				default:
-					// no valid player configuration
-					log(logMsg.invalid_player, true);
-					return false;
-			}
-
-			// even though the player has its own onPlay events, adding
-			// more general jQuery triggers can help when code needs
-			// to refer to these events before SVPS is defined
-			onPlay(function() {
-				$player.trigger('SVPS:play');
-			});
 
 			// determine if this is a livestream
 			if (data.hasOwnProperty('application')) {
 				this.isLiveStream = data.application === 'rtplive';
 			}
 
-			if (this.isLiveStream) {
-				// note that event handlers are not initialized during a livestream:
-				// this is because a livestream is fed via polling and not via interaction
-				if (meetingdata.topic || meetingdata.speaker || meetingdata.breaks) {
-					initLiveCounters();
-					initPolling();
+			// if player element exists, we can initialize the actual player object
+			var $player = $('#' + select.player, $playerContainer);
+			if ($player.exists()) {
+				// Supports multiple player types
+				switch (playerType) {
+					case 3:
+						if (!initSmvPlayer(data)) {
+							return false;
+						}
+						break;
+					case 2:
+						if (!initJw7Player(data)) {
+							return false;
+						}
+						break;
+					case 1:
+						if (!initJw6Player(data)) {
+							return false;
+						}
+						break;
+					default:
+						// no valid player configuration
+						log(logMsg.invalid_player, true);
+						return false;
 				}
-			} else {
-				initEventHandlers();
+
+				// even though the player has its own onPlay events, adding
+				// more general jQuery triggers can help when code needs
+				// to refer to these events before SVPS is defined
+				onPlay(function() {
+					$playerContainer.trigger('SVPS:play');
+				});
+
+				if (this.isLiveStream) {
+					// note that event handlers are not initialized during a livestream:
+					// this is because a livestream is fed via polling and not via interaction
+					if (meetingdata.topic || meetingdata.speaker || meetingdata.breaks) {
+						initLiveCounters();
+						initPolling(false);
+					}
+				} else {
+					initEventHandlers();
+				}
+			} else if (this.isLiveStream && meetingdata.breaks) {
+				// if the player element does not exist, we might be dealing with an interrupted livestream.
+				// in that case: initiate polling anyway
+				active.eventBreak = true;
+				initLiveCounters();
+				initPolling(true);
 			}
+
+
 			return true;
 		},
 

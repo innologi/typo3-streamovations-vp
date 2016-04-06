@@ -134,6 +134,13 @@ plugin.tx_streamovationsvp {
 							MEETINGDATA_TOPICS.value = {$plugin.tx_streamovationsvp.settings.topics.enable}
 							MEETINGDATA_SPEAKERS = TEXT
 							MEETINGDATA_SPEAKERS.value = {$plugin.tx_streamovationsvp.settings.speakers.enable}
+							# note that TS LLL doesn't resolve _LOCAL_LANG overrides because of TSFE->sL() !
+							VIDEO_BREAK_TITLE = TEXT
+							VIDEO_BREAK_TITLE.data = LLL:EXT:streamovations_vp/Resources/Private/Language/locallang.xlf:video_break_title
+							VIDEO_BREAK_TITLE.trim = 1
+							VIDEO_BREAK_SUB = TEXT
+							VIDEO_BREAK_SUB.data = LLL:EXT:streamovations_vp/Resources/Private/Language/locallang.xlf:video_break_sub
+							VIDEO_BREAK_SUB.trim = 1
 						}
 						# SvpPolling
 						20 = FILE
