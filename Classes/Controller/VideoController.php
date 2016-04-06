@@ -28,6 +28,7 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use Innologi\StreamovationsVp\Mvc\Controller\Controller;
 use Innologi\StreamovationsVp\Library\RestRepository\ResponseInterface;
 use Innologi\StreamovationsVp\Library\RestRepository\Exception\HttpReturnedError;
+use Innologi\StreamovationsVp\Domain\Service\MeetingdataService;
 /**
  * Video Controller
  *
@@ -149,6 +150,7 @@ class VideoController extends Controller {
 			if ($playlist instanceof ResponseInterface) {
 				$playlistData = NULL;
 
+				// @TODO move this to if scope below
 				/* @var $playlistService \Innologi\StreamovationsVp\Domain\Service\PlaylistService */
 				$playlistService = $this->objectManager->get(
 					'Innologi\\StreamovationsVp\\Domain\\Service\\PlaylistService',
@@ -171,8 +173,14 @@ class VideoController extends Controller {
 			$meetingdata = NULL;
 			if ((isset($this->settings['topics']['enable']) && (bool)$this->settings['topics']['enable'])
 				|| (isset($this->settings['speakers']['enable']) && (bool)$this->settings['speakers']['enable'])
+				|| ($isLiveStream && isset($this->settings['breaks']['enable']) && (bool)$this->settings['breaks']['enable'])
 			) {
 				$meetingdata = $this->meetingdataRepository->findByHash($hash);
+				if ($isLiveStream && isset($this->settings['breaks']['enable']) && (bool)$this->settings['breaks']['enable']) {
+					/** @var MeetingdataService $meetingdataService */
+					$meetingdataService = $this->objectManager->get(MeetingdataService::class);
+					$this->view->assign('interruptPlayer', $meetingdataService->isEventbreakActive($meetingdata));
+				}
 			}
 			$this->view->assign('meetingdata', $meetingdata);
 		}
