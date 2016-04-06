@@ -188,7 +188,7 @@ class Playlist extends ResponseAbstract {
 	 * @return \Innologi\StreamovationsVp\Domain\Model\Playlist
 	 */
 	public function addPlaylistItems(\Innologi\StreamovationsVp\Domain\Model\Playlist\PlaylistItem $playlistItem) {
-		$this->playlistItems->attach($timestamp);
+		$this->playlistItems->attach($playlistItem);
 		return $this;
 	}
 
@@ -199,7 +199,7 @@ class Playlist extends ResponseAbstract {
 	 * @return \Innologi\StreamovationsVp\Domain\Model\Playlist
 	 */
 	public function removePlaylistItems(\Innologi\StreamovationsVp\Domain\Model\Playlist\PlaylistItem $playlistItem) {
-		$this->playlistItems->detach($timestamp);
+		$this->playlistItems->detach($playlistItem);
 		return $this;
 	}
 

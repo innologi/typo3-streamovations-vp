@@ -105,7 +105,7 @@ class EventRepository extends Repository {
 	 * @param string $format
 	 * @return array
 	 */
-	public function findAt(\Datetime $dateTime, $format) {
+	public function findAt(\DateTime $dateTime, $format) {
 		$request = $this->createRequest()
 			->addArgument('at', $dateTime->format($format));
 		return $this->addSharedArguments($request)->send();

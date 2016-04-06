@@ -85,6 +85,15 @@
 				<source>No videostream</source>
 				<target state="translated">Geen videostreams</target>
 			</trans-unit>
+			
+			<trans-unit id="video_break_title" approved="yes">
+				<source>Temporary interruption</source>
+				<target state="translated">Tijdelijke onderbreking</target>
+			</trans-unit>
+			<trans-unit id="video_break_sub" approved="yes">
+				<source>The videostream will be resumed momentarily</source>
+				<target state="translated">De videostream zal spoedig hervat worden</target>
+			</trans-unit>
 
 
 			<trans-unit id="noscript" approved="yes">

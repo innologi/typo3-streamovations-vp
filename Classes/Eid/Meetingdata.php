@@ -58,12 +58,11 @@ class Meetingdata {
 	 * @return void
 	 */
 	protected function initializeContext() {
-		$timelineConfig = array(
+		$responsePropertyConfig = array(
 			'filterList' => 'last',
 			'json' => 0
 		);
 
-		// @TODO test this with TYPO3 7.6
 		// initialize TSFE to make TS accessible to extbase configuration manager
 		EidUtility::initTSFE();
 		// initialize extbase bootstrap, so we can use repositories
@@ -86,8 +85,8 @@ class Meetingdata {
 							),
 							'response' => array(
 								'property' => array(
-									'topicTimeline' => $timelineConfig,
-									'speakerTimeline' => $timelineConfig
+									'topicTimeline' => $responsePropertyConfig,
+									'speakerTimeline' => $responsePropertyConfig,
 								)
 							),
 							// cache concurrent requests to Streamovations API to lighten its load
@@ -106,7 +105,7 @@ class Meetingdata {
 	 * Note that when lifetime===interval, testresults show that the second polling call
 	 * of the visitor responsible for the cache, will result in him retrieving his own
 	 * cache result once, which makes the current polling interval completely useless.
-	 * To remedy this we do lifetime-1.
+	 * To remedy this we do lifetime=interval-1.
 	 *
 	 * If interval was already at 1, we can only force-disable caching to keep the chosen
 	 * interval remaining effective.

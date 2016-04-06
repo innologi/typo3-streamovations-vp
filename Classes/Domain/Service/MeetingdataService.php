@@ -1,9 +1,9 @@
 <?php
-namespace Innologi\StreamovationsVp\TypoScript;
+namespace Innologi\StreamovationsVp\Domain\Service;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2015 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
+ *  (c) 2016 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
  *
  *  All rights reserved
  *
@@ -23,28 +23,40 @@ namespace Innologi\StreamovationsVp\TypoScript;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
+use TYPO3\CMS\Core\SingletonInterface;
+use Innologi\StreamovationsVp\Domain\Model\Meetingdata;
+use Innologi\StreamovationsVp\Domain\Model\Meetingdata\EventBreak;
 /**
- * TypoScript Utility
+ * Meetingdata Domain Service class
  *
  * @package streamovations_vp
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
+ *
  */
-class Utility {
+class MeetingdataService implements SingletonInterface {
 
 	/**
-	 * Resolves prefixed paths, e.g. EXT:
+	 * Checks to see if the latest available EventBreak is active,
+	 * if any at all.
 	 *
-	 * @param string $content
-	 * @param array $conf
-	 * @return string
+	 * @param \Innologi\StreamovationsVp\Domain\Model\Meetingdata $meetingdata
+	 * @return boolean
 	 */
-	public function resolvePath($content, $conf) {
-		$path = '';
-		if (isset($conf['path'][0])) {
-			$path = $GLOBALS['TSFE']->tmpl->getFileName($conf['path']);
+	public function isEventbreakActive(Meetingdata $meetingdata) {
+		$eventBreaks = $meetingdata->getEventBreaks()->toArray();
+		$eventBreak = end($eventBreaks);
+
+		if ($eventBreak instanceof EventBreak && $eventBreak->getValid()) {
+			$endTime = $eventBreak->getEnd();
+			$now = time();
+			if ($endTime === NULL || $endTime->getTimestamp() > $now) {
+				if ($eventBreak->getStart()->getTimestamp() <= $now) {
+					return TRUE;
+				}
+			}
 		}
-		return $path;
+
+		return FALSE;
 	}
 
 }

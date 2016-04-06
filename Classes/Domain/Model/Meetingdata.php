@@ -44,6 +44,11 @@ class Meetingdata extends ResponseAbstract {
 	protected $speakers;
 
 	/**
+	 * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Innologi\StreamovationsVp\Domain\Model\Meetingdata\EventBreak>
+	 */
+	protected $eventBreaks;
+
+	/**
 	 * Although this would normally be:
 	 * \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Innologi\StreamovationsVp\Domain\Model\Meetingdata\Timestamp>
 	 * This property is converted to JSON in the Response Property Mapping
@@ -78,6 +83,7 @@ class Meetingdata extends ResponseAbstract {
 	protected function initStorageObjects() {
 		$this->topics = new ObjectStorage();
 		$this->speakers = new ObjectStorage();
+		$this->eventBreaks = new ObjectStorage();
 		//$this->topicTimeline = new ObjectStorage();
 		//$this->speakerTimeline = new ObjectStorage();
 	}
@@ -164,6 +170,48 @@ class Meetingdata extends ResponseAbstract {
 	 */
 	public function removeSpeakers(\Innologi\StreamovationsVp\Domain\Model\Meetingdata\Speaker $speaker) {
 		$this->speakers->detach($speaker);
+		return $this;
+	}
+
+	/**
+	 * Returns event breaks
+	 *
+	 * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage
+	 */
+	public function getEventBreaks() {
+		return $this->eventBreaks;
+	}
+
+	/**
+	 * Sets event breaks
+	 *
+	 * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage $eventBreaks
+	 * @return \Innologi\StreamovationsVp\Domain\Model\Meetingdata
+	 */
+	public function setEventBreaks(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $eventBreaks) {
+		$this->eventBreaks = $eventBreaks;
+		return $this;
+	}
+
+	/**
+	 * Adds an event break
+	 *
+	 * @param \Innologi\StreamovationsVp\Domain\Model\Meetingdata\EventBreak $eventBreak
+	 * @return \Innologi\StreamovationsVp\Domain\Model\Meetingdata
+	 */
+	public function addEventBreaks(\Innologi\StreamovationsVp\Domain\Model\Meetingdata\EventBreak $eventBreak) {
+		$this->eventBreaks->attach($eventBreak);
+		return $this;
+	}
+
+	/**
+	 * Remove an event break
+	 *
+	 * @param \Innologi\StreamovationsVp\Domain\Model\Meetingdata\EventBreak $eventBreak
+	 * @return \Innologi\StreamovationsVp\Domain\Model\Meetingdata
+	 */
+	public function removeEventBreaks(\Innologi\StreamovationsVp\Domain\Model\Meetingdata\EventBreak $eventBreak) {
+		$this->eventBreaks->detach($eventBreak);
 		return $this;
 	}
 

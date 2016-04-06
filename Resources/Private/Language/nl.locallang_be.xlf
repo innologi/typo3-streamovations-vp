@@ -91,6 +91,10 @@
 				<source>Polling</source>
 				<target state="translated">Polling</target>
 			</trans-unit>
+			<trans-unit id="ts_category_breaks" approved="yes">
+				<source>Event Breaks</source>
+				<target state="translated">Onderbrekingen</target>
+			</trans-unit>
 
 			<trans-unit id="ts_view_templateRootPath" approved="yes">
 				<source>Template path</source>
@@ -230,6 +234,17 @@
 			<trans-unit id="ts_settings_jwPlayer_smilWrap" approved="yes">
 				<source>Smil wrap</source>
 				<target state="translated">Smil wrap</target>
+			</trans-unit>
+			<trans-unit id="ts_settings_breaks_enable" approved="yes">
+				<source>Enable breaks: Allows livestream interruptions to occur on
+					set times. This requires that "Event Breaks" are being applied
+					to the livestream from within the Streamovations Video CMS.
+				</source>
+				<target state="translated">Onderbrekingen inschakelen: Staat toe om
+					livestreams te onderbreken op aan te geven tijden. Deze tijden
+					zijn toe te passen op de livestream middels de "Event Breaks"
+					functie beschikbaar vanuit het Streamovations Video CMS.
+				</target>
 			</trans-unit>
 			<trans-unit id="ts_settings_topics_enable" approved="yes">
 				<source>Enable topics: Shows topics beside the video player, which
