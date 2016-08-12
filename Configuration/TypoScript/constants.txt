@@ -2,6 +2,7 @@
 # customsubcategory=a_restapi=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_category_restapi
 # customsubcategory=b_player=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_category_player
 # customsubcategory=c_jw=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_category_jw
+# customsubcategory=c1_smv=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_category_smv
 # customsubcategory=d_topics=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_category_topics
 # customsubcategory=e_speakers=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_category_speakers
 # customsubcategory=f_polling=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_category_polling
@@ -60,6 +61,10 @@ plugin.tx_streamovationsvp {
 			# cat=plugin.tx_streamovationsvp/c_jw/050; type=wrap; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_jwPlayer_smilWrap
 			smilWrap = smil:|/jwplayer.smil
 			# see http://support.jwplayer.com/customer/portal/articles/1430398-dynamic-rtmp-streaming
+		}
+		smvPlayer {
+			# cat=plugin.tx_streamovationsvp/c1_smv/010; type=boolean; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_smvPlayer_forceHttps
+			forceHttps = 0
 		}
 		
 		# cat=plugin.tx_streamovationsvp/g_breaks/010; type=boolean; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_breaks_enable

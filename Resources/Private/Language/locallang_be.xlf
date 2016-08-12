@@ -60,6 +60,9 @@
 			<trans-unit id="ts_category_jw">
 				<source>JW Player-specific</source>
 			</trans-unit>
+			<trans-unit id="ts_category_smv">
+				<source>SMV Player-specific</source>
+			</trans-unit>
 			<trans-unit id="ts_category_topics">
 				<source>Topics</source>
 			</trans-unit>
@@ -155,6 +158,9 @@
 			</trans-unit>
 			<trans-unit id="ts_settings_jwPlayer_smilWrap">
 				<source>Smil wrap</source>
+			</trans-unit>
+			<trans-unit id="ts_settings_smvPlayer_forceHttps">
+				<source>Force HTTPS: Forces streaming over the HTTPS protocol. Requires a proper SSL configuration on the streaming source.</source>
 			</trans-unit>
 			<trans-unit id="ts_settings_breaks_enable">
 				<source>Enable breaks: Allows livestream interruptions to occur on

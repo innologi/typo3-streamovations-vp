@@ -29,6 +29,7 @@ use Innologi\StreamovationsVp\Mvc\Controller\Controller;
 use Innologi\StreamovationsVp\Library\RestRepository\ResponseInterface;
 use Innologi\StreamovationsVp\Library\RestRepository\Exception\HttpReturnedError;
 use Innologi\StreamovationsVp\Domain\Service\MeetingdataService;
+use Innologi\StreamovationsVp\Exception\Configuration;
 /**
  * Video Controller
  *
@@ -37,7 +38,8 @@ use Innologi\StreamovationsVp\Domain\Service\MeetingdataService;
  *
  */
 class VideoController extends Controller {
-
+	// @TODO _____add a debugging-console feature to RestRepository, so that it logs entire responses to console?
+	// @TODO _____add a hide-parameter option in RestRepository for RequestUri's build-process, so that we can produce the new API uris
 	/**
 	 * @var \Innologi\StreamovationsVp\Domain\Repository\EventRepository
 	 * @inject
@@ -138,6 +140,12 @@ class VideoController extends Controller {
 	 * @return void
 	 */
 	public function showAction($hash, $isLiveStream = FALSE) {
+		if ( !(isset($this->settings['jwPlayer']) && is_array($this->settings['jwPlayer'])) ) {
+			throw new Configuration(
+				'Missing TypoScript jwPlayer settings. Please include the extension static TypoScript through your root TS Template record.'
+			);
+		}
+
 		$playerType = (int)$this->settings['player'];
 
 		// smvPlayer requires raw response
@@ -147,21 +155,27 @@ class VideoController extends Controller {
 
 		$playlist = $this->playlistRepository->findByHash($hash);
 		if ($playlist) {
-			if ($playlist instanceof ResponseInterface) {
-				$playlistData = NULL;
+			/* @var $playlistService \Innologi\StreamovationsVp\Domain\Service\PlaylistService */
+			$playlistService = $this->objectManager->get(
+				'Innologi\\StreamovationsVp\\Domain\\Service\\PlaylistService',
+				$this->extensionName
+			);
 
-				// @TODO move this to if scope below
-				/* @var $playlistService \Innologi\StreamovationsVp\Domain\Service\PlaylistService */
-				$playlistService = $this->objectManager->get(
-					'Innologi\\StreamovationsVp\\Domain\\Service\\PlaylistService',
-					$this->extensionName
-				);
-
-				if ($playerType !== 3) {
-					// for jwPlayer we need to construct a valid configuration from the playlist-response
-					$playlistData = $playlistService->createJwplayerSetup($playlist, $this->settings['jwPlayer']);
+			// smvPlayer supports additional options and configuration
+			if ($playerType === 3) {
+				if ( !(isset($this->settings['smvPlayer']) && is_array($this->settings['smvPlayer'])) ) {
+					throw new Configuration(
+						'Missing TypoScript smvPlayer settings. Please include the extension static TypoScript through your root TS Template record.'
+					);
 				}
+				$playlist = $playlistService->alterSmvPlayerSetup($playlist, $this->settings['smvPlayer']);
 
+			// jwPlayer
+			} elseif ($playlist instanceof ResponseInterface) {
+				// for jwPlayer we need to construct a valid configuration from the playlist-response
+				$playlistData = $playlistService->createJwplayerSetup($playlist, $this->settings['jwPlayer']);
+
+				// @TODO ___php dependency already is @ 5.5, so get rid of any of this compatibility stuff
 				// javascript JSON.parse already deals with escaped slashes, but
 				// still I found it inconvenient to have them when debugging, so..
 				$playlist = version_compare(PHP_VERSION, '5.4', '<')
@@ -184,6 +198,7 @@ class VideoController extends Controller {
 			}
 			$this->view->assign('meetingdata', $meetingdata);
 		}
+		// @TODO __rename to playerSetup
 		$this->view->assign('playlist', $playlist);
 
 		// @LOW we should autodetect this once we allow livestreams via list

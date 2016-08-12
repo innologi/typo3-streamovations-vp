@@ -30,6 +30,12 @@
 		{playlist -> f:format.raw()}
 	</script>
 	
+	<f:if condition="{playerConfig}">
+		<script type="application/json" id="tx-streamovations-vp-playerconfig">
+			{playerConfig -> f:format.raw()}
+		</script>
+	</f:if>
+	
 	<f:if condition="{backPid}">
 		<f:render partial="General/BackLink" arguments="{pid: backPid}" />
 	</f:if>

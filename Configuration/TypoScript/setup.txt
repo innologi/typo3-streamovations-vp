@@ -157,6 +157,9 @@ plugin.tx_streamovationsvp {
 	
 	settings {
 		player = {$plugin.tx_streamovationsvp.settings.player}
+		smvPlayer {
+			forceHttps = {$plugin.tx_streamovationsvp.settings.smvPlayer.forceHttps}
+		}
 		jwPlayer {
 			width = {$plugin.tx_streamovationsvp.settings.jwPlayer.width}
 			height = {$plugin.tx_streamovationsvp.settings.jwPlayer.height}
