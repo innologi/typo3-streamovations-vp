@@ -223,6 +223,7 @@ var SvpStarter = (function($) {
 		html5Wrapper: '_html5videotag',
 		// id of player data HTML element
 		data: 'tx-streamovations-vp-playerdata',
+		config: 'tx-streamovations-vp-playerconfig',
 		// id of topic timeline HTML element
 		topicTimeline: 'tx-streamovations-vp-topictimeline',
 		// id of speaker timeline HTML element
@@ -857,6 +858,7 @@ var SvpStarter = (function($) {
 	 * @return booelean True on success, false on failure
 	 */
 	function initJwPlayerVariables(requireLicense) {
+		// @FIX ___________change how this works
 		var licenseKey = '###JWPLAYER_KEY###';
 
 		if (typeof jwplayer === 'undefined') {
@@ -879,51 +881,49 @@ var SvpStarter = (function($) {
 	 * @return boolean True on success, false on failure
 	 * @see http://wiki.streamovations.be/doku.php?id=smvplayer:javascript-api
 	 */
-	function initSmvPlayer(data) {
-		if (initJwPlayerVariables(false)) {
-			// smvplayer object needs to exist
-			if (typeof smvplayer !== 'undefined') {
-				SVPS.smv = smvplayer(select.player);
-				try {
-					SVPS.smv.init(data);
-				} catch (e) {
-					log(e, true);
-				}
-
-				// works for any type of smvplayer
-				getPlaylistIndex = function() {
-					return SVPS.smv.getCurrentPlaylistItem().streamfileId;
-				};
-				getPlaylistIndexFromTimeObject = function(time) {
-					return time.streamfileId;
-				}
-				// @LOW SMVnative: we can't set it to autoplay if the video element wasn't created with an autoplay attribute
-				playOnReady = function() {
-					SVPS.smv.whenReady(function() {
-						SVPS.smv.play();
-					});
-				}
-				stop = function() {
-					SVPS.smv.stop();
-				}
-
-				// do further initialization based on the utilized engine
-				var engine = SVPS.smv.getEngine();
-				if (engine === 'hlsjs' || engine === 'me') {
-					initSmvHlsPlayer();
-				} else if (engine === 'jw') {
-					initSmvJwPlayer();
-				} else if (engine === 'html5') {
-					initSmvHtml5Player();
-				}
-
-				// post init class of original player element changes with SMV
-				select.playerPI = select.smvWrapper1 + select.player;
-				return true;
+	function initSmvPlayer(data, config) {
+		// smvplayer object needs to exist
+		if (typeof smvplayer !== 'undefined') {
+			SVPS.smv = smvplayer(select.player);
+			try {
+				SVPS.smv.init(data, config);
+			} catch (e) {
+				log(e, true);
 			}
 
-			log(logMsg.no_smvplayer, true);
+			// works for any type of smvplayer
+			getPlaylistIndex = function() {
+				return SVPS.smv.getCurrentPlaylistItem().streamfileId;
+			};
+			getPlaylistIndexFromTimeObject = function(time) {
+				return time.streamfileId;
+			}
+			// @LOW SMVnative: we can't set it to autoplay if the video element wasn't created with an autoplay attribute
+			playOnReady = function() {
+				SVPS.smv.whenReady(function() {
+					SVPS.smv.play();
+				});
+			}
+			stop = function() {
+				SVPS.smv.stop();
+			}
+
+			// do further initialization based on the utilized engine
+			var engine = SVPS.smv.getEngine();
+			if (engine === 'hlsjs' || engine === 'me') {
+				initSmvHlsPlayer();
+			} else if (engine === 'jw') {
+				initSmvJwPlayer();
+			} else if (engine === 'html5') {
+				initSmvHtml5Player();
+			}
+
+			// post init class of original player element changes with SMV
+			select.playerPI = select.smvWrapper1 + select.player;
+			return true;
 		}
+
+		log(logMsg.no_smvplayer, true);
 		return false;
 	}
 
@@ -1373,7 +1373,8 @@ var SvpStarter = (function($) {
 			}
 
 			// read & parse data
-			var data = null;
+			var data = null,
+				config = null;
 			try {
 				data = JSON.parse($data.html().trim());
 			} catch (e) {
@@ -1399,7 +1400,11 @@ var SvpStarter = (function($) {
 					// Supports multiple player types
 					switch (playerType) {
 						case 3:
-							if (!initSmvPlayer(data)) {
+							var $config = $('#' + select.config).first();
+							if ($config.exists()) {
+								config = JSON.parse($config.html().trim());
+							}
+							if (!initSmvPlayer(data, config)) {
 								return false;
 							}
 							break;
