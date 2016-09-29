@@ -117,8 +117,6 @@ plugin.tx_streamovationsvp {
 						10.template = FILE
 						10.template.file = {$plugin.tx_streamovationsvp.javascript.starterFile}
 						10.marks {
-							JWPLAYER_KEY = TEXT
-							JWPLAYER_KEY.value = {$plugin.tx_streamovationsvp.settings.jwPlayer.key}
 							PLAYER_TYPE = TEXT
 							PLAYER_TYPE.value = {$plugin.tx_streamovationsvp.settings.player}
 							POLLING_INTERVAL = TEXT
@@ -161,6 +159,7 @@ plugin.tx_streamovationsvp {
 			forceHttps = {$plugin.tx_streamovationsvp.settings.smvPlayer.forceHttps}
 		}
 		jwPlayer {
+			key = {$plugin.tx_streamovationsvp.settings.jwPlayer.key}
 			width = {$plugin.tx_streamovationsvp.settings.jwPlayer.width}
 			height = {$plugin.tx_streamovationsvp.settings.jwPlayer.height}
 			liveLanguage = {$plugin.tx_streamovationsvp.settings.jwPlayer.liveLanguage}

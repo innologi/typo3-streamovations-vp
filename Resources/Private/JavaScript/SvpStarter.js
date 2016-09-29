@@ -85,7 +85,8 @@ var SvpStarter = (function($) {
 	var active = {
 		topic: 0,
 		speaker: 0,
-		eventBreak: false
+		eventBreak: false,
+		pausePlayInterval: null
 	};
 
 	/**
@@ -223,6 +224,7 @@ var SvpStarter = (function($) {
 		html5Wrapper: '_html5videotag',
 		// id of player data HTML element
 		data: 'tx-streamovations-vp-playerdata',
+		config: 'tx-streamovations-vp-playerconfig',
 		// id of topic timeline HTML element
 		topicTimeline: 'tx-streamovations-vp-topictimeline',
 		// id of speaker timeline HTML element
@@ -663,11 +665,11 @@ var SvpStarter = (function($) {
 	}
 
 	/**
-	 * Initializes HTML5 event listeners for onTime and onSeek alternatives.
+	 * Initializes HTML5 onTime vent listener.
 	 *
 	 * @return void
 	 */
-	function initHtml5EventListeners() {
+	function initOnTime() {
 		// add onTime alternative event listener
 		SVPS.player.addEventListener('timeupdate', function(e) {
 			for (var c in callbacks.onTime) {
@@ -676,6 +678,15 @@ var SvpStarter = (function($) {
 				}
 			}
 		});
+	}
+
+	/**
+	 * Initializes HTML5 event listeners for onTime and onSeek alternatives.
+	 *
+	 * @return void
+	 */
+	function initHtml5EventListeners() {
+		initOnTime();
 
 		// add onSeek alternative event listener
 		SVPS.player.addEventListener('seeking', function(e) {
@@ -702,7 +713,7 @@ var SvpStarter = (function($) {
 		// only play-specific callbacks need to re-attached
 		reattachPlayCallbacks();
 	}
-	// @TODO what about this one?
+
 	/**
 	 * Resets SVPS.player events (hls tag) to the correct time and playlist.
 	 * Needs to be called when the smvplayer replaces the html5 tag and
@@ -713,11 +724,30 @@ var SvpStarter = (function($) {
 	function resetHls(time, playlist) {
 		deactivateElement('speaker');
 		deactivateElement('topic');
-		//SVPS.player = document.getElementById(select.playerObj);
+		SVPS.player = document.getElementById(select.playerObj);
 
-		/*applySeekOnPlay(time, playlist);*/
-		//initHtml5EventListeners();
-		reattachPlayCallbacks();
+		if (time !== undefined) {
+			applySeekOnPlay(time, playlist);
+		}
+
+		initHtml5EventListeners();
+	}
+
+	/**
+	 * Resets SVPS.player events (hls tag) to the correct time and playlist.
+	 * Needs to be called when the smvplayer replaces the html5 tag and
+	 * effectively destroys a number of parameters.
+	 *
+	 * @return void
+	 */
+	function resetMe(time, playlist) {
+		deactivateElement('speaker');
+		deactivateElement('topic');
+		SVPS.player = document.getElementById(select.playerObj);
+
+		if (time !== undefined) {
+			applySeekOnPlay(time, playlist);
+		}
 	}
 
 	/**
@@ -736,6 +766,22 @@ var SvpStarter = (function($) {
 			// all event handler callbacks need to be re-attached
 			reattachEventCallbacks();
 		});
+	}
+
+	/**
+	 * Executes the onTime callbacks on demand. Useful if these
+	 * can't be set to an event listener, but you want to run
+	 * them with an interval.
+	 *
+	 * @return void
+	 */
+	function executeOnTimeCallbacks() {
+		for (var c in callbacks.onTime) {
+			if (callbacks.onTime.hasOwnProperty(c)) {
+				// note the parenthesis, necessary to execute
+				callbacks.onTime[c]();
+			}
+		}
 	}
 
 	/**
@@ -857,6 +903,7 @@ var SvpStarter = (function($) {
 	 * @return booelean True on success, false on failure
 	 */
 	function initJwPlayerVariables(requireLicense) {
+		// @FIX ___________change how this works
 		var licenseKey = '###JWPLAYER_KEY###';
 
 		if (typeof jwplayer === 'undefined') {
@@ -879,51 +926,51 @@ var SvpStarter = (function($) {
 	 * @return boolean True on success, false on failure
 	 * @see http://wiki.streamovations.be/doku.php?id=smvplayer:javascript-api
 	 */
-	function initSmvPlayer(data) {
-		if (initJwPlayerVariables(false)) {
-			// smvplayer object needs to exist
-			if (typeof smvplayer !== 'undefined') {
-				SVPS.smv = smvplayer(select.player);
-				try {
-					SVPS.smv.init(data);
-				} catch (e) {
-					log(e, true);
-				}
-
-				// works for any type of smvplayer
-				getPlaylistIndex = function() {
-					return SVPS.smv.getCurrentPlaylistItem().streamfileId;
-				};
-				getPlaylistIndexFromTimeObject = function(time) {
-					return time.streamfileId;
-				}
-				// @LOW SMVnative: we can't set it to autoplay if the video element wasn't created with an autoplay attribute
-				playOnReady = function() {
-					SVPS.smv.whenReady(function() {
-						SVPS.smv.play();
-					});
-				}
-				stop = function() {
-					SVPS.smv.stop();
-				}
-
-				// do further initialization based on the utilized engine
-				var engine = SVPS.smv.getEngine();
-				if (engine === 'hlsjs' || engine === 'me') {
-					initSmvHlsPlayer();
-				} else if (engine === 'jw') {
-					initSmvJwPlayer();
-				} else if (engine === 'html5') {
-					initSmvHtml5Player();
-				}
-
-				// post init class of original player element changes with SMV
-				select.playerPI = select.smvWrapper1 + select.player;
-				return true;
+	function initSmvPlayer(data, config) {
+		// smvplayer object needs to exist
+		if (typeof smvplayer !== 'undefined') {
+			SVPS.smv = smvplayer(select.player);
+			try {
+				SVPS.smv.init(data, config);
+			} catch (e) {
+				log(e, true);
 			}
 
-			log(logMsg.no_smvplayer, true);
+			// works for any type of smvplayer
+			getPlaylistIndex = function() {
+				return SVPS.smv.getCurrentPlaylistItem().streamfileId;
+			};
+			getPlaylistIndexFromTimeObject = function(time) {
+				return time.streamfileId;
+			}
+			// @LOW SMVnative: we can't set it to autoplay if the video element wasn't created with an autoplay attribute
+			playOnReady = function() {
+				SVPS.smv.whenReady(function() {
+					SVPS.smv.play();
+				});
+			}
+			stop = function() {
+				SVPS.smv.stop();
+			}
+
+			// do further initialization based on the utilized engine
+			var engine = SVPS.smv.getEngine();
+			if (engine === 'hlsjs') {
+				initSmvHlsPlayer();
+			} else if (engine === 'me') {
+				initSmvMePlayer();
+			} else if (engine === 'jw') {
+				initSmvJwPlayer();
+			} else if (engine === 'html5') {
+				initSmvHtml5Player();
+			}
+
+			// post init class of original player element changes with SMV
+			select.playerPI = select.smvWrapper1 + select.player;
+			return true;
 		}
+
+		log(logMsg.no_smvplayer, true);
 		return false;
 	}
 
@@ -1023,6 +1070,11 @@ var SvpStarter = (function($) {
 		select.playerObj = select.hlsWrapper + select.player;
 		// reflect active player object
 		SVPS.player = document.getElementById(select.playerObj);
+
+		SVPS.smv.onReload(function(e) {
+			resetHls();
+		});
+
 		initHtml5EventListeners();
 
 		// our own event listeners aren't destroyed, so we can keep these simple
@@ -1034,46 +1086,24 @@ var SvpStarter = (function($) {
 		};
 		// onPlay and onPause survive a playlist change, but not Quality or Audio change
 		onPlay = function(callback) {
-			callbacks.onPlay.push(callback);
+			//callbacks.onPlay.push(callback);
 			SVPS.smv.onPlay(callback);
 		};
 		onPause = function(callback) {
-			callbacks.onPause.push(callback);
+			//callbacks.onPause.push(callback);
 			SVPS.smv.onPause(callback);
 		};
 
-		// Original smv property references, for those we need to overrule
-		var orig = {};
-		// @FIX ___these don't trigger!
-		SVPS.smv.onReload(function(e) {
-			console.log('ONRELOAD TRIGGERED');
-		});
-		// overrule player.setQualityLevel()
-		orig.setQualityLevel = SVPS.smv.setQualityLevel;
-		SVPS.smv.setQualityLevel = function(q) {
-			console.log('SETTING QUALITY LEVEL TO ' + q);
-			orig.setQualityLevel(q);
-			/*var time = SVPS.player.currentTime;
-			var playlist = getPlaylistIndex();
-
-			resetHls(time, playlist);*/
-		};
-		// overrule player.setAudioLanguage()
-		/*orig.setAudioLanguage = SVPS.smv.setAudioLanguage;
-		SVPS.smv.setAudioLanguage = function(l) {
-			var time = SVPS.player.currentTime;
-			var playlist = getPlaylistIndex();
-			orig.setAudioLanguage(l);
-			resetHls(time, playlist);
-		};*/
 		// Since an automatic playlist change does not result in calling the public method next(),
 		// but instead, its private counterpart, I cannot overwrite these with any effect. Instead,
 		// I can use SMV's onComplete event handler.
-		SVPS.smv.onComplete(function (e) {
+		/*SVPS.smv.onComplete(function (e) {
+			console.log('COMPLETE');
 			deactivateElement('speaker');
 			deactivateElement('topic');
-		});
+		});*/
 
+		// @TODO I should see at some point if these constructs are still necessary in current SMV engines
 		// seek methods
 		seek = function(topic) {
 			// e.g. when BUFFERING or PAUSED (seek on IDLE doesn't stall SMV)
@@ -1094,6 +1124,110 @@ var SvpStarter = (function($) {
 			SVPS.smv.seek(time, playlist);
 			if (playlist !== null) {
 				resetHls(time, playlist);
+			}
+		}
+	}
+
+	/**
+	 * SMV player initialization that is HLS/JS engine specific.
+	 *
+	 * @return void
+	 */
+	function initSmvMePlayer() {
+		// SMV player changes the player id, so we should too if we want to get the actual HTML5 video tag
+		select.playerObj = select.hlsWrapper + select.player;
+		// reflect active player object
+		SVPS.player = document.getElementById(select.playerObj);
+
+		SVPS.smv.onReload(function(e) {
+			resetMe();
+		});
+
+		// our own event listeners aren't destroyed, so we can keep these simple
+		onTime = function(callback) {
+			callbacks.onTime.push(callback);
+		};
+		onSeek = function(callback) {
+			SVPS.smv.onSeek(callback);
+		};
+		// onPlay and onPause survive a playlist change, but not Quality or Audio change
+		onPlay = function(callback) {
+			SVPS.smv.onPlay(callback);
+		};
+		onPause = function(callback) {
+			SVPS.smv.onPause(callback);
+		};
+
+		// me-engine doesn't have an e parameter..
+		eventHandler['onSeek'] = function(t, type) {
+			return function(e) {
+				var offset = SVPS.smv.getPosition();
+				if (offset >= t.start && offset < t.end
+					&& t.playlist === getPlaylistIndex()
+				) {
+					if (t.id !== active[type]) {
+						activateElement(t.id, type);
+					}
+					// even if t.id === active.type, onSeekHit needs to be marked to prevent deactivation
+					onSeekHit[type] = true;
+				}
+			};
+		};
+		eventHandler['onTime'] = function(t, type) {
+			return function(e) {
+				var position = SVPS.smv.getPosition();
+				if (position >= t.start && position < (t.start+0.4)
+					&& t.id !== active[type]
+					&& t.playlist === getPlaylistIndex()
+				) {
+					activateElement(t.id, type);
+				}
+			};
+		};
+
+		// workaround for not being able to create an event listener
+		onPlay(function() {
+			if (active.pausePlayInterval === null) {
+				active['pausePlayInterval'] = setInterval(executeOnTimeCallbacks, 400);
+			}
+		});
+		onPause(function() {
+			if (active.pausePlayInterval !== null) {
+				clearInterval(active.pausePlayInterval);
+			}
+			active['pausePlayInterval'] = null;
+		});
+
+		// Since an automatic playlist change does not result in calling the public method next(),
+		// but instead, its private counterpart, I cannot overwrite these with any effect. Instead,
+		// I can use SMV's onComplete event handler.
+		/*SVPS.smv.onComplete(function (e) {
+			console.log('COMPLETE');
+			deactivateElement('speaker');
+			deactivateElement('topic');
+		});*/
+
+		// @TODO I should see at some point if these constructs are still necessary in current SMV engines
+		// seek methods
+		seek = function(topic) {
+			// e.g. when BUFFERING or PAUSED (seek on IDLE doesn't stall SMV)
+			var state = SVPS.smv.getStatus().toUpperCase();
+			if (state !== 'PLAYING' && state !== 'IDLE') {
+				// not all relevant onSeek events will trigger if player hasn't started
+				applySeekOnPlay(topic.time, topic.playlist);
+				SVPS.smv.play();
+			} else {
+				seekTime(topic.time, topic.playlist);
+			}
+		}
+		seekTime = function(time, playlist) {
+			if (playlist === getPlaylistIndex()) {
+				// otherwise, smv player issues a warning
+				playlist = null;
+			}
+			SVPS.smv.seek(time, playlist);
+			if (playlist !== null) {
+				resetMe(time, playlist);
 			}
 		}
 	}
@@ -1373,7 +1507,8 @@ var SvpStarter = (function($) {
 			}
 
 			// read & parse data
-			var data = null;
+			var data = null,
+				config = null;
 			try {
 				data = JSON.parse($data.html().trim());
 			} catch (e) {
@@ -1399,7 +1534,11 @@ var SvpStarter = (function($) {
 					// Supports multiple player types
 					switch (playerType) {
 						case 3:
-							if (!initSmvPlayer(data)) {
+							var $config = $('#' + select.config).first();
+							if ($config.exists()) {
+								config = JSON.parse($config.html().trim());
+							}
+							if (!initSmvPlayer(data, config)) {
 								return false;
 							}
 							break;

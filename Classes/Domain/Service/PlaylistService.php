@@ -73,6 +73,111 @@ class PlaylistService {
 		return $playerSetup;
 	}
 
+	// @TODO doc
+	public function createSmvPlayerConfig(array $smvSettings, array $jwSettings) {
+		// @TODO ________allow default config
+		// @TODO ________allow overruling some of these options
+
+		/*
+		 unicastfallbacktimeout: Timeout in seconds before falling back to unicast stream when multicast is failing
+		 jwplayerkey: The JWPlayer Ads Edition licence key
+		 skin: The applied player theme (“smv” by default, client specific and often created on demand by Streamovations)
+		 aspect: Aspect ratio
+		 controls: Object containing boolean flags that enable/disable player controls
+		 uilabels: Contains language strings that are used in the player
+		 languages: Lists all language labels for the language selection dropdown
+		 */
+		$config = [
+			'unicastfallbacktimeout' => 20,
+			'skin'=> 'default',
+			'aspect'=> '16=>9',
+			'controls'=> [
+				'langSwitch'=> false,
+				'qualSwitch'=> true,
+				'positionLabel'=> true,
+				'totalLabel'=> true,
+				'realtimeCounter'=> true,
+				'playlistNav'=> true, // timeline seekbar?
+				'sharing'=> false,
+				'controlbar'=> true,
+				'volume'=> true,
+				'settings'=> true,
+				'fullscreen'=> true,
+				'controlbarAlwaysVisible'=> false
+			],
+			'uiLabels'=> [
+				'languages'=> [
+					'or'=> 'Original language (or)',
+					'de'=> 'Deutsch (de)',
+					'en'=> 'English (en)',
+					'fr'=> 'Français (fr)',
+					'it'=> 'Italiano (it)',
+					'nl'=> 'Nederlands (nl)',
+					'da'=> 'Dansk (da)',
+					'el'=> '&#917;&#955;&#955;&#951;&#957;&#953;&#954;&#945; (el)',
+					'es'=> 'Español (es)',
+					'pt'=> 'Português (pt)',
+					'fi'=> 'Suomi (fi)',
+					'sv'=> 'Svenska (sv)',
+					'cs'=> '&#268;eština (cs)',
+					'et'=> 'Eesti keel (et)',
+					'lv'=> 'Latviešu valoda (lv)',
+					'lt'=> 'Lietuvi&#371; kalba (lt)',
+					'hu'=> 'Magyar (hu)',
+					'mt'=> 'Malti (mt)',
+					'pl'=> 'Polski (pl)',
+					'sk'=> 'Sloven&#269;ina (sk)',
+					'sl'=> 'Slovenš&#269;ina (sl)',
+					'bg'=> 'Bulgarian (bg)',
+					'ro'=> 'Romanian (ro)',
+					'ga'=> 'Gaeilge (ga)',
+					'ar'=> 'Arab (ar)',
+					'ja'=> 'Japanese (ja)',
+					'ru'=> 'Russian (ru)',
+					'tr'=> 'Türkçe (tr)',
+					'zh'=> 'Chinese (zh)',
+					'is'=> 'Islenska (is)',
+					'uk'=> 'Ukrainian (uk)',
+					'mk'=> 'Macedonian (mk)',
+					'cr'=> 'Romani (cr)',
+					'mo'=> 'Moldovia (mo)',
+					'hr'=> 'Croate (hr)',
+					'sa'=> 'Sanskrit (sa)',
+					'tt'=> 'Tatar (tt)',
+					'zu'=> 'Zulu (zu)',
+					'cy'=> 'Welsh (cy)',
+					'sh'=> 'Serbo-Croatian (sh)',
+					'xh'=> 'TestLang',
+					'aa'=> 'Montenegrin (aa)',
+					'no'=> 'Norsk (no)',
+					'sr'=> 'српски језик (sr)',
+					'eo'=> 'Esperanto (eo)',
+					'fa'=> 'Persian (fa)',
+					'hy'=> 'Armenian (hy)',
+					'ko'=> 'Korean (ko)',
+					'my'=> 'Burmese (my)',
+					'ne'=> 'Nepali (ne)',
+					'pa'=> 'Panjabi (pa)',
+					'rm'=> 'Romansh (rm)',
+					'sq'=> 'Albanian (sq)',
+					'sw'=> 'Swahili (sw)',
+					'th'=> 'Thai (th)',
+					'uk'=> 'Ukrainian (uk)',
+					'ua'=> 'none',
+					'zu'=> 'Zulu (zu)',
+					'bs'=> 'Bosnian (bs)',
+					'ku'=> 'Kurde (ku)'
+				]
+			]
+		];
+
+		if (isset($jwSettings['key'][0])) {
+			$config['jwplayerkey'] = $jwSettings['key'];
+		}
+
+		return $config;
+	}
+
 	/**
 	 * Creates a jwplayer setup array from the playlist object
 	 *
@@ -240,103 +345,5 @@ class PlaylistService {
 
 		return $source;
 	}
-
-	// @FIX ___configuration object
-	/*
-	 * {
-	"unicastfallbacktimeout": 20,
-	"jwplayerkey": "XXX",
-	"skin": "default",
-	"aspect": "16:9",
-	"controls": {
-		"langSwitch": true,
-		"qualSwitch": true,
-		"positionLabel": true,
-		"totalLabel": true,
-		"realtimeCounter": true,
-		"playlistNav": true, // timeline seekbar?
-		"sharing": true,
-		"controlbar": true,
-		"volume": true,
-		"settings": true,
-		"fullscreen": true,
-		"controlbarAlwaysVisible": false
-	},
-	"uiLabels": {
-		"languages": {
-			"or": "Original language (or)",
-			"de": "Deutsch (de)",
-			"en": "English (en)",
-			"fr": "Français (fr)",
-			"it": "Italiano (it)",
-			"nl": "Nederlands (nl)",
-			"da": "Dansk (da)",
-			"el": "&#917;&#955;&#955;&#951;&#957;&#953;&#954;&#945; (el)",
-			"es": "Español (es)",
-			"pt": "Português (pt)",
-			"fi": "Suomi (fi)",
-			"sv": "Svenska (sv)",
-			"cs": "&#268;eština (cs)",
-			"et": "Eesti keel (et)",
-			"lv": "Latviešu valoda (lv)",
-			"lt": "Lietuvi&#371; kalba (lt)",
-			"hu": "Magyar (hu)",
-			"mt": "Malti (mt)",
-			"pl": "Polski (pl)",
-			"sk": "Sloven&#269;ina (sk)",
-			"sl": "Slovenš&#269;ina (sl)",
-			"bg": "Bulgarian (bg)",
-			"ro": "Romanian (ro)",
-			"ga": "Gaeilge (ga)",
-			"ar": "Arab (ar)",
-			"ja": "Japanese (ja)",
-			"ru": "Russian (ru)",
-			"tr": "Türkçe (tr)",
-			"zh": "Chinese (zh)",
-			"is": "Islenska (is)",
-			"uk": "Ukrainian (uk)",
-			"mk": "Macedonian (mk)",
-			"cr": "Romani (cr)",
-			"mo": "Moldovia (mo)",
-			"hr": "Croate (hr)",
-			"sa": "Sanskrit (sa)",
-			"tt": "Tatar (tt)",
-			"zu": "Zulu (zu)",
-			"cy": "Welsh (cy)",
-			"sh": "Serbo-Croatian (sh)",
-			"xh": "TestLang",
-			"aa": "Montenegrin (aa)",
-			"no": "Norsk (no)",
-			"sr": "српски језик (sr)",
-			"eo": "Esperanto (eo)",
-			"fa": "Persian (fa)",
-			"hy": "Armenian (hy)",
-			"ko": "Korean (ko)",
-			"my": "Burmese (my)",
-			"ne": "Nepali (ne)",
-			"pa": "Panjabi (pa)",
-			"rm": "Romansh (rm)",
-			"sq": "Albanian (sq)",
-			"sw": "Swahili (sw)",
-			"th": "Thai (th)",
-			"uk": "Ukrainian (uk)",
-			"ua": "none",
-			"zu": "Zulu (zu)",
-			"bs": "Bosnian (bs)",
-			"ku": "Kurde (ku)"
-		}
-	}
-}
-
-
-    unicastfallbacktimeout: Timeout in seconds before falling back to unicast stream when multicast is failing
-    jwplayerkey: The JWPlayer Ads Edition licence key
-    skin: The applied player theme (“smv” by default, client specific and often created on demand by Streamovations)
-    aspect: Aspect ratio
-    controls: Object containing boolean flags that enable/disable player controls
-    uilabels: Contains language strings that are used in the player
-        languages: Lists all language labels for the language selection dropdown
-
-	 */
 
 }
