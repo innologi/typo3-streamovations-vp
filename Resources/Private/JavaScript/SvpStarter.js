@@ -575,7 +575,8 @@ var SvpStarter = (function($) {
 		var timeline = null;
 		if (meetingdata.topic) {
 			// set jump event on topic clicks
-			$('.' + select.container + ' .topics').on('click', '.topic .topic-link', function(e) {
+			var $topics = $('.' + select.container + ' .topics');
+			$topics.on('click', '.topic .topic-link', function(e) {
 				e.preventDefault();
 				SVPS.jumpToTopic(
 					$(this).parent('.topic').attr('data-topic')
@@ -597,6 +598,19 @@ var SvpStarter = (function($) {
 				}
 				$topicTimeline.html('');
 			}
+
+			// remove the anchor tag from topics without a time
+			$topics.find('.topic').each(function (i, topic) {
+				var $topic = $(topic);
+				if (idMap['topic'][$topic.attr('data-topic')] === undefined) {
+					var $topicLink = $topic.find('.topic-link');
+					if ($topicLink[0]) {
+						var text = $topicLink.text();
+						$topic.append('<span class="topic-title">' + text + '</span>');
+						$topicLink.remove();
+					}
+				}
+			});
 
 			log(logMsg.events_topic_init, false);
 		}
