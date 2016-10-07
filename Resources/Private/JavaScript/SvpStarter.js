@@ -955,15 +955,15 @@ var SvpStarter = (function($) {
 
 			// do further initialization based on the utilized engine
 			var engine = SVPS.smv.getEngine();
-			if (engine === 'hlsjs') {
+			if (engine === 'hlsjs' || engine === 'html5') {
 				initSmvHlsPlayer();
 			} else if (engine === 'me') {
 				initSmvMePlayer();
 			} else if (engine === 'jw') {
 				initSmvJwPlayer();
-			} else if (engine === 'html5') {
+			}/* else if (engine === 'html5') {
 				initSmvHtml5Player();
-			}
+			}*/
 
 			// post init class of original player element changes with SMV
 			select.playerPI = select.smvWrapper1 + select.player;
@@ -1240,7 +1240,7 @@ var SvpStarter = (function($) {
 	 */
 	function initSmvHtml5Player() {
 		// SMV player changes the player id, so we should too if we want to get the actual HTML5 video tag
-		select.playerObj = select.player + select.html5Wrapper;
+		select.playerObj = select + select.player + select.html5Wrapper;
 		// reflect active player object
 		SVPS.player = document.getElementById(select.playerObj);
 		initHtml5EventListeners();
