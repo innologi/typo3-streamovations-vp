@@ -68,12 +68,20 @@ class EidUtility extends \TYPO3\CMS\Frontend\Utility\EidUtility {
 
 		// TCA isn't necessary for all eID scripts that depend on TSFE, but ..
 		if (!isset($GLOBALS['TCA']['pages'])) {
-			$GLOBALS['TCA']['pages'] = array(
+			$GLOBALS['TCA']['pages'] = [
 				// required due to PageRepository->enableFields() in TYPO3 7.x
-				'ctrl' => array(),
+				'ctrl' => [],
 				// required due to a RootlineUtility method in TYPO3 6.x
-				'columns' => array()
-			);
+				'columns' => []
+			];
+		}
+		// @LOW I think it's safe to put this in the TCA pages if scope above, but I need to verify, because it looks like this one is needed because pages DOES contain data, so it could be that pages already exists (or is added to later)
+		// same goes for these when it is necessary to generate the cObj outselves:
+		if (!isset($GLOBALS['TCA']['sys_file_reference'])) {
+			$GLOBALS['TCA']['sys_file_reference'] = [
+				'ctrl' => [],
+				'columns' => []
+			];
 		}
 
 		// initializes feUser used to determine various settings necessary for determineId()
@@ -91,6 +99,11 @@ class EidUtility extends \TYPO3\CMS\Frontend\Utility\EidUtility {
 		$tsfe->initTemplate();
 		// sets TS in tmpl->setup for use by configurationManager
 		$tsfe->getConfigArray();
+
+		// make sure cObj exists
+		if (!is_object($tsfe->cObj)) {
+			$tsfe->newCObj();
+		}
 	}
 
 	/**
