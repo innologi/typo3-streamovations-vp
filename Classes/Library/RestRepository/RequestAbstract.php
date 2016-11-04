@@ -216,6 +216,7 @@ abstract class RequestAbstract implements RequestInterface {
 				switch ($data['error']) {
 					case 22:
 						throw new Exception\HttpReturnedError($data['message']);
+					case 7:
 					case 6:
 						throw new Exception\HostUnreachable($data['message']);
 					case 3:
