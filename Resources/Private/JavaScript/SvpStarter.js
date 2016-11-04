@@ -86,7 +86,8 @@ var SvpStarter = (function($) {
 		topic: 0,
 		speaker: 0,
 		eventBreak: false,
-		pausePlayInterval: null
+		pausePlayInterval: null,
+		engine: ''
 	};
 
 	/**
@@ -132,6 +133,13 @@ var SvpStarter = (function($) {
 		topic: false,
 		speaker: false
 	};
+
+	/**
+	 * Message jQuery object
+	 *
+	 * @var object
+	 */
+	var $message = null;
 
 	/**
 	 * Contains all eventhandler closures for use by the player that
@@ -355,9 +363,16 @@ var SvpStarter = (function($) {
 	 * @return void
 	 */
 	function log(message, error) {
+		message = active.engine + ' | ' + message;
 		console.log('SVPS | ' + message);
 		if (error) {
-			// @LOW introduce some frontend messaging library for all these logs? especially in jumpToTopic()!
+			// @LOW introduce some frontend messaging library?
+			if ($message === null) {
+				var $container = $('.' + select.container);
+				$container.prepend('<div class="typo3-messages"><div class="typo3-message message-error"><div class="message-header">Error</div><div class="message-body"></div></div></div>');
+				$message = $('.typo3-messages .message-body', $container);
+			}
+			$message.html($message.html() + '<p>' + message + '</p>');
 		}
 	}
 
@@ -920,6 +935,8 @@ var SvpStarter = (function($) {
 		// @FIX ___________change how this works
 		var licenseKey = '###JWPLAYER_KEY###';
 
+		active.engine = 'jw:';
+
 		if (typeof jwplayer === 'undefined') {
 			log(logMsg.no_jwplayer, true);
 			return false;
@@ -943,6 +960,7 @@ var SvpStarter = (function($) {
 	function initSmvPlayer(data, config) {
 		// smvplayer object needs to exist
 		if (typeof smvplayer !== 'undefined') {
+			active.engine = 'smv:';
 			SVPS.smv = smvplayer(select.player);
 			try {
 				SVPS.smv.init(data, config);
@@ -969,6 +987,7 @@ var SvpStarter = (function($) {
 
 			// do further initialization based on the utilized engine
 			var engine = SVPS.smv.getEngine();
+			active.engine += engine;
 			if (engine === 'hlsjs' || engine === 'html5') {
 				initSmvHlsPlayer();
 			} else if (engine === 'me') {
@@ -1404,6 +1423,7 @@ var SvpStarter = (function($) {
 	function initJw7Player(data) {
 		if (initJwPlayerVariables(true)) {
 			initJwPlayerShared(data);
+			active.engine += '7';
 
 			// remaining seek method
 			seekTime = function(time, playlistId) {
@@ -1439,6 +1459,7 @@ var SvpStarter = (function($) {
 	function initJw6Player(data) {
 		if (initJwPlayerVariables(false)) {
 			initJwPlayerShared(data);
+			active.engine += '6';
 
 			// remaining seek methods
 			seekTime = function(time, playlistId) {
