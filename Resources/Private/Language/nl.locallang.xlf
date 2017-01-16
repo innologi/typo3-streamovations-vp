@@ -37,7 +37,7 @@
 			</trans-unit>
 			<trans-unit id="stream_n_a" approved="yes">
 				<source>Chosen videostream is unavailable.</source>
-				<target state="translated">De gekozen videostream is niet beschikbaar.
+				<target state="translated">De gekozen videostream is niet (meer) beschikbaar.
 				</target>
 			</trans-unit>
 			<trans-unit id="no_stream" approved="yes">
