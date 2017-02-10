@@ -157,6 +157,7 @@ plugin.tx_streamovationsvp {
 		player = {$plugin.tx_streamovationsvp.settings.player}
 		smvPlayer {
 			forceHttps = {$plugin.tx_streamovationsvp.settings.smvPlayer.forceHttps}
+			skin = {$plugin.tx_streamovationsvp.settings.smvPlayer.skin}
 		}
 		jwPlayer {
 			key = {$plugin.tx_streamovationsvp.settings.jwPlayer.key}

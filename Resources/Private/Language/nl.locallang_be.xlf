@@ -243,6 +243,10 @@
 				<source>Force HTTPS: Forces streaming over the HTTPS protocol. Requires a proper SSL configuration on the streaming source.</source>
 				<target state="translated">Forceer HTTPS: Forceert streaming over het HTTPS protocol. Vereist een correcte SSL configuratie op de streaming-bron.</target>
 			</trans-unit>
+			<trans-unit id="ts_settings_smvPlayer_skin" approved="yes">
+				<source>Player skin</source>
+				<target state="translated">Player skin</target>
+			</trans-unit>
 			<trans-unit id="ts_settings_breaks_enable" approved="yes">
 				<source>Enable breaks: Allows livestream interruptions to occur on
 					set times. This requires that "Event Breaks" are being applied

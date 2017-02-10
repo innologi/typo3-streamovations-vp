@@ -76,7 +76,6 @@ class PlaylistService {
 	// @TODO doc
 	public function createSmvPlayerConfig(array $smvSettings, array $jwSettings) {
 		// @TODO ________allow default config
-		// @TODO ________allow overruling some of these options
 
 		/*
 		 unicastfallbacktimeout: Timeout in seconds before falling back to unicast stream when multicast is failing
@@ -89,7 +88,7 @@ class PlaylistService {
 		 */
 		$config = [
 			'unicastfallbacktimeout' => 20,
-			'skin'=> 'default',
+			'skin'=> $smvSettings['skin'] ?: 'default',
 			'aspect'=> '16=>9',
 			'controls'=> [
 				'langSwitch'=> false,

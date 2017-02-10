@@ -65,6 +65,8 @@ plugin.tx_streamovationsvp {
 		smvPlayer {
 			# cat=plugin.tx_streamovationsvp/c1_smv/010; type=boolean; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_smvPlayer_forceHttps
 			forceHttps = 0
+			# cat=plugin.tx_streamovationsvp/c1_smv/020; type=string; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_smvPlayer_skin
+			skin = default
 		}
 		
 		# cat=plugin.tx_streamovationsvp/g_breaks/010; type=boolean; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_breaks_enable
