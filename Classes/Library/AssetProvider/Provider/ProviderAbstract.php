@@ -23,7 +23,8 @@ namespace Innologi\StreamovationsVp\Library\AssetProvider\Provider;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Page\PageRenderer;
 /**
  * Asset Provider Abstract
  *
@@ -78,8 +79,7 @@ abstract class ProviderAbstract implements ProviderInterface {
 	protected function initializeRenderers() {
 		// @LOW Extbase/FLOW api: $configurationManager->getContentObject();
 		$this->contentObject = $GLOBALS['TSFE']->cObj;
-		// @LOW pageRenderer is a singleton, so getting it via objectManager should get us the correct instance as well
-		$this->pageRenderer = $GLOBALS['TSFE']->getPageRenderer();
+		$this->pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
 	}
 
 	/**
@@ -157,7 +157,7 @@ abstract class ProviderAbstract implements ProviderInterface {
 				try {
 					// treat inline configs as typoscript COA, so subitems can be TEMPLATE etc.
 					$inline = trim(
-						$this->contentObject->COBJ_ARRAY($typoscript[$cT . '.'][$key . '.'])
+						$this->contentObject->cObjGetSingle('COA', $typoscript[$cT . '.'][$key . '.'])
 					);
 					if (isset($inline[0])) {
 						$conf = array_merge($this->defaultConfiguration, $conf);
