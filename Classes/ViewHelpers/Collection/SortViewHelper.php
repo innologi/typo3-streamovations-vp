@@ -36,6 +36,16 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 class SortViewHelper extends AbstractViewHelper {
 
 	/**
+	 * @var boolean
+	 */
+	protected $escapeChildren = FALSE;
+
+	/**
+	 * @var boolean
+	 */
+	protected $escapeOutput = FALSE;
+
+	/**
 	 * Initialize arguments
 	 *
 	 * @return void
