@@ -13,15 +13,13 @@
 			</f:for>
 		</ul>
 	</f:then>
-	<f:else>
-		<f:if condition="{isLiveStream}">
-			<ul class="template">
-				<f:render
-					partial="Video/SpeakerListItem"
-					arguments="{speaker:{id:'', firstname:'', lastname:''}, avatar:settings.imgDefault, settings:settings, extraClass:' template'}"
-				/>
-			</ul>
-		</f:if>
+	<f:else if="{isLiveStream}">
+		<ul class="template">
+			<f:render
+				partial="Video/SpeakerListItem"
+				arguments="{speaker:{id:'', firstname:'', lastname:''}, avatar:settings.imgDefault, settings:settings, extraClass:' template'}"
+			/>
+		</ul>
 	</f:else>
 	</f:if>
 	
