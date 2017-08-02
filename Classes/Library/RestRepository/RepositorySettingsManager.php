@@ -25,7 +25,7 @@ namespace Innologi\StreamovationsVp\Library\RestRepository;
  ***************************************************************/
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
-use TYPO3\CMS\Extbase\Service\TypoScriptService;
+use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 /**
  * REST Repository Settings Manager
  *
