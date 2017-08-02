@@ -162,6 +162,9 @@
 			<trans-unit id="ts_settings_smvPlayer_forceHttps">
 				<source>Force HTTPS: Forces streaming over the HTTPS protocol. Requires a proper SSL configuration on the streaming source.</source>
 			</trans-unit>
+			<trans-unit id="ts_settings_smvPlayer_skin">
+				<source>Player skin</source>
+			</trans-unit>
 			<trans-unit id="ts_settings_breaks_enable">
 				<source>Enable breaks: Allows livestream interruptions to occur on
 					set times. This requires that Event Breaks are being applied

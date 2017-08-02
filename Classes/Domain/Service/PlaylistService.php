@@ -73,10 +73,16 @@ class PlaylistService {
 		return $playerSetup;
 	}
 
-	// @TODO doc
+	/**
+	 * Creates an smvplayer config array that is necessary for
+	 * pre-initialization of the player.
+	 *
+	 * @param array $smvSettings
+	 * @param array $jwSettings
+	 * @return array
+	 */
 	public function createSmvPlayerConfig(array $smvSettings, array $jwSettings) {
-		// @TODO ________allow default config
-		// @TODO ________allow overruling some of these options
+		// @TODO allow default config
 
 		/*
 		 unicastfallbacktimeout: Timeout in seconds before falling back to unicast stream when multicast is failing
@@ -89,7 +95,7 @@ class PlaylistService {
 		 */
 		$config = [
 			'unicastfallbacktimeout' => 20,
-			'skin'=> 'default',
+			'skin'=> $smvSettings['skin'] ?: 'default',
 			'aspect'=> '16=>9',
 			'controls'=> [
 				'langSwitch'=> false,
@@ -173,6 +179,23 @@ class PlaylistService {
 
 		if (isset($jwSettings['key'][0])) {
 			$config['jwplayerkey'] = $jwSettings['key'];
+		}
+
+		return $config;
+	}
+
+	/**
+	 * Creates a jwplayer config array that is necessary for
+	 * pre-initialization of the player.
+	 *
+	 * @param array $settings
+	 * @return array
+	 */
+	public function createJwplayerConfig(array $settings) {
+		$config = [];
+		// jwplayer.key
+		if (isset($settings['key'][0])) {
+			$config['key'] = $settings['key'];
 		}
 
 		return $config;

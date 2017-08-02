@@ -86,7 +86,8 @@ var SvpStarter = (function($) {
 		topic: 0,
 		speaker: 0,
 		eventBreak: false,
-		pausePlayInterval: null
+		pausePlayInterval: null,
+		engine: ''
 	};
 
 	/**
@@ -132,6 +133,13 @@ var SvpStarter = (function($) {
 		topic: false,
 		speaker: false
 	};
+
+	/**
+	 * Message jQuery object
+	 *
+	 * @var object
+	 */
+	var $message = null;
 
 	/**
 	 * Contains all eventhandler closures for use by the player that
@@ -355,9 +363,16 @@ var SvpStarter = (function($) {
 	 * @return void
 	 */
 	function log(message, error) {
+		message = active.engine + ' | ' + message;
 		console.log('SVPS | ' + message);
 		if (error) {
-			// @LOW introduce some frontend messaging library for all these logs? especially in jumpToTopic()!
+			// @LOW introduce some frontend messaging library?
+			if ($message === null) {
+				var $container = $('.' + select.container);
+				$container.prepend('<ul class="typo3-messages"><li class="alert alert-danger"><h4 class="alert-title">Error</h4></li></ul>');
+				$message = $('.typo3-messages .alert', $container);
+			}
+			$message.html($message.html() + '<p class="alert-message">' + message + '</p>');
 		}
 	}
 
@@ -575,7 +590,8 @@ var SvpStarter = (function($) {
 		var timeline = null;
 		if (meetingdata.topic) {
 			// set jump event on topic clicks
-			$('.' + select.container + ' .topics').on('click', '.topic .topic-link', function(e) {
+			var $topics = $('.' + select.container + ' .topics');
+			$topics.on('click', '.topic .topic-link', function(e) {
 				e.preventDefault();
 				SVPS.jumpToTopic(
 					$(this).parent('.topic').attr('data-topic')
@@ -597,6 +613,19 @@ var SvpStarter = (function($) {
 				}
 				$topicTimeline.html('');
 			}
+
+			// remove the anchor tag from topics without a time
+			$topics.find('.topic').each(function (i, topic) {
+				var $topic = $(topic);
+				if (idMap['topic'][$topic.attr('data-topic')] === undefined) {
+					var $topicLink = $topic.find('.topic-link');
+					if ($topicLink[0]) {
+						var text = $topicLink.text();
+						$topic.append('<span class="topic-title">' + text + '</span>');
+						$topicLink.remove();
+					}
+				}
+			});
 
 			log(logMsg.events_topic_init, false);
 		}
@@ -900,18 +929,19 @@ var SvpStarter = (function($) {
 	 * Check if jwplayer exists first.
 	 *
 	 * @param requireLicense boolean If true, will fail if no licenseKey was provided
+	 * @param config object Parsed JSON data
 	 * @return booelean True on success, false on failure
 	 */
-	function initJwPlayerVariables(requireLicense) {
-		// @FIX ___________change how this works
-		var licenseKey = '###JWPLAYER_KEY###';
+	function initJwPlayerVariables(requireLicense, config) {
+		active.engine = 'jw:';
 
 		if (typeof jwplayer === 'undefined') {
 			log(logMsg.no_jwplayer, true);
 			return false;
 		}
-		if (licenseKey) {
-			jwplayer.key = licenseKey;
+
+		if (config !== null && config.key) {
+			jwplayer.key = config.key
 		} else if(requireLicense) {
 			log(logMsg.no_jwplayer_key, true);
 			return false;
@@ -923,12 +953,14 @@ var SvpStarter = (function($) {
 	 * Create the video player by using the smvplayer object
 	 *
 	 * @param data object Parsed JSON data
+	 * @param config object Parsed JSON data
 	 * @return boolean True on success, false on failure
 	 * @see http://wiki.streamovations.be/doku.php?id=smvplayer:javascript-api
 	 */
 	function initSmvPlayer(data, config) {
 		// smvplayer object needs to exist
 		if (typeof smvplayer !== 'undefined') {
+			active.engine = 'smv:';
 			SVPS.smv = smvplayer(select.player);
 			try {
 				SVPS.smv.init(data, config);
@@ -955,15 +987,16 @@ var SvpStarter = (function($) {
 
 			// do further initialization based on the utilized engine
 			var engine = SVPS.smv.getEngine();
-			if (engine === 'hlsjs') {
+			active.engine += engine;
+			if (engine === 'hlsjs' || engine === 'html5') {
 				initSmvHlsPlayer();
 			} else if (engine === 'me') {
 				initSmvMePlayer();
 			} else if (engine === 'jw') {
 				initSmvJwPlayer();
-			} else if (engine === 'html5') {
+			}/* else if (engine === 'html5') {
 				initSmvHtml5Player();
-			}
+			}*/
 
 			// post init class of original player element changes with SMV
 			select.playerPI = select.smvWrapper1 + select.player;
@@ -1114,6 +1147,9 @@ var SvpStarter = (function($) {
 				SVPS.smv.play();
 			} else {
 				seekTime(topic.time, topic.playlist);
+				// if this player changes playlist item through seeking, it does not autostart-play
+					// at least we can fix this on our own seeks, but manual ones: no solution
+				SVPS.smv.play();
 			}
 		}
 		seekTime = function(time, playlist) {
@@ -1240,7 +1276,7 @@ var SvpStarter = (function($) {
 	 */
 	function initSmvHtml5Player() {
 		// SMV player changes the player id, so we should too if we want to get the actual HTML5 video tag
-		select.playerObj = select.player + select.html5Wrapper;
+		select.playerObj = select + select.player + select.html5Wrapper;
 		// reflect active player object
 		SVPS.player = document.getElementById(select.playerObj);
 		initHtml5EventListeners();
@@ -1384,12 +1420,14 @@ var SvpStarter = (function($) {
 	 * JW player 7.x initialization
 	 *
 	 * @param data object Parsed JSON data
+	 * @param config object Parsed JSON data
 	 * @return boolean True on success, false on failure
 	 * @see https://github.com/jwplayer/jwplayer/wiki/2.1-JW-Player-7-API-Changes
 	 */
-	function initJw7Player(data) {
-		if (initJwPlayerVariables(true)) {
+	function initJw7Player(data, config) {
+		if (initJwPlayerVariables(true, config)) {
 			initJwPlayerShared(data);
+			active.engine += '7';
 
 			// remaining seek method
 			seekTime = function(time, playlistId) {
@@ -1420,11 +1458,13 @@ var SvpStarter = (function($) {
 	 * JW player 6.x initialization
 	 *
 	 * @param data object Parsed JSON data
+	 * @param config object Parsed JSON data
 	 * @return boolean True on success, false on failure
 	 */
-	function initJw6Player(data) {
-		if (initJwPlayerVariables(false)) {
+	function initJw6Player(data, config) {
+		if (initJwPlayerVariables(false, config)) {
 			initJwPlayerShared(data);
+			active.engine += '6';
 
 			// remaining seek methods
 			seekTime = function(time, playlistId) {
@@ -1447,7 +1487,6 @@ var SvpStarter = (function($) {
 		return false;
 	}
 
-	// @TODO turn around the init conditions: return false if true
 	/**
 	 * Actual SVPS object, offers public methods/properties
 	 *
@@ -1531,24 +1570,25 @@ var SvpStarter = (function($) {
 			var $player = $('#' + select.player, $playerContainer);
 			if ($player.exists()) {
 				try {
+					var $config = $('#' + select.config).first();
+					if ($config.exists()) {
+						config = JSON.parse($config.html().trim());
+					}
+
 					// Supports multiple player types
 					switch (playerType) {
 						case 3:
-							var $config = $('#' + select.config).first();
-							if ($config.exists()) {
-								config = JSON.parse($config.html().trim());
-							}
 							if (!initSmvPlayer(data, config)) {
 								return false;
 							}
 							break;
 						case 2:
-							if (!initJw7Player(data)) {
+							if (!initJw7Player(data, config)) {
 								return false;
 							}
 							break;
 						case 1:
-							if (!initJw6Player(data)) {
+							if (!initJw6Player(data, config)) {
 								return false;
 							}
 							break;

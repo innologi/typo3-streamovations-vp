@@ -3,6 +3,7 @@
 	<name>TYPO3_ext-streamovations_vp</name>
 	<comment></comment>
 	<projects>
+		<project>TYPO3-extdev8</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

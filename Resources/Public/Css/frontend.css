@@ -124,38 +124,38 @@
 .tx-streamovations-vp .typo3-messages {
 	overflow:hidden;
 }
-.tx-streamovations-vp .typo3-message {
+.tx-streamovations-vp .typo3-messages .alert {
 	margin:8px 0;
-	padding:10px;
+	padding:0 10px;
 	min-width:100px;
 	font-size:0.9em;
 	float:left;
 	clear:both;
 }
-.tx-streamovations-vp .typo3-message .message-header {
+.tx-streamovations-vp .typo3-messages .alert-title {
 	font-weight:bold;
 }
-.tx-streamovations-vp .typo3-message.message-error {
+.tx-streamovations-vp .typo3-messages .alert.alert-danger {
 	background-color:#fcb;
 	border:1px solid #ea9;
 	color:#a33;
 }
-.tx-streamovations-vp .typo3-message.message-warning {
+.tx-streamovations-vp .typo3-messages .alert.alert-warning {
 	background-color:#ffb;
 	border:1px solid #f5d588;
 	color:#85510d;
 }
-.tx-streamovations-vp .typo3-message.message-notice {
+.tx-streamovations-vp .typo3-messages .alert.alert-notice {
 	background-color:#e4e4e4;
 	border:1px solid #d5d5d5;
 	color:#443;
 }
-.tx-streamovations-vp .typo3-message.message-information {
+.tx-streamovations-vp .typo3-messages .alert.alert-info {
 	background-color:#def;
 	border:1px solid #cdf;
 	color:#469;
 }
-.tx-streamovations-vp .typo3-message.message-ok {
+.tx-streamovations-vp .typo3-messages .alert.alert-success {
 	background-color:#cdefc0;
 	border:1px solid #b9ddaa;
 	color:#3b7826;
