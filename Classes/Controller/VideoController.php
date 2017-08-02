@@ -183,12 +183,9 @@ class VideoController extends Controller {
 				$playlistData = $playlistService->createJwplayerSetup($playlist, $this->settings['jwPlayer']);
 				// @FIX _________note that jwPlayer still needs jwplayer.key to be set!
 
-				// @TODO ___php dependency already is @ 5.5, so get rid of any of this compatibility stuff
 				// javascript JSON.parse already deals with escaped slashes, but
 				// still I found it inconvenient to have them when debugging, so..
-				$playlist = version_compare(PHP_VERSION, '5.4', '<')
-					? str_replace('\\/', '/', json_encode($playlistData))
-					: json_encode($playlistData, JSON_UNESCAPED_SLASHES);
+				$playlist = json_encode($playlistData, JSON_UNESCAPED_SLASHES);
 			}
 
 			// at least one of meetingdata types must be enabled before getting anything
