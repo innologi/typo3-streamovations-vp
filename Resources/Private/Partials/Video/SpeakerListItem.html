@@ -1,4 +1,7 @@
-{namespace s=Innologi\StreamovationsVp\ViewHelpers}
+<html data-namespace-typo3-fluid="true"
+	xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+	xmlns:s="http://typo3.org/ns/Innologi/StreamovationsVp/ViewHelpers">
+	
 <li class="speaker{extraClass}" data-speaker="{speaker.id}">
 	<p class="header"><f:translate key="speaker_header" /></p>
 	<f:image
@@ -10,3 +13,5 @@
 	/>
 	<div class="speaker-data">{speaker.firstname} {speaker.lastname}</div>
 </li>
+
+</html>
