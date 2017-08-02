@@ -3,7 +3,7 @@ namespace Innologi\StreamovationsVp\Library\RestRepository;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2014 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
+ *  (c) 2014-2017 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
  *
  *  All rights reserved
  *
@@ -37,6 +37,26 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class Typo3Request extends RequestAbstract {
 
 	/**
+	 * Prepares request headers
+	 *
+	 * TYPO3's use of guzzle expects $header => value format.
+	 *
+	 * @param array $headers
+	 * @return void
+	 */
+	protected function initRequestHeaders(array $headers = array()) {
+		$this->headers['Accept'] = $this->responseType === RequestInterface::RESPONSETYPE_JSON
+			? 'application/json'
+			: 'text/xml';
+
+		if (!empty($headers)) {
+			foreach ($headers as $header => $value) {
+				$this->headers[$header] = is_array($value) ? join(',', $value) : $value;
+			}
+		}
+	}
+
+	/**
 	 * Sends Request without use of cache, returns response
 	 *
 	 * @param boolean $returnRawResponse
@@ -51,10 +71,8 @@ class Typo3Request extends RequestAbstract {
 			$data
 		);
 
-		// unfortunately, Typo3Request doesn't always allow us to read the actual
-		// response. instead, we get a status- and lib-based error message, e.g. 404
-		// this is due to the forced CURLOPT_FAILONERROR = 1
-		if ($rawResponse === FALSE || $data['error'] > 0) {
+		// TYPO3's use of guzzle gives us the status code in 'error'
+		if ($rawResponse === FALSE || $data['error'] !== 200) {
 			$this->haltRequest($data, $rawResponse);
 		}
 

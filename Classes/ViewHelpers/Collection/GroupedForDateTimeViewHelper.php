@@ -3,7 +3,7 @@ namespace Innologi\StreamovationsVp\ViewHelpers\Collection;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2015 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
+ *  (c) 2015-2017 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
  *
  *  All rights reserved
  *
@@ -23,7 +23,8 @@ namespace Innologi\StreamovationsVp\ViewHelpers\Collection;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use TYPO3\CMS\Fluid\ViewHelpers\GroupedForViewHelper;
+use TYPO3Fluid\Fluid\ViewHelpers\GroupedForViewHelper;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 /**
  * collection.groupedForDateTime viewhelper
  *
@@ -32,6 +33,16 @@ use TYPO3\CMS\Fluid\ViewHelpers\GroupedForViewHelper;
  *
  */
 class GroupedForDateTimeViewHelper extends GroupedForViewHelper {
+
+	/**
+	 * @var string
+	 */
+	protected static $dateTimeFormat;
+
+	/**
+	 * @var boolean
+	 */
+	protected $escapeChildren = FALSE;
 
 	/**
 	 * Initialize arguments
@@ -44,6 +55,18 @@ class GroupedForDateTimeViewHelper extends GroupedForViewHelper {
 	}
 
 	/**
+	 * @param array $arguments
+	 * @param \Closure $renderChildrenClosure
+	 * @param RenderingContextInterface $renderingContext
+	 * @return mixed
+	 */
+	public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+	{
+		static::$dateTimeFormat = $arguments['dateTimeFormat'];
+		return parent::renderStatic($arguments, $renderChildrenClosure, $renderingContext);
+	}
+
+	/**
 	 * Groups the given array by the specified groupBy property.
 	 *
 	 * @param array $elements The array / traversable object to be grouped
@@ -51,8 +74,8 @@ class GroupedForDateTimeViewHelper extends GroupedForViewHelper {
 	 * @return array The grouped array in the form array('keys' => array('key1' => [key1value], 'key2' => [key2value], ...), 'values' => array('key1' => array([key1value] => [element1]), ...), ...)
 	 * @throws \TYPO3\CMS\Fluid\Core\ViewHelper\Exception
 	 */
-	protected function groupElements(array $elements, $groupBy) {
-		$groups = array('keys' => array(), 'values' => array());
+	protected static function groupElements(array $elements, $groupBy) {
+		$groups = ['keys' => [], 'values' => []];
 		foreach ($elements as $key => $value) {
 			if (is_array($value)) {
 				$currentGroupIndex = isset($value[$groupBy]) ? $value[$groupBy] : NULL;
@@ -62,8 +85,6 @@ class GroupedForDateTimeViewHelper extends GroupedForViewHelper {
 				throw new \TYPO3\CMS\Fluid\Core\ViewHelper\Exception('GroupedForViewHelper only supports multi-dimensional arrays and objects', 1253120365);
 			}
 
-			//<-- BEGIN added code
-			$format = $this->arguments['dateTimeFormat'];
 			if (!$currentGroupIndex instanceof \DateTime) {
 				if (is_numeric($currentGroupIndex)) {
 					$temp = new \DateTime();
@@ -73,16 +94,9 @@ class GroupedForDateTimeViewHelper extends GroupedForViewHelper {
 					$currentGroupIndex = new \DateTime($currentGroupIndex);
 				}
 			}
-			$currentGroupIndex = $currentGroupIndex->format($format);
-			// END added code -->
+			$currentGroupIndex = $currentGroupIndex->format(static::$dateTimeFormat);
 
 			$currentGroupKeyValue = $currentGroupIndex;
-			if (is_object($currentGroupIndex)) {
-				if ($currentGroupIndex instanceof \TYPO3\CMS\Extbase\Persistence\Generic\LazyLoadingProxy) {
-					$currentGroupIndex = $currentGroupIndex->_loadRealInstance();
-				}
-				$currentGroupIndex = spl_object_hash($currentGroupIndex);
-			}
 			$groups['keys'][$currentGroupIndex] = $currentGroupKeyValue;
 			$groups['values'][$currentGroupIndex][$key] = $value;
 		}
