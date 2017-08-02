@@ -929,20 +929,19 @@ var SvpStarter = (function($) {
 	 * Check if jwplayer exists first.
 	 *
 	 * @param requireLicense boolean If true, will fail if no licenseKey was provided
+	 * @param config object Parsed JSON data
 	 * @return booelean True on success, false on failure
 	 */
-	function initJwPlayerVariables(requireLicense) {
-		// @FIX ___________change how this works
-		var licenseKey = '###JWPLAYER_KEY###';
-
+	function initJwPlayerVariables(requireLicense, config) {
 		active.engine = 'jw:';
 
 		if (typeof jwplayer === 'undefined') {
 			log(logMsg.no_jwplayer, true);
 			return false;
 		}
-		if (licenseKey) {
-			jwplayer.key = licenseKey;
+
+		if (config !== null && config.key) {
+			jwplayer.key = config.key
 		} else if(requireLicense) {
 			log(logMsg.no_jwplayer_key, true);
 			return false;
@@ -954,6 +953,7 @@ var SvpStarter = (function($) {
 	 * Create the video player by using the smvplayer object
 	 *
 	 * @param data object Parsed JSON data
+	 * @param config object Parsed JSON data
 	 * @return boolean True on success, false on failure
 	 * @see http://wiki.streamovations.be/doku.php?id=smvplayer:javascript-api
 	 */
@@ -1417,11 +1417,12 @@ var SvpStarter = (function($) {
 	 * JW player 7.x initialization
 	 *
 	 * @param data object Parsed JSON data
+	 * @param config object Parsed JSON data
 	 * @return boolean True on success, false on failure
 	 * @see https://github.com/jwplayer/jwplayer/wiki/2.1-JW-Player-7-API-Changes
 	 */
-	function initJw7Player(data) {
-		if (initJwPlayerVariables(true)) {
+	function initJw7Player(data, config) {
+		if (initJwPlayerVariables(true, config)) {
 			initJwPlayerShared(data);
 			active.engine += '7';
 
@@ -1454,10 +1455,11 @@ var SvpStarter = (function($) {
 	 * JW player 6.x initialization
 	 *
 	 * @param data object Parsed JSON data
+	 * @param config object Parsed JSON data
 	 * @return boolean True on success, false on failure
 	 */
-	function initJw6Player(data) {
-		if (initJwPlayerVariables(false)) {
+	function initJw6Player(data, config) {
+		if (initJwPlayerVariables(false, config)) {
 			initJwPlayerShared(data);
 			active.engine += '6';
 
@@ -1482,7 +1484,6 @@ var SvpStarter = (function($) {
 		return false;
 	}
 
-	// @TODO turn around the init conditions: return false if true
 	/**
 	 * Actual SVPS object, offers public methods/properties
 	 *
@@ -1566,24 +1567,27 @@ var SvpStarter = (function($) {
 			var $player = $('#' + select.player, $playerContainer);
 			if ($player.exists()) {
 				try {
+					var $config = $('#' + select.config).first();
+					if ($config.exists()) {
+						config = JSON.parse($config.html().trim());
+					}
+					// @FIX if any of these players change playlist item, they lose the active topic marking
+
 					// Supports multiple player types
 					switch (playerType) {
 						case 3:
-							var $config = $('#' + select.config).first();
-							if ($config.exists()) {
-								config = JSON.parse($config.html().trim());
-							}
+							// @FIX if this player changes playlist item through topic-click or seeking, it does not autostart-play
 							if (!initSmvPlayer(data, config)) {
 								return false;
 							}
 							break;
 						case 2:
-							if (!initJw7Player(data)) {
+							if (!initJw7Player(data, config)) {
 								return false;
 							}
 							break;
 						case 1:
-							if (!initJw6Player(data)) {
+							if (!initJw6Player(data, config)) {
 								return false;
 							}
 							break;

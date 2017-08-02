@@ -2,7 +2,7 @@
 
 <f:section name="main">
 
-<f:if condition="{playlist}">
+<f:if condition="{playerSetup}">
 <f:then>
 	<f:if condition="{settings.topics.enable}">
 		<f:render
@@ -27,7 +27,7 @@
 		</f:if>
 	</div>
 	<script type="application/json" id="tx-streamovations-vp-playerdata" data-hash="{hash}">
-		{playlist -> f:format.raw()}
+		{playerSetup -> f:format.raw()}
 	</script>
 	
 	<f:if condition="{playerConfig}">

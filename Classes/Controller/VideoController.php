@@ -153,6 +153,7 @@ class VideoController extends Controller {
 			$this->playlistRepository->setForceRawResponse(TRUE);
 		}
 
+		$playerConfig = NULL;
 		$playlist = $this->playlistRepository->findByHash($hash);
 		if ($playlist) {
 			/* @var $playlistService \Innologi\StreamovationsVp\Domain\Service\PlaylistService */
@@ -170,18 +171,12 @@ class VideoController extends Controller {
 				}
 				$playlist = $playlistService->alterSmvPlayerSetup($playlist, $this->settings['smvPlayer']);
 				$playerConfig = $playlistService->createSmvPlayerConfig($this->settings['smvPlayer'], $this->settings['jwPlayer']);
-				if (!empty($playerConfig)) {
-					$this->view->assign(
-						'playerConfig',
-						json_encode($playerConfig, JSON_UNESCAPED_SLASHES)
-					);
-				}
 
 			// jwPlayer
 			} elseif ($playlist instanceof ResponseInterface) {
 				// for jwPlayer we need to construct a valid configuration from the playlist-response
 				$playlistData = $playlistService->createJwplayerSetup($playlist, $this->settings['jwPlayer']);
-				// @FIX _________note that jwPlayer still needs jwplayer.key to be set!
+				$playerConfig = $playlistService->createJwplayerConfig($this->settings['jwPlayer']);
 
 				// javascript JSON.parse already deals with escaped slashes, but
 				// still I found it inconvenient to have them when debugging, so..
@@ -203,8 +198,11 @@ class VideoController extends Controller {
 			}
 			$this->view->assign('meetingdata', $meetingdata);
 		}
-		// @TODO __rename to playerSetup
-		$this->view->assign('playlist', $playlist);
+
+		$this->view->assign('playerSetup', $playlist);
+		if (!empty($playerConfig)) {
+			$this->view->assign('playerConfig', json_encode($playerConfig, JSON_UNESCAPED_SLASHES));
+		}
 
 		// @LOW we should autodetect this once we allow livestreams via list
 		$this->view->assign('isLiveStream', $isLiveStream);
