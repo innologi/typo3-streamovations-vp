@@ -16,7 +16,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'category' => 'plugin',
 	'author' => 'Frenck Lutke',
 	'author_email' => 'typo3@innologi.nl',
-	'state' => 'beta',
+	'state' => 'stable',
 	'internal' => '',
 	'uploadfolder' => '0',
 	'createDirs' => '',
@@ -25,7 +25,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'constraints' => array(
 		'depends' => array(
 			'typo3' => '8.7.0-8.7.99',
-			'php' => '7.1'
+			'php' => '7.0-7.1'
 		),
 		'conflicts' => array(
 		),
