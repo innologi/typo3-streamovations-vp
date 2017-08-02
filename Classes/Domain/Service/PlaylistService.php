@@ -63,9 +63,8 @@ class PlaylistService {
 	public function alterSmvPlayerSetup($playerSetup, array $settings) {
 		if (isset($settings['forceHttps']) && (int)$settings['forceHttps'] === 1) {
 			$playerSetupData = json_decode($playerSetup, TRUE);
-			foreach ($playerSetupData['playlist'] as $i => $playlist) {
+			foreach ($playerSetupData['playlist'] as &$playlist) {
 				$playlist['source']['forceProtocol'] = 'https';
-				$playerSetupData['playlist'][$i] = $playlist;
 			}
 			$playerSetup = json_encode($playerSetupData);
 		}
