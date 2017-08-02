@@ -28,10 +28,7 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3\CMS\Fluid\View\AbstractTemplateView;
-use Innologi\StreamovationsVp\Library\RestRepository\Exception\RestException;
-use Innologi\StreamovationsVp\Library\RestRepository\Exception\HttpReturnedError;
-use Innologi\StreamovationsVp\Library\RestRepository\Exception\HostUnreachable;
-use Innologi\StreamovationsVp\Library\RestRepository\Exception\Configuration;
+use Innologi\StreamovationsVp\Library\RestRepository\Exception\{RestException, HttpReturnedError, HostUnreachable, Configuration};
 /**
  * Video Controller
  *
