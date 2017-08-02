@@ -1,4 +1,4 @@
 eclipse.preferences.version=1
-include_path=0;/TYPO3_ext-streamovations_vp\u00055;org.eclipse.dltk.USER_LIBRARY/typo3_src
-phpVersion=php5.5
+include_path=0;/TYPO3_ext-streamovations_vp\u00052;/TYPO3-extdev8
+phpVersion=php7.1
 useShortTags=false

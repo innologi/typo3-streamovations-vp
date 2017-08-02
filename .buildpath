@@ -2,5 +2,5 @@
 <buildpath>
 	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
 	<buildpathentry kind="src" path=""/>
-	<buildpathentry kind="con" path="org.eclipse.dltk.USER_LIBRARY/typo3_src"/>
+	<buildpathentry combineaccessrules="false" kind="prj" path="/TYPO3-extdev8"/>
 </buildpath>
