@@ -1147,6 +1147,9 @@ var SvpStarter = (function($) {
 				SVPS.smv.play();
 			} else {
 				seekTime(topic.time, topic.playlist);
+				// if this player changes playlist item through seeking, it does not autostart-play
+					// at least we can fix this on our own seeks, but manual ones: no solution
+				SVPS.smv.play();
 			}
 		}
 		seekTime = function(time, playlist) {
@@ -1571,12 +1574,10 @@ var SvpStarter = (function($) {
 					if ($config.exists()) {
 						config = JSON.parse($config.html().trim());
 					}
-					// @FIX if any of these players change playlist item, they lose the active topic marking
 
 					// Supports multiple player types
 					switch (playerType) {
 						case 3:
-							// @FIX if this player changes playlist item through topic-click or seeking, it does not autostart-play
 							if (!initSmvPlayer(data, config)) {
 								return false;
 							}
