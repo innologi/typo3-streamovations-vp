@@ -369,10 +369,10 @@ var SvpStarter = (function($) {
 			// @LOW introduce some frontend messaging library?
 			if ($message === null) {
 				var $container = $('.' + select.container);
-				$container.prepend('<div class="typo3-messages"><div class="typo3-message message-error"><div class="message-header">Error</div><div class="message-body"></div></div></div>');
-				$message = $('.typo3-messages .message-body', $container);
+				$container.prepend('<ul class="typo3-messages"><li class="alert alert-danger"><h4 class="alert-title">Error</h4></li></ul>');
+				$message = $('.typo3-messages .alert', $container);
 			}
-			$message.html($message.html() + '<p>' + message + '</p>');
+			$message.html($message.html() + '<p class="alert-message">' + message + '</p>');
 		}
 	}
 
