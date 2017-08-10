@@ -60,7 +60,7 @@ class RequestUri implements RequestUriInterface {
 	 *
 	 * @var array
 	 */
-	protected $arguments = array();
+	protected $arguments = [];
 
 	/**
 	 * Complete request URI
@@ -75,6 +75,21 @@ class RequestUri implements RequestUriInterface {
 	 * @var boolean
 	 */
 	protected $isModified = TRUE;
+
+	/**
+	 * @var array
+	 */
+	protected $stripArguments = [];
+
+	/**
+	 * @var array
+	 */
+	protected $stripArgumentNames = [];
+
+	/**
+	 * @var array
+	 */
+	protected $stripArgumentValues = [];
 
 	/**
 	 * Sets request scheme
@@ -137,6 +152,22 @@ class RequestUri implements RequestUriInterface {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * @see RequestUriInterface::setStrip()
+	 */
+	public function setStrip(array $strip) {
+		if (isset($strip['args'])) {
+			$this->stripArguments = array_flip(explode(',', $strip['args']));
+		}
+		if (isset($strip['names'])) {
+			$this->stripArgumentNames = array_flip(explode(',', $strip['names']));
+		}
+		if (isset($strip['values'])) {
+			$this->stripArgumentValues = array_flip(explode(',', $strip['values']));
+		}
+	}
+
+	/**
 	 * Adds URI argument
 	 *
 	 * @param string $name
@@ -172,7 +203,14 @@ class RequestUri implements RequestUriInterface {
 			$this->baseUri . '/' .
 			$this->apiUri . '/';
 		foreach ($this->arguments as $parameter => $value) {
-			$this->requestUri .= $parameter . '/' . $value . '/';
+			if (!isset($this->stripArguments[$parameter])) {
+				if (!isset($this->stripArgumentNames[$parameter])) {
+					$this->requestUri .= $parameter . '/';
+				}
+				if (!isset($this->stripArgumentValues[$parameter])) {
+					$this->requestUri .= $value . '/';
+				}
+			}
 		}
 	}
 

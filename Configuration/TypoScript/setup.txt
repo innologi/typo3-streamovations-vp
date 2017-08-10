@@ -41,7 +41,10 @@ plugin.tx_streamovationsvp {
 				}
 			}
 			Playlist {
-				request.apiUri = api.php/playlists/pub
+				request {
+					apiUri = api.php/playlists
+					strip.names = hash
+				}
 				response {
 					exclude = result,errorType,servertime,clientIp,uiLabels
 					property.playlist {

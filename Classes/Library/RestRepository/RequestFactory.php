@@ -63,23 +63,15 @@ class RequestFactory extends FactoryAbstract implements RequestFactoryInterface 
 		return $this->objectManager->get(
 			__NAMESPACE__ . '\\RequestInterface',
 			$this->createRequestUriObject(
-				isset($settings['request'])
-					? $settings['request']
-					: array()
+				$settings['request'] ?? []
 			),
 			$objectType,
-			(isset($settings['request']['headers'])
-				? $settings['request']['headers']
-				: array()
-			),
-			(isset($settings['cache'])
-				? $settings['cache']
-				: array()
-			),
+			$settings['request']['headers'] ?? [],
+			$settings['cache'] ?? [],
 			$forceRawResponse,
 			(isset($settings['features'][$this->httpConfKey])
 				&& (bool) $settings['features'][$this->httpConfKey]
-					? array()
+					? []
 					: $GLOBALS['TYPO3_CONF_VARS']['HTTP']
 			)
 		);
@@ -90,6 +82,7 @@ class RequestFactory extends FactoryAbstract implements RequestFactoryInterface 
 	 * - scheme
 	 * - baseUri
 	 * - apiUri
+	 * - strip
 	 *
 	 * @param array $settings
 	 * @return RequestUriInterface
@@ -100,10 +93,10 @@ class RequestFactory extends FactoryAbstract implements RequestFactoryInterface 
 			__NAMESPACE__ . '\\RequestUriInterface'
 		);
 		$requestUri
-			// no isset checks here, if they don't exist errors occur anyway
-			->setScheme($settings['scheme'])
-			->setBaseUri($settings['baseUri'])
-			->setApiUri($settings['apiUri']);
+			->setScheme($settings['scheme'] ?? '')
+			->setBaseUri($settings['baseUri'] ?? '')
+			->setApiUri($settings['apiUri'] ?? '')
+			->setStrip($settings['strip'] ?? []);
 
 		return $requestUri;
 	}

@@ -80,6 +80,14 @@ interface RequestUriInterface {
 	public function getApiUri();
 
 	/**
+	 * Set stripping configuration
+	 *
+	 * @param array $strip
+	 * @return RequestUriInterface
+	 */
+	public function setStrip(array $strip);
+
+	/**
 	 * Adds URI argument
 	 *
 	 * @param string $name
