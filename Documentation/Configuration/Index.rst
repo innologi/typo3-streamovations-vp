@@ -38,7 +38,8 @@ These constants are all editable in the Template module's Constant Editor.
 	`view.layoutRootPath`_            dir       EXT:streamovations_vp/Resources/Private/Layouts/
 	`javascript.includeJquery`_       boolean   1
 	`javascript.jqueryLib`_           resource  EXT:streamovations_vp/Resources/Public/JavaScript/jQuery/jquery-1.11.1.min.js
-	`javascript.jwPlayerLib`_         resource  EXT:streamovations_vp/Resources/Public/JavaScript/jwPlayer/jwplayer.js
+	`javascript.jwPlayer6Lib`_        resource  EXT:streamovations_vp/Resources/Public/JavaScript/jwPlayer6/jwplayer.js
+	`javascript.jwPlayer7Lib`_        resource  EXT:streamovations_vp/Resources/Public/JavaScript/jwPlayer7/jwplayer.js
 	`javascript.smvPlayerLib`_        resource
 	`css.frontendFile`_               resource  EXT:streamovations_vp/Resources/Public/Css/frontend.min.css
 	`rest.scheme`_                    string    http
@@ -50,6 +51,9 @@ These constants are all editable in the Template module's Constant Editor.
 	`settings.jwPlayer.liveLanguage`_ csv       or,nl,en
 	`settings.jwPlayer.smilSupport`_  boolean   1
 	`settings.jwPlayer.smilWrap`_     wrap      smil:\|/jwplayer.smil
+	`settings.smvPlayer.forceHttps`_  boolean   0
+	`settings.smvPlayer.skin`_        string    default
+	`settings.breaks.enable`_         boolean   1
 	`settings.topics.enable`_         boolean   1
 	`settings.speakers.enable`_       boolean   1
 	`settings.speakers.imgDir`_       dir
@@ -62,25 +66,20 @@ These constants are all editable in the Template module's Constant Editor.
 Setup
 ^^^^^
 
-The following TypoScript setup properties allow for some advanced configuration.
+The following TypoScript setup properties allow for some advanced configuration thay may be useful to most use-cases. Note that not all are documented here, and you may find more in the TypoScript configuration files. 
 
 .. container:: ts-properties
 
-	============================================= ========= =============
-	Property                                      Data type Default value
-	============================================= ========= =============
-	`view.templateRootPaths.20`_                  string
-	`view.partialRootPaths.20`_                   string
-	`view.layoutRootPaths.20`_                    string
-	`rest.repository.default.cache.enable`_       boolean   1
-	`rest.repository.default.cache.lifetime`_     integer   3600
-	`rest.repository.Event.cache.enable`_         boolean
-	`rest.repository.Event.cache.lifetime`_       integer
-	`rest.repository.Playlist.cache.enable`_      boolean
-	`rest.repository.Playlist.cache.lifetime`_    integer
-	`rest.repository.Meetingdata.cache.enable`_   boolean
-	`rest.repository.Meetingdata.cache.lifetime`_ integer
-	============================================= ========= =============
+	======================================================== ========= =============
+	Property                                                 Data type Default value
+	======================================================== ========= =============
+	`view.templateRootPaths.20`_                             string
+	`view.partialRootPaths.20`_                              string
+	`view.layoutRootPaths.20`_                               string
+	`rest.repository.{REPOSITORY}.cache.enable`_             boolean   1
+	`rest.repository.{REPOSITORY}.cache.lifetime`_           integer   3600
+	`rest.repository.{REPOSITORY}.request.headers.{HEADER}`_ tsObj
+	======================================================== ========= =============
 
 Constants property details
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -149,14 +148,27 @@ javascript.jqueryLib
 
 Location of jQuery library, which is included only if `javascript.includeJquery`_ is enabled.
 
-.. _javascript.jwPlayerLib:
+.. _javascript.jwPlayer6Lib:
 
-javascript.jwPlayerLib
-""""""""""""""""""""""
+javascript.jwPlayer6Lib
+"""""""""""""""""""""""
 
-:typoscript:`plugin.tx_streamovationsvp.javascript.jwPlayerLib = path/to/file.js`
+:typoscript:`plugin.tx_streamovationsvp.javascript.jwPlayer6Lib = path/to/file.js`
 
-Location of JW Player library. You would only change this if you require a different version than the one supplied with this extension.
+Location of JW Player 6 library. You would only change this if you require a different version than the one supplied with this extension.
+
+.. _javascript.jwPlayer7Lib:
+
+javascript.jwPlayer7Lib
+"""""""""""""""""""""""
+
+:typoscript:`plugin.tx_streamovationsvp.javascript.jwPlayer7Lib = path/to/file.js`
+
+Location of JW Player 7 library. You would only change this if you require a different version than the one supplied with this extension.
+
+.. note::
+
+   JW Player 7 requires a valid JW Player license key to work.
 
 .. _javascript.smvPlayerLib:
 
@@ -223,7 +235,8 @@ settings.player
 
 Sets the preferred video player. The following choices are available:
 
-#. JW Player
+#. JW Player (6.x)
+#. JW Player (7.x)
 #. SMV Player
 
 .. important::
@@ -295,6 +308,33 @@ The smil file wrap. Only change if you know what you're doing. Only applies if J
 .. note::
 
    See why this is needed in the `JW Player documentation`_.
+
+.. _settings.smvPlayer.forceHttps:
+
+settings.smvPlayer.forceHttps
+"""""""""""""""""""""""""""""
+
+:typoscript:`plugin.tx_streamovationsvp.settings.smvPlayer.forceHttps = 1`
+
+Forces HTTPS for stream URLs, in case |videocms| publishes only HTTP URLs causing mixed content warnings on your HTTPS website.
+
+.. _settings.smvPlayer.skin:
+
+settings.smvPlayer.skin
+"""""""""""""""""""""""
+
+:typoscript:`plugin.tx_streamovationsvp.settings.smvPlayer.skin = lion`
+
+Enables a different non-default skin if provided with your copy of the SMV Player.
+
+.. _settings.breaks.enable:
+
+settings.breaks.enable
+""""""""""""""""""""""
+
+:typoscript:`plugin.tx_streamovationsvp.settings.breaks.enable = 1`
+
+Enables the use of breaks metadata, if available via the REST API of your |videocms|.
 
 .. _settings.topics.enable:
 
@@ -401,85 +441,36 @@ view.layoutRootPaths.20
 
 Points to an overruling template layout directory. You can selectively overrule one or more layout files this way while maintaining a fallback to the original layout directory set with the constant property `view.layoutRootPath`_.
 
-.. _rest.repository.default.cache.enable:
+.. _rest.repository.{REPOSITORY}.cache.enable:
 
-rest.repository.default.cache.enable
-""""""""""""""""""""""""""""""""""""
+rest.repository.{REPOSITORY}.cache.enable
+"""""""""""""""""""""""""""""""""""""""""
 
-:typoscript:`plugin.tx_streamovationsvp.rest.repository.default.cache.enable = 1`
+:typoscript:`plugin.tx_streamovationsvp.rest.repository.Event.cache.enable = 1`
 
-Enables or disables caching for REST-requests as a default for all REST APIs.
+Enables or disables caching for REST-requests for one (Event, Playlist, Meetingdata) or as default (default) for all REST APIs.
 
-.. _rest.repository.default.cache.lifetime:
+.. _rest.repository.{REPOSITORY}.cache.lifetime:
 
-rest.repository.default.cache.lifetime
-""""""""""""""""""""""""""""""""""""""
+rest.repository.{REPOSITORY}.cache.lifetime
+"""""""""""""""""""""""""""""""""""""""""""
 
-:typoscript:`plugin.tx_streamovationsvp.rest.repository.default.cache.lifetime = 3600`
+:typoscript:`plugin.tx_streamovationsvp.rest.repository.Playlist.cache.lifetime = 3600`
 
-Caching lifetime in seconds. Set this for REST-requests as a default for all REST APIs.
+Caching lifetime in seconds. Set this for REST-requests for one (Event, Playlist, Meetingdata) or as default (default) for all REST APIs.
 
 .. tip::
 
    The ideal setting may differ from the default per use case. Setting a high lifetime prevents redundant bandwith between your website and your |videocms|, but lowers the update frequency of the plugins.
 
-.. _rest.repository.Event.cache.enable:
+.. _rest.repository.{REPOSITORY}.request.headers.{HEADER}:
 
-rest.repository.Event.cache.enable
-""""""""""""""""""""""""""""""""""
+rest.repository.{REPOSITORY}.request.headers.{HEADER}
+"""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-:typoscript:`plugin.tx_streamovationsvp.rest.repository.Event.cache.enable = 1`
+:typoscript:`plugin.tx_streamovationsvp.rest.repository.default.request.headers.Authorization = TEXT`
 
-Enables or disables caching for REST-requests for the Session REST API.
-
-.. _rest.repository.Event.cache.lifetime:
-
-rest.repository.Event.cache.lifetime
-""""""""""""""""""""""""""""""""""""
-
-:typoscript:`plugin.tx_streamovationsvp.rest.repository.Event.cache.lifetime = 3600`
-
-Caching lifetime in seconds. Set this for REST-requests for the Session REST API.
-
-.. _rest.repository.Playlist.cache.enable:
-
-rest.repository.Playlist.cache.enable
-"""""""""""""""""""""""""""""""""""""
-
-:typoscript:`plugin.tx_streamovationsvp.rest.repository.Playlist.cache.enable = 1`
-
-Enables or disables caching for REST-requests for the Playlist REST API.
-
-.. _rest.repository.Playlist.cache.lifetime:
-
-rest.repository.Playlist.cache.lifetime
-"""""""""""""""""""""""""""""""""""""""
-
-:typoscript:`plugin.tx_streamovationsvp.rest.repository.Playlist.cache.lifetime = 3600`
-
-Caching lifetime in seconds. Set this for REST-requests for the Playlist REST API.
-
-.. _rest.repository.Meetingdata.cache.enable:
-
-rest.repository.Meetingdata.cache.enable
-""""""""""""""""""""""""""""""""""""""""
-
-:typoscript:`plugin.tx_streamovationsvp.rest.repository.Meetingdata.cache.enable = 1`
-
-Enables or disables caching for REST-requests for the Meetingdata REST API.
-
-.. note::
-
-   Regardless of this setting, the polling script always executes with this specific cache disabled.
-
-.. _rest.repository.Meetingdata.cache.lifetime:
-
-rest.repository.Meetingdata.cache.lifetime
-""""""""""""""""""""""""""""""""""""""""""
-
-:typoscript:`plugin.tx_streamovationsvp.rest.repository.Meetingdata.cache.lifetime = 3600`
-
-Caching lifetime in seconds. Set this for REST-requests for the Meetingdata REST API.
+Set specific request headers through TS Objects. This allows to satisfy both simple and advanced needs for one (Event, Playlist, Meetingdata) or as default (default) for all REST APIs.
 
 
 .. _JW Player documentation: http://support.jwplayer.com/customer/portal/articles/1430398-dynamic-rtmp-streaming

@@ -29,7 +29,7 @@ Streamovations Video Player
 		video,streaming,videostreaming,media
 
 	:Copyright:
-		2014
+		2017
 
 	:Author:
 		Frenck Lutke
