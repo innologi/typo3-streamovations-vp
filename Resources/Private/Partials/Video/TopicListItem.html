@@ -3,12 +3,12 @@
 
 <li class="topic{extraClass}"  data-topic="{topic.id}">
 	<f:if condition="{isLiveStream}">
-	<f:then><span class="topic-title">{topic.title}</span></f:then>
+	<f:then><span class="topic-title">{topic.title -> f:format.htmlentities()}</span></f:then>
 	<f:else>
 		<a href="{uri}#!"
 			class="topic-link topic-title"
 			title="{f:translate(key:'topic_link_title')}"
-		>{topic.title}</a>
+		>{topic.title -> f:format.htmlentities()}</a>
 	</f:else>
 	</f:if>
 	<span class="topic-description">{topic.description -> f:format.raw()}</span>

@@ -11,7 +11,9 @@
 		width="{settings.imgWidth}"
 		alt="{speaker.firstname} {speaker.lastname}"
 	/>
-	<div class="speaker-data">{speaker.firstname} {speaker.lastname}</div>
+	<div class="speaker-data">
+		<f:format.htmlentities>{speaker.firstname} {speaker.lastname}</f:format.htmlentities>
+	</div>
 </li>
 
 </ul>
