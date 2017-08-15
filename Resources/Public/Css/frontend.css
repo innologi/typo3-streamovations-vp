@@ -118,8 +118,6 @@
 
 
 /* Flash messages */
-/* <ul class="typo3-messages"><li class="alert alert-danger"><h4 class="alert-title">Error message</h4><p class="alert-message">OK</p></li></ul> */
-/* @TODO redo the styling, based on every type */
 
 .tx-streamovations-vp .typo3-messages {
 	overflow:hidden;

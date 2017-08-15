@@ -39,7 +39,6 @@ use Innologi\StreamovationsVp\Exception\Configuration;
  */
 class VideoController extends Controller {
 	// @TODO _____add a debugging-console feature to RestRepository, so that it logs entire responses to console?
-	// @TODO _____add a hide-parameter option in RestRepository for RequestUri's build-process, so that we can produce the new API uris
 	/**
 	 * @var \Innologi\StreamovationsVp\Domain\Repository\EventRepository
 	 * @inject
