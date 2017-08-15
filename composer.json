@@ -1,7 +1,7 @@
 {
-	"name": "innologi/streamovations-vp",
+	"name": "innologi/typo3-streamovations-vp",
 	"type": "typo3-cms-extension",
-	"version": "2.0.0",
+	"version": "2.0.1",
 	"description": "Streaming Video Player (JW player or JW player-based) that connects to your Streamovations instance for live-streaming, VOD and additional (interactive) metadata (e.g. topic, speaker)",
 	"license": "GPL-2.0+",
 	"authors": [{
@@ -13,7 +13,7 @@
 	],
 	"require": {
 		"typo3/cms-core": "^8.7",
-		"php": "^7.0 || ^7.1"
+		"php": "^7.1"
 	},
 	"autoload": {
 		"psr-4": {

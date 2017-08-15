@@ -11,7 +11,7 @@ conf.py:
   copyright: 2017
   project: Streamovations Video Player
   version: 2.0
-  release: 2.0.0
+  release: 2.0.1
   latex_documents:
   - - Index
     - streamovations_vp.tex
