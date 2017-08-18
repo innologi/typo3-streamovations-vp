@@ -19,5 +19,25 @@
 		"psr-4": {
 			"Innologi\\StreamovationsVp\\": "Classes/"
 		}
+	},
+	"replace": {
+		"streamovations_vp": "self.version",
+		"typo3-ter/streamovations-vp": "self.version"
+	},
+	"config": {
+		"vendor-dir": ".Build/vendor",
+		"bin-dir": ".Build/bin"
+	},
+	 "scripts": {
+		"post-autoload-dump": [
+			"mkdir -p .Build/Web/typo3conf/ext/",
+			"[ -L .Build/Web/typo3conf/ext/streamovations_vp ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/streamovations_vp"
+		]
+	},
+	"extra": {
+		"typo3/cms": {
+			"cms-package-dir": "{$vendor-dir}/typo3/cms",
+			"web-dir": ".Build/Web"
+		}
 	}
 }
