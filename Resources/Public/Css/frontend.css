@@ -2,6 +2,7 @@
 
 .tx-streamovations-vp {
 	position:relative;
+	overflow:hidden;
 }
 .tx-streamovations-vp.fullwidth {
 	width:100%;
