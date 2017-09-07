@@ -88,6 +88,7 @@ plugin.tx_streamovationsvp {
 					jQuery.if.value = {$plugin.tx_streamovationsvp.javascript.includeJquery}
 					jQuery.if.equals = 1
 					jQuery.forceOnTop = 1
+					jQuery.placeInFooter = 1
 					
 					jwPlayer6 = {$plugin.tx_streamovationsvp.javascript.jwPlayer6Lib}
 					jwPlayer6.if.value = {$plugin.tx_streamovationsvp.settings.player}
