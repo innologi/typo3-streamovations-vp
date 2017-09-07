@@ -21,7 +21,7 @@ plugin.tx_streamovationsvp {
 		# cat=plugin.tx_streamovationsvp/file/010; type=boolean; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_javascript_includeJquery
 		includeJquery = 1
 		# cat=plugin.tx_streamovationsvp/file/020; type=string; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_javascript_jqueryLib
-		jqueryLib = EXT:streamovations_vp/Resources/Public/JavaScript/jQuery/jquery-1.11.1.min.js
+		jqueryLib = EXT:streamovations_vp/Resources/Public/JavaScript/jQuery/jquery-3.2.1.min.js
 		# cat=plugin.tx_streamovationsvp/file/030; type=string; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_javascript_jwPlayer6Lib 
 		jwPlayer6Lib = EXT:streamovations_vp/Resources/Public/JavaScript/jwPlayer6/jwplayer.js
 		# cat=plugin.tx_streamovationsvp/file/030; type=string; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_javascript_jwPlayer7Lib 
