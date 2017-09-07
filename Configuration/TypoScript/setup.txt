@@ -82,6 +82,7 @@ plugin.tx_streamovationsvp {
 	assets {
 		controller.Video.action.show {
 			javascript {
+				# note: we can't async these! content is depending on their immediate availability!
 				libs {
 					jQuery = {$plugin.tx_streamovationsvp.javascript.jqueryLib}
 					jQuery.if.value = {$plugin.tx_streamovationsvp.javascript.includeJquery}
