@@ -211,6 +211,14 @@ abstract class RequestAbstract implements RequestInterface {
 	 */
 	protected function haltRequest(array $data, $response) {
 		switch ($data['lib']) {
+			case 'GuzzleHttp':
+				if ($data['exception'] instanceof \GuzzleHttp\Exception\ClientException) {
+					switch ($data['exception']->getCode()) {
+						case 404:
+							throw new Exception\HttpReturnedError($data['message']);
+					}
+				}
+				break;
 			case 'cURL':
 				// @see http://curl.haxx.se/libcurl/c/libcurl-errors.html
 				switch ($data['error']) {
@@ -222,10 +230,9 @@ abstract class RequestAbstract implements RequestInterface {
 					case 3:
 						throw new Exception\MalformedUrl($data['message']);
 				}
-			default:
-				// @LOW log errormessage + request uri?
-				throw new Exception\Request($data['message']);
 		}
+		// @LOW log errormessage + request uri?
+		throw new Exception\Request($data['message']);
 	}
 
 	/**
