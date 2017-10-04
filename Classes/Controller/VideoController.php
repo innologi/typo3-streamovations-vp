@@ -311,6 +311,8 @@ class VideoController extends Controller {
 				$supportedKeys = array(
 					'dateTimeAt',
 					'dateAt',
+					'dateFrom',
+					'dateTo',
 					'category',
 					'subCategory',
 					'tags'
@@ -338,8 +340,16 @@ class VideoController extends Controller {
 						$dateTime = new \DateTime($advanced['dateAt']);
 						$events = $this->eventRepository->findAtDate($dateTime);
 					} else {
-						// no use continuing if neither format is available
-						return;
+						// .. or find between a range
+						$dateStart = NULL;
+						if (isset($advanced['dateFrom'][0])) {
+							$dateStart = new \DateTime($advanced['dateFrom']);
+						}
+						$dateEnd = NULL;
+						if (isset($advanced['dateTo'][0])) {
+							$dateEnd = new \DateTime($advanced['dateTo']);
+						}
+						$events = $this->eventRepository->findBetweenDateTimeRange($dateStart, $dateEnd);
 					}
 
 					/* @var $eventService \Innologi\StreamovationsVp\Domain\Service\EventService */
