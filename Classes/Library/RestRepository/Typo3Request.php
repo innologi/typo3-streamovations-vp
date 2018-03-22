@@ -63,17 +63,33 @@ class Typo3Request extends RequestAbstract {
 	 * @return mixed
 	 */
 	public function sendNoCache($returnRawResponse = FALSE) {
-		$data = array();
-		$rawResponse = GeneralUtility::getUrl(
-			$this->requestUri->getRequestUri(),
-			0,
-			$this->headers,
-			$data
-		);
+		$error = [];
+		$rawResponse = FALSE;
 
-		// TYPO3's use of guzzle gives us the status code in 'error'
-		if ($rawResponse === FALSE || $data['error'] !== 200) {
-			$this->haltRequest($data, $rawResponse);
+		/** @var \TYPO3\CMS\Core\Http\RequestFactory $requestFactory */
+		$requestFactory = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Http\RequestFactory::class);
+		try {
+			$response = $requestFactory->request(
+				$this->requestUri->getRequestUri(),
+				'GET',
+				is_array($this->headers) ? ['headers' => $this->headers] : []
+			);
+			$rawResponse = $response->getBody()->getContents();
+
+			if ($response->getStatusCode() >= 300 || empty($rawResponse)) {
+				throw new \GuzzleHttp\Exception\TransferException(
+					$response->getReasonPhrase(),
+					$response->getStatusCode()
+				);
+			}
+		} catch (\GuzzleHttp\Exception\GuzzleException $e) {
+			$error['code'] = $e->getCode();
+			$error['message'] = $e->getMessage();
+			$error['exception'] = $e;
+		}
+
+		if ($rawResponse === FALSE || !empty($error)) {
+			$this->haltRequest($error, $rawResponse);
 		}
 
 		return $this->forceRawResponse || $returnRawResponse

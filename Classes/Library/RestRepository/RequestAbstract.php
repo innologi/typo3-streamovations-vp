@@ -210,28 +210,20 @@ abstract class RequestAbstract implements RequestInterface {
 	 * @return void
 	 */
 	protected function haltRequest(array $data, $response) {
-		switch ($data['lib']) {
-			case 'GuzzleHttp':
-				if ($data['exception'] instanceof \GuzzleHttp\Exception\ClientException) {
-					switch ($data['exception']->getCode()) {
-						case 404:
-							throw new Exception\HttpReturnedError($data['message']);
-					}
-				}
-				break;
-			/*case 'cURL':
-				// @see http://curl.haxx.se/libcurl/c/libcurl-errors.html
-				switch ($data['error']) {
-					case 22:
-						throw new Exception\HttpReturnedError($data['message']);
-					case 7:
-					case 6:
-						throw new Exception\HostUnreachable($data['message']);
-					case 3:
-						throw new Exception\MalformedUrl($data['message']);
-				}*/
-			default:
-				$data['message'] = json_encode($data);
+		if (isset($data['exception'])) {
+			$code = $data['exception']->getCode();
+			switch ($code) {
+				case 404:
+				case 403:
+					throw new Exception\HttpReturnedError($data['exception']->getMessage(), $code);
+			}
+
+		}
+		if (!isset($data['message'][0])) {
+			$data['message'] = json_encode($data);
+		}
+		if (is_string($response)) {
+			$data['message'] .= ' [RESPONSE: ' . $response . ' ]';
 		}
 		// @LOW log errormessage + request uri?
 		throw new Exception\Request($data['message']);
