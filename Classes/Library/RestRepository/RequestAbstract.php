@@ -219,7 +219,7 @@ abstract class RequestAbstract implements RequestInterface {
 					}
 				}
 				break;
-			case 'cURL':
+			/*case 'cURL':
 				// @see http://curl.haxx.se/libcurl/c/libcurl-errors.html
 				switch ($data['error']) {
 					case 22:
@@ -229,7 +229,9 @@ abstract class RequestAbstract implements RequestInterface {
 						throw new Exception\HostUnreachable($data['message']);
 					case 3:
 						throw new Exception\MalformedUrl($data['message']);
-				}
+				}*/
+			default:
+				$data['message'] = json_encode($data);
 		}
 		// @LOW log errormessage + request uri?
 		throw new Exception\Request($data['message']);
