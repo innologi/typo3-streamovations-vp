@@ -203,19 +203,20 @@ abstract class RequestAbstract implements RequestInterface {
 	 *
 	 * @param array $data
 	 * @param string $response
-	 * @throws Exception\HttpReturnedError
-	 * @throws Exception\HostUnreachable
-	 * @throws Exception\MalformedUrl
+	 * @throws Exception\HttpNotFound
+	 * @throws Exception\HttpForbidden
 	 * @throws Exception\Request
 	 * @return void
 	 */
 	protected function haltRequest(array $data, $response) {
+		$code = 0;
 		if (isset($data['exception'])) {
 			$code = $data['exception']->getCode();
 			switch ($code) {
 				case 404:
+					throw new Exception\HttpNotFound($data['exception']->getMessage(), $code);
 				case 403:
-					throw new Exception\HttpReturnedError($data['exception']->getMessage(), $code);
+					throw new Exception\HttpForbidden($data['exception']->getMessage(), $code);
 			}
 
 		}
@@ -226,7 +227,7 @@ abstract class RequestAbstract implements RequestInterface {
 			$data['message'] .= ' [RESPONSE: ' . $response . ' ]';
 		}
 		// @LOW log errormessage + request uri?
-		throw new Exception\Request($data['message']);
+		throw new Exception\Request($data['message'], $code);
 	}
 
 	/**

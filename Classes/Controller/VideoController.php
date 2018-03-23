@@ -27,7 +27,7 @@ use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use Innologi\StreamovationsVp\Mvc\Controller\Controller;
 use Innologi\StreamovationsVp\Library\RestRepository\ResponseInterface;
-use Innologi\StreamovationsVp\Library\RestRepository\Exception\HttpReturnedError;
+use Innologi\StreamovationsVp\Library\RestRepository\Exception\HttpNotFound;
 use Innologi\StreamovationsVp\Domain\Service\MeetingdataService;
 use Innologi\StreamovationsVp\Exception\Configuration;
 /**
@@ -120,7 +120,7 @@ class VideoController extends Controller {
 				$this->view->assign('settings', $this->settings);
 			}
 
-		} catch(HttpReturnedError $e) {
+		} catch(HttpNotFound $e) {
 			// no streams found returns a 404, which in this case really isn't an error
 			$this->addFlashMessage(
 				LocalizationUtility::translate('no_list', $this->extensionName),
@@ -271,7 +271,7 @@ class VideoController extends Controller {
 				);
 				$this->forward('show', NULL, NULL, $arguments);
 			}
-		} catch (HttpReturnedError $e) {
+		} catch (HttpNotFound $e) {
 			// no streams found returns a 404, which in this case really isn't an error
 		}
 
@@ -367,7 +367,7 @@ class VideoController extends Controller {
 						$this->forward('show', NULL, NULL, $arguments);
 					}
 
-				} catch (HttpReturnedError $e) {
+				} catch (HttpNotFound $e) {
 					// no stream found returns a 404, which in this case really isn't an error
 				}
 			}

@@ -25,13 +25,13 @@ namespace Innologi\StreamovationsVp\Library\RestRepository\Exception;
  ***************************************************************/
 
 /**
- * Http Returned Error Exception
+ * Http Not Found Exception
  *
  * @package InnologiLibs
  * @subpackage RestRepository
  * @author Frenck Lutke
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class HttpReturnedError extends RestException {
+class HttpNotFound extends RestException {
 
 }

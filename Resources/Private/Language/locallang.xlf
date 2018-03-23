@@ -29,6 +29,9 @@
 			<trans-unit id="stream_n_a">
 				<source>Chosen videostream is unavailable.</source>
 			</trans-unit>
+			<trans-unit id="api_403">
+				<source>Unauthorized, you do not have access to the requested data.</source>
+			</trans-unit>
 			<trans-unit id="no_stream">
 				<source>No videostream found.</source>
 			</trans-unit>

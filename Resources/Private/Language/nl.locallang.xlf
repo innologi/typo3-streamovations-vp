@@ -32,13 +32,15 @@
 
 			<trans-unit id="host_n_a" approved="yes">
 				<source>Source videostreaming is unreachable.</source>
-				<target state="translated">Bron videostreaming is niet bereikbaar.
-				</target>
+				<target state="translated">Bron videostreaming is niet bereikbaar.</target>
 			</trans-unit>
 			<trans-unit id="stream_n_a" approved="yes">
 				<source>Chosen videostream is unavailable.</source>
-				<target state="translated">De gekozen videostream is niet (meer) beschikbaar.
-				</target>
+				<target state="translated">De gekozen videostream is niet (meer) beschikbaar.</target>
+			</trans-unit>
+			<trans-unit id="api_403" approved="yes">
+				<source>Unauthorized, you do not have access to the requested data.</source>
+				<target state="translated">U heeft geen toegang tot de opgevraagde data.</target>
 			</trans-unit>
 			<trans-unit id="no_stream" approved="yes">
 				<source>No videostream found.</source>
@@ -50,13 +52,11 @@
 			</trans-unit>
 			<trans-unit id="no_list" approved="yes">
 				<source>No videostream found or available.</source>
-				<target state="translated">Geen videostream gevonden of beschikbaar.
-				</target>
+				<target state="translated">Geen videostream gevonden of beschikbaar.</target>
 			</trans-unit>
 			<trans-unit id="unexpected_response_structure" approved="yes">
 				<source>The videostream could not be read.</source>
-				<target state="translated">De videostream kan niet worden uitgelezen.
-				</target>
+				<target state="translated">De videostream kan niet worden uitgelezen.</target>
 			</trans-unit>
 			<trans-unit id="config_missing_hash" approved="yes">
 				<source>No videostream configured.</source>

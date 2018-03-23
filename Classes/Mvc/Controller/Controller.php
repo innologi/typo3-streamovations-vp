@@ -28,7 +28,7 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3\CMS\Fluid\View\AbstractTemplateView;
-use Innologi\StreamovationsVp\Library\RestRepository\Exception\{RestException, HttpReturnedError, HostUnreachable, Configuration};
+use Innologi\StreamovationsVp\Library\RestRepository\Exception\{RestException, HttpNotFound, HttpForbidden, HostUnreachable, Configuration};
 /**
  * Video Controller
  *
@@ -89,11 +89,19 @@ class Controller extends ActionController {
 		} catch (Configuration $e) {
 			// pass these through
 			throw $e;
-		} catch (HttpReturnedError $e) {
+		} catch (HttpNotFound $e) {
 			$this->extensionErrorHandler(
 				new \Exception(
 					LocalizationUtility::translate('stream_n_a', $this->extensionName),
-					0,
+					$e->getCode(),
+					$e
+				)
+			);
+		} catch (HttpForbidden $e) {
+			$this->extensionErrorHandler(
+				new \Exception(
+					LocalizationUtility::translate('api_403', $this->extensionName),
+					$e->getCode(),
 					$e
 				)
 			);
@@ -101,7 +109,7 @@ class Controller extends ActionController {
 			$this->extensionErrorHandler(
 				new \Exception(
 					LocalizationUtility::translate('host_n_a', $this->extensionName),
-					0,
+					$e->getCode(),
 					$e
 				)
 			);
