@@ -12,6 +12,7 @@
 	],
 	"require": {
 		"typo3/cms-core": "~8.7.0 || ~9.5.0",
+		"innologi/typo3-asset-provider": "~0.3.0 || dev-develop",
 		"php": ">=7.1 <7.4"
 	},
 	"autoload": {

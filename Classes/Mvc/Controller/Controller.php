@@ -39,7 +39,7 @@ use Innologi\StreamovationsVp\Library\RestRepository\Exception\{RestException, H
 class Controller extends ActionController {
 
 	/**
-	 * @var \Innologi\StreamovationsVp\Library\AssetProvider\ProviderServiceInterface
+	 * @var \Innologi\TYPO3AssetProvider\ProviderServiceInterface
 	 * @inject
 	 */
 	protected $assetProviderService;
@@ -59,6 +59,7 @@ class Controller extends ActionController {
 		if ($view instanceof AbstractTemplateView && $this->request->getFormat() === 'html') {
 			// provide assets as configured per action
 			$this->assetProviderService->provideAssets(
+				$this->extensionName,
 				$this->request->getControllerName(),
 				$this->request->getControllerActionName()
 			);
