@@ -11,8 +11,8 @@
 		}
 	],
 	"require": {
-		"typo3/cms-core": "^8.7",
-		"php": "^7.1"
+		"typo3/cms-core": "~8.7.0 || ~9.5.0",
+		"php": ">=7.1 <7.4"
 	},
 	"autoload": {
 		"psr-4": {
@@ -22,9 +22,5 @@
 	"replace": {
 		"streamovations_vp": "self.version",
 		"typo3-ter/streamovations-vp": "self.version"
-	},
-	"config": {
-		"vendor-dir": ".Build/vendor",
-		"bin-dir": ".Build/bin"
 	}
 }
