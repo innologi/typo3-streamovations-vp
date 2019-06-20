@@ -3,7 +3,7 @@ namespace Innologi\StreamovationsVp\Controller;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2014 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
+ *  (c) 2014-2019 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
  *
  *  All rights reserved
  *
@@ -41,21 +41,45 @@ class VideoController extends Controller {
 	// @TODO _____add a debugging-console feature to RestRepository, so that it logs entire responses to console?
 	/**
 	 * @var \Innologi\StreamovationsVp\Domain\Repository\EventRepository
-	 * @inject
 	 */
 	protected $eventRepository;
 
 	/**
 	 * @var \Innologi\StreamovationsVp\Domain\Repository\PlaylistRepository
-	 * @inject
 	 */
 	protected $playlistRepository;
 
 	/**
 	 * @var \Innologi\StreamovationsVp\Domain\Repository\MeetingdataRepository
-	 * @inject
 	 */
 	protected $meetingdataRepository;
+
+	/**
+	 *
+	 * @param \Innologi\StreamovationsVp\Domain\Repository\EventRepository $eventRepository
+	 */
+	public function injectEventRepository(\Innologi\StreamovationsVp\Domain\Repository\EventRepository $eventRepository)
+	{
+		$this->eventRepository = $eventRepository;
+	}
+
+	/**
+	 *
+	 * @param \Innologi\StreamovationsVp\Domain\Repository\PlaylistRepository $playlistRepository
+	 */
+	public function injectPlaylistRepository(\Innologi\StreamovationsVp\Domain\Repository\PlaylistRepository $playlistRepository)
+	{
+		$this->playlistRepository = $playlistRepository;
+	}
+
+	/**
+	 *
+	 * @param \Innologi\StreamovationsVp\Domain\Repository\MeetingdataRepository $meetingdataRepository
+	 */
+	public function injectMeetingdataRepository(\Innologi\StreamovationsVp\Domain\Repository\MeetingdataRepository $meetingdataRepository)
+	{
+		$this->meetingdataRepository = $meetingdataRepository;
+	}
 
 	/**
 	 * Initializes the controller before invoking an action method.

@@ -3,7 +3,7 @@ namespace Innologi\StreamovationsVp\Library\RestRepository;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2016 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
+ *  (c) 2016-2019 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
  *
  *  All rights reserved
  *
@@ -38,7 +38,6 @@ class RepositorySettingsManager implements RepositorySettingsManagerInterface,Si
 
 	/**
 	 * @var \TYPO3\CMS\Extbase\Object\ObjectManagerInterface
-	 * @inject
 	 */
 	protected $objectManager;
 
@@ -77,6 +76,16 @@ class RepositorySettingsManager implements RepositorySettingsManagerInterface,Si
 	 * @var string
 	 */
 	protected $action;
+
+	/**
+	 * Injects the object manager
+	 *
+	 * @param \TYPO3\CMS\Extbase\Object\ObjectManagerInterface $objectManager
+	 */
+	public function injectObjectManager(\TYPO3\CMS\Extbase\Object\ObjectManagerInterface $objectManager)
+	{
+		$this->objectManager = $objectManager;
+	}
 
 	/**
 	 * {@inheritDoc}

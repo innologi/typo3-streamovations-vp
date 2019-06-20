@@ -3,7 +3,7 @@ namespace Innologi\StreamovationsVp\Mvc\Controller;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2015 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
+ *  (c) 2015-2019 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
  *
  *  All rights reserved
  *
@@ -40,9 +40,17 @@ class Controller extends ActionController {
 
 	/**
 	 * @var \Innologi\TYPO3AssetProvider\ProviderServiceInterface
-	 * @inject
 	 */
 	protected $assetProviderService;
+
+	/**
+	 *
+	 * @param \Innologi\TYPO3AssetProvider\ProviderServiceInterface $assetProviderService
+	 */
+	public function injectAssetProviderService(\Innologi\TYPO3AssetProvider\ProviderServiceInterface $assetProviderService)
+	{
+		$this->assetProviderService = $assetProviderService;
+	}
 
 	/**
 	 * Initializes the view before invoking an action method.

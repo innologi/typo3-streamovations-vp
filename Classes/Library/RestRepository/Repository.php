@@ -3,7 +3,7 @@ namespace Innologi\StreamovationsVp\Library\RestRepository;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2014 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
+ *  (c) 2014-2019 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
  *
  *  All rights reserved
  *
@@ -36,7 +36,6 @@ abstract class Repository implements RepositoryInterface,SingletonInterface {
 
 	/**
 	 * @var \TYPO3\CMS\Extbase\Object\ObjectManagerInterface
-	 * @inject
 	 */
 	protected $objectManager;
 
@@ -64,6 +63,16 @@ abstract class Repository implements RepositoryInterface,SingletonInterface {
 	 */
 	public function __construct() {
 		$this->initializeObjectType();
+	}
+
+	/**
+	 * Injects the object manager
+	 *
+	 * @param \TYPO3\CMS\Extbase\Object\ObjectManagerInterface $objectManager
+	 */
+	public function injectObjectManager(\TYPO3\CMS\Extbase\Object\ObjectManagerInterface $objectManager)
+	{
+		$this->objectManager = $objectManager;
 	}
 
 	/**
