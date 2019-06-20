@@ -317,6 +317,7 @@ class VideoController extends Controller {
 	 * @return void
 	 */
 	public function advancedShowAction() {
+		// @extensionScannerIgnoreLine false positive
 		$contentObject = $this->configurationManager->getContentObject();
 		$typoscript = $this->configurationManager->getConfiguration(
 			\TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT

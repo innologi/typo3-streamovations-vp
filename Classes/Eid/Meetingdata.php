@@ -63,6 +63,9 @@ class Meetingdata {
 			'json' => 0
 		);
 
+		// @TODO deprecated @ v9.4: https://docs.typo3.org/c/typo3/cms-core/master/en-us/Changelog/9.4/Deprecation-85878-EidUtilityAndVariousTSFEMethods.html
+			// @see https://docs.typo3.org/c/typo3/cms-core/master/en-us/Changelog/9.2/Feature-83725-SupportForPSR-15HTTPMiddlewares.html
+			// @see https://docs.typo3.org/c/typo3/cms-core/master/en-us/Changelog/9.2/Deprecation-83803-DeprecateEidRequestHandler.html
 		// initialize TSFE to make TS accessible to extbase configuration manager
 		EidUtility::initTSFE();
 		// initialize extbase bootstrap, so we can use repositories

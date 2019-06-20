@@ -3,7 +3,7 @@ namespace Innologi\StreamovationsVp\Utility;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2014 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
+ *  (c) 2014-2019 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
  *
  *  All rights reserved
  *
@@ -95,8 +95,11 @@ class EidUtility extends \TYPO3\CMS\Frontend\Utility\EidUtility {
 		#$tsfe->determineId()
 		// calling fetch_the_id() is faster than determineId(), although @access is set to private
 		$tsfe->fetch_the_id();
-		// initializes tmpl which getConfigArray() uses to store TS in
-		$tsfe->initTemplate();
+		if (version_compare(TYPO3_version, '9.4', '<')) {
+			// initializes tmpl which getConfigArray() uses to store TS in
+			// @extensionScannerIgnoreLine
+			$tsfe->initTemplate();
+		}
 		// sets TS in tmpl->setup for use by configurationManager
 		$tsfe->getConfigArray();
 

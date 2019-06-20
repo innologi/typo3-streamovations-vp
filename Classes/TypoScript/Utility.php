@@ -3,7 +3,7 @@ namespace Innologi\StreamovationsVp\TypoScript;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2015 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
+ *  (c) 2015-2019 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
  *
  *  All rights reserved
  *
@@ -42,7 +42,16 @@ class Utility {
 	public function resolvePath($content, $conf) {
 		$path = '';
 		if (isset($conf['path'][0])) {
-			$path = $GLOBALS['TSFE']->tmpl->getFileName($conf['path']);
+			if (version_compare(TYPO3_version, '9.4', '<')) {
+				// @extensionScannerIgnoreLine
+				$path = $GLOBALS['TSFE']->tmpl->getFileName($conf['path']);
+			} else {
+				/** @var \TYPO3\CMS\Frontend\Resource\FilePathSanitizer $filePathSanitizer */
+				$filePathSanitizer = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+					\TYPO3\CMS\Frontend\Resource\FilePathSanitizer::class
+				);
+				$path = $filePathSanitizer->sanitize($conf['path']);
+			}
 		}
 		return $path;
 	}
