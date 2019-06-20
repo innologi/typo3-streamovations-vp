@@ -3,7 +3,7 @@ namespace Innologi\StreamovationsVp\ViewHelpers\Collection;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2015-2017 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
+ *  (c) 2015-2019 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
  *
  *  All rights reserved
  *
@@ -82,7 +82,7 @@ class GroupedForDateTimeViewHelper extends GroupedForViewHelper {
 			} elseif (is_object($value)) {
 				$currentGroupIndex = \TYPO3\CMS\Extbase\Reflection\ObjectAccess::getPropertyPath($value, $groupBy);
 			} else {
-				throw new \TYPO3\CMS\Fluid\Core\ViewHelper\Exception('GroupedForViewHelper only supports multi-dimensional arrays and objects', 1253120365);
+				throw new \TYPO3Fluid\Fluid\Core\ViewHelper\Exception('GroupedForViewHelper only supports multi-dimensional arrays and objects', 1253120365);
 			}
 
 			if (!$currentGroupIndex instanceof \DateTime) {

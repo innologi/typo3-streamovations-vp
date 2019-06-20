@@ -3,7 +3,7 @@ namespace Innologi\StreamovationsVp\ViewHelpers\Collection;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2015 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
+ *  (c) 2015-2019 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
  *
  *  All rights reserved
  *
@@ -23,9 +23,9 @@ namespace Innologi\StreamovationsVp\ViewHelpers\Collection;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 /**
  * container.sort viewhelper
  *
@@ -33,7 +33,7 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class SortViewHelper extends AbstractViewHelper {
+class SortViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * @var boolean
@@ -58,26 +58,25 @@ class SortViewHelper extends AbstractViewHelper {
 	}
 
 	/**
-	 * Render method
-	 *
-	 * Puts sorted subject as array(!) in the template variable container,
-	 * then renders children.
-	 *
-	 * @return string
+	 * @param array $arguments
+	 * @param \Closure $renderChildrenClosure
+	 * @param RenderingContextInterface $renderingContext
+	 * @return mixed
 	 */
-	public function render() {
+	public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+	{
 		// first sort subject
-		$subject = $this->arguments['subject'];
+		$subject = $arguments['subject'];
 		$sortedSubject = NULL;
 		if (is_array($subject) || $subject instanceof ObjectStorage) {
-			$sortedSubject = $this->sortCollection($subject);
+			$sortedSubject = static::sortCollection($subject, $arguments);
 		}
 
 		// then make sorted subject available in template __as array__
-		$as = $this->arguments['as'];
-		$this->templateVariableContainer->add($as, $sortedSubject);
-		$output = $this->renderChildren();
-		$this->templateVariableContainer->remove($as);
+		$as = $arguments['as'];
+		$renderingContext->getVariableProvider()->add($as, $sortedSubject);
+		$output = $renderChildrenClosure();
+		$renderingContext->getVariableProvider()->remove($as);
 
 		return $output;
 	}
@@ -86,21 +85,22 @@ class SortViewHelper extends AbstractViewHelper {
 	 * Sort collection
 	 *
 	 * @param mixed $subject
+	 * @param array $arguments
 	 * @return array
 	 */
-	protected function sortCollection($subject) {
+	protected static function sortCollection($subject, array $arguments) {
 		// @LOW test this with ObjectStorage, cba to look if it implements Sortable until I need it
 		$result = array();
-		if (isset($this->arguments['sortBy'])) {
+		if (isset($arguments['sortBy'])) {
 			foreach ($subject as $key => $value) {
-				$key = $this->getPropertyValue($value, $this->arguments['sortBy']);
+				$key = static::getPropertyValue($value, $arguments['sortBy']);
 				while (isset($result[$key])) {
 					$key .= '_1';
 				}
 				$result[$key] = $value;
 			}
 		}
-		switch ($this->arguments['order']) {
+		switch (arguments['order']) {
 			case 'DESC':
 				krsort($result);
 				break;
@@ -118,7 +118,7 @@ class SortViewHelper extends AbstractViewHelper {
 	 * @param string $property
 	 * @return mixed
 	 */
-	protected function getPropertyValue($object, $property) {
+	protected static function getPropertyValue($object, $property) {
 		$value = ObjectAccess::getPropertyPath($object, $property);
 		if ($value instanceof \DateTime) {
 			$value = $value->getTimestamp();

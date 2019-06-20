@@ -3,7 +3,7 @@ namespace Innologi\StreamovationsVp\ViewHelpers\File;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2014 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
+ *  (c) 2014-2019 Frenck Lutke <typo3@innologi.nl>, www.innologi.nl
  *
  *  All rights reserved
  *
@@ -23,7 +23,6 @@ namespace Innologi\StreamovationsVp\ViewHelpers\File;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * file.exists viewhelper
@@ -32,7 +31,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class ExistsViewHelper extends AbstractConditionViewHelper {
+class ExistsViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper {
 
 	/**
 	 * Initialize arguments
@@ -44,6 +43,8 @@ class ExistsViewHelper extends AbstractConditionViewHelper {
 		$this->registerArgument('file', 'string', 'Filepath, which depending on if it exists, will trigger f:then or f:else.', TRUE);
 	}
 
+	// @TODO deprecated @ v9.0: https://docs.typo3.org/c/typo3/cms-core/master/en-us/Changelog/9.0/Breaking-82414-RemoveCMSBaseViewHelperClasses.html
+		// wanting to use the provided then/else logic, this will have to wait until the if VH has also been migrated
 	/**
 	 * Render method
 	 *
