@@ -67,7 +67,7 @@ class Controller extends ActionController {
 		if ($view instanceof AbstractTemplateView && $this->request->getFormat() === 'html') {
 			// provide assets as configured per action
 			$this->assetProviderService->provideAssets(
-				$this->extensionName,
+				\strtolower($this->extensionName),
 				$this->request->getControllerName(),
 				$this->request->getControllerActionName()
 			);
