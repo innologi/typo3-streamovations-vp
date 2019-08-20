@@ -100,7 +100,7 @@ class SortViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelpe
 				$result[$key] = $value;
 			}
 		}
-		switch (arguments['order']) {
+		switch ($arguments['order']) {
 			case 'DESC':
 				krsort($result);
 				break;
