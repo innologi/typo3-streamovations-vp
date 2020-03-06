@@ -184,19 +184,21 @@ abstract class RequestAbstract implements RequestInterface {
 	 * @return void
 	 */
 	protected function storeResponseInCache($response, $isRawResponse = FALSE) {
-		$tags = array();
+		$tags = [
+			'pageId_' . $GLOBALS['TSFE']->id
+		];
 
-		// only enable tags if requested by our cache settings, as these tags are wonderful for tracking
+		// only enable additional tags if requested by our cache settings, as these tags are wonderful for tracking
 		// down caching issues, but are completely unused in and add overhead to production
 		if ($this->cacheTags) {
 			/** @var RepositorySettingsManagerInterface $repositorySettingsManager */
 			$repositorySettingsManager = $this->objectManager->get(__NAMESPACE__ . '\\RepositorySettingsManagerInterface');
-			$tags = array(
+			$tags = \array_merge($tags, [
 				$repositorySettingsManager->getRepositoryNameFromObjectType($this->responseObjectType),
 				'lifetime_' . $this->cacheLifetime,
 				'raw_' . (int) ($isRawResponse || $this->forceRawResponse),
 				'type_' . $this->responseType
-			);
+			]);
 		}
 
 		$this->cache->set(
