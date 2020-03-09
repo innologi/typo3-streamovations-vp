@@ -1,27 +1,27 @@
 {
-	"name": "innologi/typo3-streamovations-vp",
-	"type": "typo3-cms-extension",
-	"description": "Streaming Video Player (JW player or JW player-based) that connects to your Streamovations instance for live-streaming, VOD and additional (interactive) metadata (e.g. topic, speaker)",
-	"license": "GPL-2.0+",
-	"authors": [{
-			"name": "Frenck Lutke",
-			"email": "typo3@innologi.nl",
-			"homepage": "http://www.innologi.nl",
-			"role": "Developer"
+	"name" : "innologi/typo3-streamovations-vp",
+	"type" : "typo3-cms-extension",
+	"description" : "Streaming Video Player (JW player or JW player-based) that connects to your Streamovations instance for live-streaming, VOD and additional (interactive) metadata (e.g. topic, speaker)",
+	"license" : "GPL-2.0-or-later",
+	"authors" : [{
+			"name" : "Frenck Lutke",
+			"email" : "typo3@innologi.nl",
+			"homepage" : "http://www.innologi.nl",
+			"role" : "Developer"
 		}
 	],
-	"require": {
-		"php": ">=7.1 <7.4",
-		"typo3/cms-core": "~8.7.0 || ~9.5.0",
-		"innologi/typo3-asset-provider": "~0.3.1 || dev-develop"
+	"require" : {
+		"php" : ">=7.1 <7.4",
+		"typo3/cms-core" : "~8.7.0 || ~9.5.0",
+		"innologi/typo3-asset-provider" : "~0.3.1 || dev-develop"
 	},
-	"autoload": {
-		"psr-4": {
-			"Innologi\\StreamovationsVp\\": "Classes/"
+	"autoload" : {
+		"psr-4" : {
+			"Innologi\\StreamovationsVp\\" : "Classes/"
 		}
 	},
-	"replace": {
-		"streamovations_vp": "self.version",
-		"typo3-ter/streamovations-vp": "self.version"
+	"replace" : {
+		"streamovations_vp" : "self.version",
+		"typo3-ter/streamovations-vp" : "self.version"
 	}
 }
