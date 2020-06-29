@@ -128,9 +128,9 @@
 				<displayCond>FIELD:switchableControllerActions:=:Video->presetShow</displayCond>
 				<config>
 					<type>input</type>
-					<size>30</size>
-					<max>32</max>
-					<eval>trim,alphanum,required</eval>
+					<size>50</size>
+					<max>255</max>
+					<eval>trim,alphanum_x,required</eval>
 					<default></default>
 				</config>
 			</TCEforms>
