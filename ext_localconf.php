@@ -7,7 +7,7 @@ if (!defined('TYPO3_MODE')) {
 	'Innologi.' . $_EXTKEY,
 	'Video',
 	array(
-		'Video' => 'list, presetShow, show, liveStream, advancedShow',
+		'Video' => 'list, presetShow, show, liveStream, advancedShow'
 	),
 	// @LOW review if we absolutely can't cache presetShow, show and advancedShow
 	// non-cacheable actions
@@ -34,5 +34,14 @@ if (!isset($TYPO3_CONF_VARS['SYS']['caching']['cacheConfigurations']['streamovat
 }
 
 // register eID script for metadata processing
-$GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'][$_EXTKEY . '_meetingdata'] =
-	'EXT:' . $_EXTKEY . '/Classes/Eid/Meetingdata.php';
+$GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'][$_EXTKEY . '_meetingdata'] = 'EXT:' . $_EXTKEY . '/Classes/Eid/Meetingdata.php';
+
+// custom PageTitle provider
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup(trim('
+    config.pageTitleProviders {
+        streamovations_vp {
+            provider = Innologi\StreamovationsVp\Seo\HashTitleProvider
+            before = altPageTitle,record,seo
+        }
+    }
+'));

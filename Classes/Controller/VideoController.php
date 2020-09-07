@@ -26,6 +26,7 @@ namespace Innologi\StreamovationsVp\Controller;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use Innologi\StreamovationsVp\Mvc\Controller\Controller;
+use Innologi\StreamovationsVp\Seo\HashTitleProvider;
 use Innologi\StreamovationsVp\Library\RestRepository\ResponseInterface;
 use Innologi\StreamovationsVp\Library\RestRepository\Exception\HttpNotFound;
 use Innologi\StreamovationsVp\Domain\Service\MeetingdataService;
@@ -225,6 +226,12 @@ class VideoController extends Controller {
 		$this->view->assign('playerSetup', $playlist);
 		if (!empty($playerConfig)) {
 			$this->view->assign('playerConfig', json_encode($playerConfig, JSON_UNESCAPED_SLASHES));
+		}
+
+		if (isset($this->settings['hashHeader']) && (bool)$this->settings['hashHeader']) {
+			/** @var HashTitleProvider $titleProvider */
+			$titleProvider = $this->objectManager->get(HashTitleProvider::class);
+			$titleProvider->setTitle($hash);
 		}
 
 		// @LOW we should autodetect this once we allow livestreams via list

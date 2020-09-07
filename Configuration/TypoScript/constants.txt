@@ -7,6 +7,7 @@
 # customsubcategory=e_speakers=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_category_speakers
 # customsubcategory=f_polling=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_category_polling
 # customsubcategory=g_breaks=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_category_breaks
+# customsubcategory=h_header=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_category_header
 
 plugin.tx_streamovationsvp {
 	view {
@@ -85,6 +86,8 @@ plugin.tx_streamovationsvp {
 			# cat=plugin.tx_streamovationsvp/e_speakers/050; type=int+; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_speakers_imgHeight
 			imgHeight = 150
 		}
+		# cat=plugin.tx_streamovationsvp/h_header/010; type=boolean; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_hash_header
+		hashHeader.enable = 0
 		
 		# cat=plugin.tx_streamovationsvp/f_polling/010; type=int; label=LLL:EXT:streamovations_vp/Resources/Private/Language/locallang_be.xml:ts_settings_polling_interval
 		polling.interval = 5

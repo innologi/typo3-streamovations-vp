@@ -176,6 +176,9 @@ plugin.tx_streamovationsvp {
 			imgWidth = {$plugin.tx_streamovationsvp.settings.speakers.imgWidth}
 			imgDefault = {$plugin.tx_streamovationsvp.settings.speakers.imgDefault}
 		}
+		hashHeader {
+            enable = {$plugin.tx_streamovationsvp.settings.hashHeader.enable}
+        }
 		advanced {
 			enable = 0
 			category =

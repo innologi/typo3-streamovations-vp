@@ -1,214 +1,222 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages"
-		date="2015-01-12T14:05:13Z" product-name="streamovations_vp">
-		<header />
-		<body>
-			<trans-unit id="ff_video_sheet_sDEF">
-				<source>Settings</source>
-			</trans-unit>
+    <file source-language="en" datatype="plaintext"
+        original="messages" date="2015-01-12T14:05:13Z"
+        product-name="streamovations_vp">
+        <header />
+        <body>
+            <trans-unit id="ff_video_sheet_sDEF">
+                <source>Settings</source>
+            </trans-unit>
 
-			<trans-unit id="ff_video_pluginType">
-				<source>Plugin type</source>
-			</trans-unit>
-			<trans-unit id="ff_video_pluginType.list">
-				<source>List/Show-view</source>
-			</trans-unit>
-			<trans-unit id="ff_video_pluginType.single">
-				<source>Preset Single Video</source>
-			</trans-unit>
-			<trans-unit id="ff_video_pluginType.live">
-				<source>Livestream</source>
-			</trans-unit>
-			<trans-unit id="ff_video_pluginType.advanced">
-				<source>Show-view (Advanced)</source>
-			</trans-unit>
-			<trans-unit id="ff_video_dateAt">
-				<source>Video Date</source>
-			</trans-unit>
-			<trans-unit id="ff_video_dateFrom">
-				<source>Video Date/Time Start</source>
-			</trans-unit>
-			<trans-unit id="ff_video_dateTo">
-				<source>Video Date/Time End</source>
-			</trans-unit>
-			<trans-unit id="ff_video_category">
-				<source>Category</source>
-			</trans-unit>
-			<trans-unit id="ff_video_subCategory">
-				<source>Sub Category</source>
-			</trans-unit>
-			<trans-unit id="ff_video_tags">
-				<source>Tags</source>
-			</trans-unit>
-			<trans-unit id="ff_video_hash">
-				<source>Videostream Session Hash</source>
-			</trans-unit>
-			<trans-unit id="ff_video_showPid">
-				<source>Target Show Page</source>
-			</trans-unit>
-			<trans-unit id="ff_video_backPid">
-				<source>Target Back Page</source>
-			</trans-unit>
+            <trans-unit id="ff_video_pluginType">
+                <source>Plugin type</source>
+            </trans-unit>
+            <trans-unit id="ff_video_pluginType.list">
+                <source>List/Show-view</source>
+            </trans-unit>
+            <trans-unit id="ff_video_pluginType.single">
+                <source>Preset Single Video</source>
+            </trans-unit>
+            <trans-unit id="ff_video_pluginType.live">
+                <source>Livestream</source>
+            </trans-unit>
+            <trans-unit id="ff_video_pluginType.advanced">
+                <source>Show-view (Advanced)</source>
+            </trans-unit>
+            <trans-unit id="ff_video_dateAt">
+                <source>Video Date</source>
+            </trans-unit>
+            <trans-unit id="ff_video_dateFrom">
+                <source>Video Date/Time Start</source>
+            </trans-unit>
+            <trans-unit id="ff_video_dateTo">
+                <source>Video Date/Time End</source>
+            </trans-unit>
+            <trans-unit id="ff_video_category">
+                <source>Category</source>
+            </trans-unit>
+            <trans-unit id="ff_video_subCategory">
+                <source>Sub Category</source>
+            </trans-unit>
+            <trans-unit id="ff_video_tags">
+                <source>Tags</source>
+            </trans-unit>
+            <trans-unit id="ff_video_hash">
+                <source>Videostream Session Hash</source>
+            </trans-unit>
+            <trans-unit id="ff_video_showPid">
+                <source>Target Show Page</source>
+            </trans-unit>
+            <trans-unit id="ff_video_backPid">
+                <source>Target Back Page</source>
+            </trans-unit>
 
-			<trans-unit id="ts_category_restapi">
-				<source>REST API</source>
-			</trans-unit>
-			<trans-unit id="ts_category_player">
-				<source>Video Player</source>
-			</trans-unit>
-			<trans-unit id="ts_category_jw">
-				<source>JW Player-specific</source>
-			</trans-unit>
-			<trans-unit id="ts_category_smv">
-				<source>SMV Player-specific</source>
-			</trans-unit>
-			<trans-unit id="ts_category_topics">
-				<source>Topics</source>
-			</trans-unit>
-			<trans-unit id="ts_category_speakers">
-				<source>Speakers</source>
-			</trans-unit>
-			<trans-unit id="ts_category_polling">
-				<source>Polling</source>
-			</trans-unit>
-			<trans-unit id="ts_category_breaks">
-				<source>Event Breaks</source>
-			</trans-unit>
+            <trans-unit id="ts_category_restapi">
+                <source>REST API</source>
+            </trans-unit>
+            <trans-unit id="ts_category_player">
+                <source>Video Player</source>
+            </trans-unit>
+            <trans-unit id="ts_category_jw">
+                <source>JW Player-specific</source>
+            </trans-unit>
+            <trans-unit id="ts_category_smv">
+                <source>SMV Player-specific</source>
+            </trans-unit>
+            <trans-unit id="ts_category_topics">
+                <source>Topics</source>
+            </trans-unit>
+            <trans-unit id="ts_category_speakers">
+                <source>Speakers</source>
+            </trans-unit>
+            <trans-unit id="ts_category_polling">
+                <source>Polling</source>
+            </trans-unit>
+            <trans-unit id="ts_category_breaks">
+                <source>Event Breaks</source>
+            </trans-unit>
+            <trans-unit id="ts_category_header">
+                <source>Vide Header</source>
+            </trans-unit>
 
-			<trans-unit id="ts_view_templateRootPath">
-				<source>Template path</source>
-			</trans-unit>
-			<trans-unit id="ts_view_partialRootPath">
-				<source>Template partial path</source>
-			</trans-unit>
-			<trans-unit id="ts_view_layoutRootPath">
-				<source>Template layout path</source>
-			</trans-unit>
-			<trans-unit id="ts_javascript_includeJquery">
-				<source>Include jQuery Library: You can disable this if a compatible
-					jQuery-version is already included on your site.
-				</source>
-			</trans-unit>
-			<trans-unit id="ts_javascript_jqueryLib">
-				<source>jQuery Library path</source>
-			</trans-unit>
-			<trans-unit id="ts_javascript_jwPlayer6Lib">
-				<source>JW Player (6.x) path: If you're using a license key, make sure
-					this points to a compatible version.
-				</source>
-			</trans-unit>
-			<trans-unit id="ts_javascript_jwPlayer7Lib">
-				<source>JW Player (7.x) path: You need to use a license key, so make
-					sure this points to a compatible version.
-				</source>
-			</trans-unit>
-			<trans-unit id="ts_javascript_smvPlayerLib">
-				<source>Streamovations Player path: This player is not included. If
-					you wish to use the Streamovations player, inquire at your contact
-					at Streamovations BVBA.
-				</source>
-			</trans-unit>
-			<trans-unit id="ts_css_frontendFile">
-				<source>Frontend CSS path: Provides frontend styling to plugin
-				</source>
-			</trans-unit>
-			<trans-unit id="ts_rest_scheme">
-				<source>REST API scheme: Scheme for REST requests, usually 'http' or
-					'https'.
-				</source>
-			</trans-unit>
-			<trans-unit id="ts_rest_baseUri">
-				<source>REST API Base URI: Base URI for REST requests, starting from
-					the (sub) domain and up to '/api.php'. e.g. 'stream.mysite.com'
-				</source>
-			</trans-unit>
-			<trans-unit id="ts_settings_player">
-				<source>Pick Video Player: Choose which video player to use. By default,
-					JW Player 6.x is set, as it does not require a license key. If you
-					wish to use JW Player 7.x or the Streamovations player, be sure to
-					set your own JW Player license key. Aditionally, if you wish to use
-					the Streamovations player, inquire at your contact at Streamovations
-					BVBA about this, as it will require additional player files as well.
-				</source>
-			</trans-unit>
-			<trans-unit id="ts_settings_jwPlayer_key">
-				<source>JW Player license key: Unlocks JW Player and removes its
-					logo. Please note that your license key will be exposed to
-					knowledgeable viewers of the plugin, as is always the case with JW
-					Player. You need a valid license key for use of the Streamovations
-					player and JW Player 7.x.
-				</source>
-			</trans-unit>
-			<trans-unit id="ts_settings_jwPlayer_width">
-				<source>Player width (pixels/percentage)</source>
-			</trans-unit>
-			<trans-unit id="ts_settings_jwPlayer_height">
-				<source>Player height (pixels/percentage)</source>
-			</trans-unit>
-			<trans-unit id="ts_settings_jwPlayer_liveLanguage">
-				<source>Livestream language: Sets the order of preferred languages
-					to find in livestreams. (comma separated values)
-				</source>
-			</trans-unit>
-			<trans-unit id="ts_settings_jwPlayer_smilSupport">
-				<source>Smil support: Allows the use of smil files if detected in
-					the REST response.
-				</source>
-			</trans-unit>
-			<trans-unit id="ts_settings_jwPlayer_smilWrap">
-				<source>Smil wrap</source>
-			</trans-unit>
-			<trans-unit id="ts_settings_smvPlayer_forceHttps">
-				<source>Force HTTPS: Forces streaming over the HTTPS protocol. Requires a proper SSL configuration on the streaming source.</source>
-			</trans-unit>
-			<trans-unit id="ts_settings_smvPlayer_skin">
-				<source>Player skin</source>
-			</trans-unit>
-			<trans-unit id="ts_settings_breaks_enable">
-				<source>Enable breaks: Allows livestream interruptions to occur on
-					set times. This requires that Event Breaks are being applied
-					to the livestream from within the Streamovations Video CMS.
-				</source>
-			</trans-unit>
-			<trans-unit id="ts_settings_topics_enable">
-				<source>Enable topics: Shows topics beside the video player, which
-					when clicked, jumps to the appropriate time. This requires the
-					video to have correctly assigned topics and associated timestamps
-					in the Streamovations Video CMS.
-				</source>
-			</trans-unit>
-			<trans-unit id="ts_settings_speakers_enable">
-				<source>Enable speakers: Shows current speaker beside the video
-					player. This requires the video to have correctly assigned speakers
-					and associated timestamps in the Streamovations Video CMS.
-				</source>
-			</trans-unit>
-			<trans-unit id="ts_settings_speakers_imgDir">
-				<source>Avatar path: Serverpath to speaker avatar directory. e.g.
-					"fileadmin/images/streamovations/" The Streamovations Video CMS
-					allows for avatars to be assigned to speakers. By keeping the same
-					images with the same filenames(!) in the configured path, these
-					will be displayed if speaker data is enabled.
-				</source>
-			</trans-unit>
-			<trans-unit id="ts_settings_speakers_imgDefault">
-				<source>Default avatar: If a speaker has no matching avatar, this is
-					the image that is displayed.</source>
-			</trans-unit>
-			<trans-unit id="ts_settings_speakers_imgWidth">
-				<source>Avatar width (pixels)</source>
-			</trans-unit>
-			<trans-unit id="ts_settings_speakers_imgHeight">
-				<source>Avatar height (pixels)</source>
-			</trans-unit>
-			<trans-unit id="ts_settings_polling_interval">
-				<source>Polling interval (seconds): Polling interval for
-					topic/speaker data during a livestream, as long one of these is
-					enabled. Setting the interval to anything lower than 1 disables
-					polling. Setting it to 1 disables caching for polling.
-				</source>
-			</trans-unit>
-		</body>
-	</file>
+            <trans-unit id="ts_view_templateRootPath">
+                <source>Template path</source>
+            </trans-unit>
+            <trans-unit id="ts_view_partialRootPath">
+                <source>Template partial path</source>
+            </trans-unit>
+            <trans-unit id="ts_view_layoutRootPath">
+                <source>Template layout path</source>
+            </trans-unit>
+            <trans-unit id="ts_javascript_includeJquery">
+                <source>Include jQuery Library: You can disable this if a compatible
+                    jQuery-version is already included on your site.
+                </source>
+            </trans-unit>
+            <trans-unit id="ts_javascript_jqueryLib">
+                <source>jQuery Library path</source>
+            </trans-unit>
+            <trans-unit id="ts_javascript_jwPlayer6Lib">
+                <source>JW Player (6.x) path: If you're using a license key, make sure
+                    this points to a compatible version.
+                </source>
+            </trans-unit>
+            <trans-unit id="ts_javascript_jwPlayer7Lib">
+                <source>JW Player (7.x) path: You need to use a license key, so make
+                    sure this points to a compatible version.
+                </source>
+            </trans-unit>
+            <trans-unit id="ts_javascript_smvPlayerLib">
+                <source>Streamovations Player path: This player is not included. If
+                    you wish to use the Streamovations player, inquire at your contact
+                    at Streamovations BVBA.
+                </source>
+            </trans-unit>
+            <trans-unit id="ts_css_frontendFile">
+                <source>Frontend CSS path: Provides frontend styling to plugin</source>
+            </trans-unit>
+            <trans-unit id="ts_rest_scheme">
+                <source>REST API scheme: Scheme for REST requests, usually 'http' or 'https'.</source>
+            </trans-unit>
+            <trans-unit id="ts_rest_baseUri">
+                <source>REST API Base URI: Base URI for REST requests, starting from
+                    the (sub) domain and up to '/api.php'. e.g. 'stream.mysite.com'
+                </source>
+            </trans-unit>
+            <trans-unit id="ts_settings_player">
+                <source>Pick Video Player: Choose which video player to use. By default,
+                    JW Player 6.x is set, as it does not require a license key. If you
+                    wish to use JW Player 7.x or the Streamovations player, be sure to
+                    set your own JW Player license key. Aditionally, if you wish to use
+                    the Streamovations player, inquire at your contact at Streamovations
+                    BVBA about this, as it will require additional player files as well.
+                </source>
+            </trans-unit>
+            <trans-unit id="ts_settings_jwPlayer_key">
+                <source>JW Player license key: Unlocks JW Player and removes its
+                    logo. Please note that your license key will be exposed to
+                    knowledgeable viewers of the plugin, as is always the case with JW
+                    Player. You need a valid license key for use of the Streamovations
+                    player and JW Player 7.x.
+                </source>
+            </trans-unit>
+            <trans-unit id="ts_settings_jwPlayer_width">
+                <source>Player width (pixels/percentage)</source>
+            </trans-unit>
+            <trans-unit id="ts_settings_jwPlayer_height">
+                <source>Player height (pixels/percentage)</source>
+            </trans-unit>
+            <trans-unit
+                id="ts_settings_jwPlayer_liveLanguage">
+                <source>Livestream language: Sets the order of preferred languages
+                    to find in livestreams. (comma separated values)
+                </source>
+            </trans-unit>
+            <trans-unit id="ts_settings_jwPlayer_smilSupport">
+                <source>Smil support: Allows the use of smil files if detected in the REST response.</source>
+            </trans-unit>
+            <trans-unit id="ts_settings_jwPlayer_smilWrap">
+                <source>Smil wrap</source>
+            </trans-unit>
+            <trans-unit id="ts_settings_smvPlayer_forceHttps">
+                <source>Force HTTPS: Forces streaming over the HTTPS
+                    protocol. Requires a proper SSL configuration on the
+                    streaming source.</source>
+            </trans-unit>
+            <trans-unit id="ts_settings_smvPlayer_skin">
+                <source>Player skin</source>
+            </trans-unit>
+            <trans-unit id="ts_settings_breaks_enable">
+                <source>Enable breaks: Allows livestream interruptions to occur on
+                    set times. This requires that Event Breaks are being applied
+                    to the livestream from within the Streamovations Video CMS.
+                </source>
+            </trans-unit>
+            <trans-unit id="ts_settings_topics_enable">
+                <source>Enable topics: Shows topics beside the video player, which
+                    when clicked, jumps to the appropriate time. This requires the
+                    video to have correctly assigned topics and associated timestamps
+                    in the Streamovations Video CMS.
+                </source>
+            </trans-unit>
+            <trans-unit id="ts_settings_speakers_enable">
+                <source>Enable speakers: Shows current speaker beside the video
+                    player. This requires the video to have correctly assigned speakers
+                    and associated timestamps in the Streamovations Video CMS.
+                </source>
+            </trans-unit>
+            <trans-unit id="ts_settings_speakers_imgDir">
+                <source>Avatar path: Serverpath to speaker avatar directory. e.g.
+                    "fileadmin/images/streamovations/" The Streamovations Video CMS
+                    allows for avatars to be assigned to speakers. By keeping the same
+                    images with the same filenames(!) in the configured path, these
+                    will be displayed if speaker data is enabled.
+                </source>
+            </trans-unit>
+            <trans-unit id="ts_settings_speakers_imgDefault">
+                <source>Default avatar: If a speaker has no matching avatar, this is
+                    the image that is displayed.
+                </source>
+            </trans-unit>
+            <trans-unit id="ts_settings_speakers_imgWidth">
+                <source>Avatar width (pixels)</source>
+            </trans-unit>
+            <trans-unit id="ts_settings_speakers_imgHeight">
+                <source>Avatar height (pixels)</source>
+            </trans-unit>
+            <trans-unit id="ts_settings_polling_interval">
+                <source>Polling interval (seconds): Polling interval for
+                    topic/speaker data during a livestream, as long one of these is
+                    enabled. Setting the interval to anything lower than 1 disables
+                    polling. Setting it to 1 disables caching for polling.
+                </source>
+            </trans-unit>
+            <trans-unit id="ts_settings_hash_header">
+                <source>Hash as header: shows a video hash as header on
+                    the video page with the designated size.
+                </source>
+            </trans-unit>
+        </body>
+    </file>
 </xliff>
