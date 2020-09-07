@@ -228,7 +228,7 @@ class VideoController extends Controller {
 			$this->view->assign('playerConfig', json_encode($playerConfig, JSON_UNESCAPED_SLASHES));
 		}
 
-		if (isset($this->settings['hashHeader']) && (bool)$this->settings['hashHeader']) {
+		if (isset($this->settings['hashHeader']['enable']) && (bool)$this->settings['hashHeader']['enable']) {
 			/** @var HashTitleProvider $titleProvider */
 			$titleProvider = $this->objectManager->get(HashTitleProvider::class);
 			$titleProvider->setTitle($hash);
