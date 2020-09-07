@@ -232,6 +232,7 @@ class VideoController extends Controller {
 			/** @var HashTitleProvider $titleProvider */
 			$titleProvider = $this->objectManager->get(HashTitleProvider::class);
 			$titleProvider->setTitle($hash);
+			$this->view->assign('videoHeader', $titleProvider->getTitle());
 		}
 
 		// @LOW we should autodetect this once we allow livestreams via list

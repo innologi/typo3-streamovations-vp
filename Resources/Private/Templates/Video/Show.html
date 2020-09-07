@@ -15,6 +15,9 @@
 	</f:if>
 	
 	<div class="video-player-container">
+        <f:if condition="{videoHeader}">
+            <f:render partial="Video/Header" arguments="{videoHeader:videoHeader}" />
+        </f:if>
 		<f:if condition="{interruptPlayer}">
 		<f:then>
 			<div class="video-player-break">
