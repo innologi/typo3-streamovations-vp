@@ -39,6 +39,11 @@ use Innologi\StreamovationsVp\Library\RestRepository\Exception\{RestException, H
 class Controller extends ActionController {
 
 	/**
+	 * @var string
+	 */
+	protected $extensionName = 'StreamovationsVp';
+
+	/**
 	 * @var \Innologi\TYPO3AssetProvider\ProviderServiceInterface
 	 */
 	protected $assetProviderService;

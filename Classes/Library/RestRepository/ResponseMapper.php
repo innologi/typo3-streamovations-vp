@@ -118,12 +118,13 @@ class ResponseMapper implements ResponseMapperInterface, SingletonInterface {
 
 		$properties = $object->_getProperties();
 		foreach ($properties as $propertyName => $propertyValue) {
+			/** @var \TYPO3\CMS\Extbase\Reflection\ClassSchema\Property $propertyData */
 			$propertyData = $classSchema->getProperty($propertyName);
 			if (isset($responseData[$propertyName]) && $responseData[$propertyName] !== NULL) {
 				$propertyValue = $this->determinePropertyValue(
 					$responseData[$propertyName],
-					$propertyData['type'],
-					$propertyData['elementType'],
+					$propertyData->getType(),
+					$propertyData->getElementType(),
 					$propertyName,
 					$className
 				);
@@ -157,12 +158,14 @@ class ResponseMapper implements ResponseMapperInterface, SingletonInterface {
 				$propertyValue = (string) $value;
 				break;
 			case 'integer':
+			case 'int':
 				$propertyValue = (int) $value;
 				break;
 			case 'float':
 				$propertyValue = (double) $value;
 				break;
 			case 'boolean':
+			case 'bool':
 				$propertyValue = (bool) $value;
 				break;
 			case 'array':

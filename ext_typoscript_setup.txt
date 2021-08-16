@@ -1,9 +1,0 @@
-# @TODO deprecated @ v9.5: https://docs.typo3.org/c/typo3/cms-core/master/en-us/Changelog/9.5/Deprecation-86270-ExtbaseXclassViaTypoScriptSettings.html
-config.tx_extbase.objects {
-	Innologi\StreamovationsVp\Library\RestRepository\ResponseInterface {
-		className = Innologi\StreamovationsVp\Library\RestRepository\MagicResponse
-	}
-	Innologi\StreamovationsVp\Library\RestRepository\RequestInterface {
-		className = Innologi\StreamovationsVp\Library\RestRepository\Typo3Request
-	}
-}

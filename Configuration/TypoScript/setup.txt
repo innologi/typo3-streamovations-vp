@@ -110,7 +110,7 @@ plugin.tx_streamovationsvp {
 					tx_streamovationsvp_jsInline {
 						# SvpStarter
 						10 = TEMPLATE
-						10.template = FILE
+						10.template = STREAMOVATIONS_VP_FILE
 						10.template.file = {$plugin.tx_streamovationsvp.javascript.starterFile}
 						10.marks {
 							PLAYER_TYPE = TEXT
@@ -137,10 +137,10 @@ plugin.tx_streamovationsvp {
 							VIDEO_BREAK_SUB.trim = 1
 						}
 						# SvpPolling
-						20 = FILE
+						20 = STREAMOVATIONS_VP_FILE
 						20.file = {$plugin.tx_streamovationsvp.javascript.pollingFile}
 						# init
-						30 = FILE
+						30 = STREAMOVATIONS_VP_FILE
 						30.file = {$plugin.tx_streamovationsvp.javascript.initFile}
 						placeInFooter = 1
 					}

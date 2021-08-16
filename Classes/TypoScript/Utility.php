@@ -42,16 +42,11 @@ class Utility {
 	public function resolvePath($content, $conf) {
 		$path = '';
 		if (isset($conf['path'][0])) {
-			if (version_compare(TYPO3_version, '9.4', '<')) {
-				// @extensionScannerIgnoreLine
-				$path = $GLOBALS['TSFE']->tmpl->getFileName($conf['path']);
-			} else {
-				/** @var \TYPO3\CMS\Frontend\Resource\FilePathSanitizer $filePathSanitizer */
-				$filePathSanitizer = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
-					\TYPO3\CMS\Frontend\Resource\FilePathSanitizer::class
-				);
-				$path = $filePathSanitizer->sanitize($conf['path']);
-			}
+			/** @var \TYPO3\CMS\Frontend\Resource\FilePathSanitizer $filePathSanitizer */
+			$filePathSanitizer = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+				\TYPO3\CMS\Frontend\Resource\FilePathSanitizer::class
+			);
+			$path = $filePathSanitizer->sanitize($conf['path']);
 		}
 		return $path;
 	}

@@ -35,7 +35,7 @@ use TYPO3\CMS\Extbase\Core\Bootstrap;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class EidUtility extends \TYPO3\CMS\Frontend\Utility\EidUtility {
+class EidUtility {
 
 	/**
 	 * Load and initialize TypoScriptFrontendController aka TSFE.
@@ -85,21 +85,16 @@ class EidUtility extends \TYPO3\CMS\Frontend\Utility\EidUtility {
 		}
 
 		// initializes feUser used to determine various settings necessary for determineId()
-		if ($feUser === NULL) {
-			$tsfe->initFEuser();
-		} else {
-			$tsfe->fe_user = $feUser;
-		}
+		#if ($feUser === NULL) {
+		#	$tsfe->initFEuser();
+		#} else {
+		#	$tsfe->fe_user = $feUser;
+		#}
 
 		// initializes rootLine used by getConfigArray() to determine applicable TS records
 		#$tsfe->determineId()
 		// calling fetch_the_id() is faster than determineId(), although @access is set to private
 		$tsfe->fetch_the_id();
-		if (version_compare(TYPO3_version, '9.4', '<')) {
-			// initializes tmpl which getConfigArray() uses to store TS in
-			// @extensionScannerIgnoreLine
-			$tsfe->initTemplate();
-		}
 		// sets TS in tmpl->setup for use by configurationManager
 		$tsfe->getConfigArray();
 
@@ -130,7 +125,7 @@ class EidUtility extends \TYPO3\CMS\Frontend\Utility\EidUtility {
 			'extensionName' => $extensionName,
 			'vendorName' => $vendorName
 		), $configuration);
-		$bootstrap = new Bootstrap();
+		$bootstrap = GeneralUtility::makeInstance(Bootstrap::class);
 		$bootstrap->initialize($configuration);
 	}
 

@@ -4,7 +4,7 @@ if (!defined('TYPO3_MODE')) {
 }
 
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
-	'Innologi.' . $_EXTKEY,
+	'Innologi.Streamovations_Vp',
 	'Video',
 	array(
 		'Video' => 'list, presetShow, show, liveStream, advancedShow'
@@ -21,10 +21,10 @@ if (!defined('TYPO3_MODE')) {
 );
 
 // create a cache specifically for rest requests
-if (!isset($TYPO3_CONF_VARS['SYS']['caching']['cacheConfigurations']['streamovations_vp_rest'])
-	|| !is_array($TYPO3_CONF_VARS['SYS']['caching']['cacheConfigurations']['streamovations_vp_rest'])
+if (!isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['streamovations_vp_rest'])
+	|| !is_array($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['streamovations_vp_rest'])
 ) {
-	$TYPO3_CONF_VARS['SYS']['caching']['cacheConfigurations']['streamovations_vp_rest'] = array(
+	$GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['streamovations_vp_rest'] = array(
 		'options' => array(
 			'defaultLifetime' => 3600,
 			'compression' => extension_loaded('zlib')
@@ -34,7 +34,7 @@ if (!isset($TYPO3_CONF_VARS['SYS']['caching']['cacheConfigurations']['streamovat
 }
 
 // register eID script for metadata processing
-$GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'][$_EXTKEY . '_meetingdata'] = 'EXT:' . $_EXTKEY . '/Classes/Eid/Meetingdata.php';
+$GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['streamovations_vp_meetingdata'] = \Innologi\StreamovationsVp\Eid\Meetingdata::class;
 
 // custom PageTitle provider
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup(trim('
@@ -45,3 +45,24 @@ $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'][$_EXTKEY . '_meetingdata'] = 'E
         }
     }
 '));
+
+// register implementation classes for DI
+/** @var \TYPO3\CMS\Extbase\Object\Container\Container $container */
+$container = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\Object\Container\Container::class);
+$container->registerImplementation(
+	\Innologi\StreamovationsVp\Library\RestRepository\ResponseInterface::class,
+	\Innologi\StreamovationsVp\Library\RestRepository\MagicResponse::class
+);
+$container->registerImplementation(
+	\Innologi\StreamovationsVp\Library\RestRepository\RequestInterface::class,
+	\Innologi\StreamovationsVp\Library\RestRepository\Typo3Request::class
+);
+
+// @TODO replace all TEMPLATE cases with FLUIDTEMPLATE so this becomes unnecessary
+// Add FILE alternative
+$GLOBALS['TYPO3_CONF_VARS']['FE']['ContentObjects'] = array_merge(
+	$GLOBALS['TYPO3_CONF_VARS']['FE']['ContentObjects'],
+	[
+		'STREAMOVATIONS_VP_FILE' => \Innologi\StreamovationsVp\Mvc\ContentObject\FileContentObject::class
+	]
+);
