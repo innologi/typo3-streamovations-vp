@@ -4,10 +4,10 @@ if (!defined('TYPO3_MODE')) {
 }
 
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
-	'Innologi.Streamovations_Vp',
+	'Streamovations_Vp',
 	'Video',
 	array(
-		'Video' => 'list, presetShow, show, liveStream, advancedShow'
+		\Innologi\StreamovationsVp\Controller\VideoController::class => 'list, presetShow, show, liveStream, advancedShow'
 	),
 	// @LOW review if we absolutely can't cache presetShow, show and advancedShow
 	// non-cacheable actions
@@ -16,7 +16,7 @@ if (!defined('TYPO3_MODE')) {
 		// we're not caching any of them. instead, we rely on a
 		// caching table with configurable caching lifetime per
 		// rest-repository
-		'Video' => 'list, presetShow, show, liveStream, advancedShow',
+		\Innologi\StreamovationsVp\Controller\VideoController::class => 'list, presetShow, show, liveStream, advancedShow',
 	)
 );
 

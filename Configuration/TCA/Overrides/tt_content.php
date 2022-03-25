@@ -12,7 +12,7 @@ $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['streamovatio
 
 // register the plugin
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
-	'Innologi.StreamovationsVp',
+	'StreamovationsVp',
 	'Video',
 	'Streamovations Video Player'
 );
